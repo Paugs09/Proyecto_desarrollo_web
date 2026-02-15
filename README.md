@@ -68,3 +68,5 @@ Asegúrate de tener instalado lo siguiente:
 - [Node.js](https://nodejs.org/) (versión 18 o superior)
 - [.NET SDK](https://dotnet.microsoft.com/download) (versión 6.0 o superior)
 - [Angular CLI](https://angular.io/cli) - Instalar globalmente con: `npm install -g @angular/cli`
+
+## Tablero Sprint
