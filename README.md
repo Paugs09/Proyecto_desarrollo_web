@@ -57,3 +57,14 @@ Aplicación de navegación mediante puntos de interés con visualización clara 
 ![C#](https://img.shields.io/badge/C%23-239120?style=for-the-badge&logo=csharp&logoColor=white)
 - **.NET** - Framework para desarrollo del API REST
 - **C#** - Lenguaje de programación orientado a objetos
+
+## Instalación y uso
+
+### Prerrequisitos
+
+Asegúrate de tener instalado lo siguiente:
+
+- [Git](https://git-scm.com/downloads)
+- [Node.js](https://nodejs.org/) (versión 18 o superior)
+- [.NET SDK](https://dotnet.microsoft.com/download) (versión 6.0 o superior)
+- [Angular CLI](https://angular.io/cli) - Instalar globalmente con: `npm install -g @angular/cli`
