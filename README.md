@@ -40,3 +40,20 @@ Plataforma de mapas interactivos con técnicas de implementación de mapas diná
 [![Google Maps](img/googleMaps.jpg)](https://www.google.com/maps)
 Aplicación de navegación mediante puntos de interés con visualización clara de rutas.
 
+## Tecnologías utilizadas
+
+### Control de versiones
+![Git](https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=git&logoColor=white)
+- **Git** - Gestión del código fuente y colaboración en equipo
+
+### Frontend
+![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)
+![Angular](https://img.shields.io/badge/Angular-DD0031?style=for-the-badge&logo=angular&logoColor=white)
+- **Node.js** - Entorno de ejecución JavaScript
+- **Angular** - Framework web para desarrollo de aplicaciones SPA
+
+### Backend
+![.NET](https://img.shields.io/badge/.NET-512BD4?style=for-the-badge&logo=dotnet&logoColor=white)
+![C#](https://img.shields.io/badge/C%23-239120?style=for-the-badge&logo=csharp&logoColor=white)
+- **.NET** - Framework para desarrollo del API REST
+- **C#** - Lenguaje de programación orientado a objetos
