@@ -33,7 +33,7 @@ Sitio oficial de turismo que presenta destinos turísticos combinando informaci�
 Plataforma digital que narra experiencias turísticas desde un enfoque cultural y educativo.
 
 ### - Tus Guías de Viaje
-[![Tus Guías de Viaje](img/tusGuiasDeViaje.jpg)](https://tusguiasdeviaje.com/mapa/)
+[![Tus Guías de Viaje](img/TusGuiasDeViaje.jpg)](https://tusguiasdeviaje.com/mapa/)
 Plataforma de exploración turística que presenta destinos y puntos de interés mediante mapas interactivos, sirviendo como referencia para la organización visual de experiencias, navegación por territorio y presentación de información turística.
 
 ### - Mapbox
