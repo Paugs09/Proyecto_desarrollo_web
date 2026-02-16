@@ -76,4 +76,4 @@ Asegúrate de tener instalado lo siguiente:
 - [Angular CLI](https://angular.io/cli) - Instalar globalmente con: `npm install -g @angular/cli`
 
 ## Tablero sprint
-[![Gestión de tareas](img/tableroSprint.png)]
+![Gestión de tareas](img/gestionTareas.png)
