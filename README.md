@@ -64,16 +64,146 @@ Aplicación de navegación mediante puntos de interés con visualización clara 
 - **.NET** - Framework para desarrollo del API REST
 - **C#** - Lenguaje de programación orientado a objetos
 
-## Instalación y uso
+# Instalación y uso
 
-### Prerrequisitos
+## Prerrequisitos
 
 Asegúrate de tener instalado lo siguiente:
 
-- [Git](https://git-scm.com/downloads)
-- [Node.js](https://nodejs.org/) (versión 18 o superior)
-- [.NET SDK](https://dotnet.microsoft.com/download) (versión 6.0 o superior)
-- [Angular CLI](https://angular.io/cli) - Instalar globalmente con: `npm install -g @angular/cli`
+### 1. **Git**
+
+#### Windows:
+1. Descarga el instalador desde [git-scm.com](https://git-scm.com/download/win)
+2. Ejecuta el instalador descargado
+3. Sigue el asistente de instalación (puedes dejar las opciones por defecto)
+4. Verifica la instalación abriendo CMD o PowerShell y ejecutando:
+   ```bash
+   git --version
+   ```
+
+#### macOS:
+1. Instala usando Homebrew (recomendado):
+   ```bash
+   brew install git
+   ```
+   O descarga el instalador desde [git-scm.com](https://git-scm.com/download/mac)
+
+2. Verifica la instalación:
+   ```bash
+   git --version
+   ```
+
+#### Linux (Ubuntu/Debian):
+```bash
+sudo apt update
+sudo apt install git
+git --version
+```
+
+---
+
+### 2. **Node.js** (versión 18 o superior)
+
+#### Windows y macOS:
+1. Descarga el instalador LTS desde [nodejs.org](https://nodejs.org/)
+2. Ejecuta el instalador y sigue las instrucciones
+3. Verifica la instalación:
+   ```bash
+   node --version
+   npm --version
+   ```
+
+#### Linux (Ubuntu/Debian):
+```bash
+# Usando NodeSource para obtener la versión 18 o superior
+curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+sudo apt-get install -y nodejs
+
+# Verificar instalación
+node --version
+npm --version
+```
+
+#### Alternativa (Cualquier SO) - Usando NVM (Node Version Manager):
+```bash
+# Instalar NVM
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
+
+# Cerrar y abrir la terminal, luego:
+nvm install 18
+nvm use 18
+```
+
+---
+
+### 3. **.NET SDK** (versión 6.0 o superior)
+
+#### Windows:
+1. Descarga el SDK desde [dotnet.microsoft.com](https://dotnet.microsoft.com/download)
+2. Ejecuta el instalador
+3. Verifica la instalación:
+   ```bash
+   dotnet --version
+   ```
+
+#### macOS:
+```bash
+# Usando Homebrew
+brew install --cask dotnet-sdk
+
+# O descarga desde dotnet.microsoft.com
+```
+
+Verifica la instalación:
+```bash
+dotnet --version
+```
+
+#### Linux (Ubuntu):
+```bash
+# Agregar el repositorio de Microsoft
+wget https://packages.microsoft.com/config/ubuntu/$(lsb_release -rs)/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
+sudo dpkg -i packages-microsoft-prod.deb
+rm packages-microsoft-prod.deb
+
+# Instalar el SDK
+sudo apt-get update
+sudo apt-get install -y dotnet-sdk-8.0
+
+# Verificar instalación
+dotnet --version
+```
+
+---
+
+### 4. **Angular CLI**
+
+Una vez que Node.js y npm estén instalados, instala Angular CLI globalmente:
+
+```bash
+npm install -g @angular/cli
+```
+
+Verifica la instalación:
+```bash
+ng version
+```
+
+---
+
+## Verificación de todos los prerrequisitos
+
+Para asegurarte de que todo está correctamente instalado, ejecuta los siguientes comandos:
+
+```bash
+git --version
+node --version
+npm --version
+dotnet --version
+ng version
+```
+
+Todos los comandos deberían devolver sus respectivas versiones sin errores.
 
 ## Tablero sprint
 ![Gestión de tareas](img/gestionTareas.png)
