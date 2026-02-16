@@ -207,3 +207,46 @@ Todos los comandos deberían devolver sus respectivas versiones sin errores.
 
 ## Tablero sprint
 ![Gestión de tareas](img/gestionTareas.png)
+
+## Notas Finales
+
+### Herramientas para el Desarrollo
+
+#### Editor Backend
+![Visual Studio](https://img.shields.io/badge/Visual_Studio-5C2D91?style=for-the-badge&logo=visualstudio&logoColor=white)
+- **Visual Studio** - IDE recomendado para el desarrollo del backend en .NET
+- Abre la solución `.sln` ubicada en la carpeta `backend`
+- Configura el proyecto de inicio y ejecuta con `F5`
+
+#### Editor Frontend
+![Visual Studio Code](https://img.shields.io/badge/Visual_Studio_Code-007ACC?style=for-the-badge&logo=visualstudiocode&logoColor=white)
+- **Visual Studio Code** - Editor ligero y potente para el desarrollo del frontend en Angular
+- Abre la carpeta `frontend` en VS Code
+- Extensiones recomendadas:
+  - Angular Language Service
+  - ESLint
+  - Prettier
+- Ejecuta `ng serve` desde la terminal integrada
+
+#### Testing de API
+![Postman](https://img.shields.io/badge/Postman-FF6C37?style=for-the-badge&logo=postman&logoColor=white)
+- **Postman** - Herramienta para pruebas y testing de endpoints de la API
+- Importa la colección de endpoints (si está disponible)
+- Configura las variables de entorno necesarias
+- Prueba los endpoints del backend antes de integrar con el frontend
+
+---
+
+### 💡 Consejos Adicionales
+
+- **Usa Git Branches**: Trabaja en ramas separadas para cada feature
+- **Code Review**: Revisa el código antes de hacer merge a main
+- **Testing**: Escribe pruebas unitarias para componentes críticos
+- **Documentación**: Mantén actualizada la documentación de la API
+
+---
+
+<div align="center">
+  <p>⭐ Si este proyecto te fue útil, considera darle una estrella ⭐</p>
+  <p>Hecho con ❤️ y ☕</p>
+</div>
