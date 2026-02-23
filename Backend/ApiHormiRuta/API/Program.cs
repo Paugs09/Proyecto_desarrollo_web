@@ -10,8 +10,6 @@ using Scalar.AspNetCore;
 using System.Text.Json.Serialization;
 const string CORS_POLICY_NAME = "CorsPolicy";
 
-NpgsqlConnection.GlobalTypeMapper.MapEnum<DifficultyLevel>("difficulty_level");
-
 var builder = WebApplication.CreateBuilder(args);
 
 var services = builder.Services;
@@ -28,14 +26,11 @@ services.AddControllers().AddJsonOptions(options =>
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 services.AddOpenApi();
 
-configuration.SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile($"appsettings.json");
+configuration.SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json");
 
 var connectionString = configuration.GetConnectionString("DefaultConnection");
 
-// 1. Crear el DataSourceBuilder y mapear el enum
 var dataSourceBuilder = new NpgsqlDataSourceBuilder(connectionString);
-// El nombre entre comillas debe ser EXACTO al de la DB (image_f44ba6.png)
-dataSourceBuilder.MapEnum<DifficultyLevel>("difficulty_level");
 dataSourceBuilder.EnableUnmappedTypes();
 var dataSource = dataSourceBuilder.Build();
 
@@ -64,7 +59,7 @@ services.AddCors(options => options.AddPolicy(CORS_POLICY_NAME, builder =>
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment() || app.Environment.EnvironmentName == "Local")
 {
     app.MapOpenApi();
     app.MapScalarApiReference();
