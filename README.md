@@ -21,15 +21,15 @@ La plataforma web presenta su catálogo de productos mediante un mapa interactiv
 ## Inspiraciones o referencias
 
 ### - Google Earth
-[![Google Earth](img/googleEarth.jpg)](https://earth.google.com/)
+[![Google Earth](ProjectData/img/googleEarth.jpg)](https://earth.google.com/)
 Plataforma de exploración geográfica de territorios de manera visual e intuitiva haciendo uso de mapas interactivos.
 
 ### - Visit Norway
-[![Visit Norway](img/visitNorway.jpg)](https://www.visitnorway.com/)
+[![Visit Norway](ProjectData/img/visitNorway.jpg)](https://www.visitnorway.com/)
 Sitio oficial de turismo que presenta destinos turísticos combinando información cultural, natural y visual.
 
 ### - Culture Trip
-[![Culture Trip](img/cultureTrip.jpg)](https://theculturetrip.com/)
+[![Culture Trip](ProjectData/img/cultureTrip.jpg)](https://theculturetrip.com/)
 Plataforma digital que narra experiencias turísticas desde un enfoque cultural y educativo.
 
 ### - Tus Guías de Viaje
@@ -39,11 +39,11 @@ Plataforma digital que narra experiencias turísticas desde un enfoque cultural 
 Plataforma de exploración turística que presenta destinos y puntos de interés mediante mapas interactivos, sirviendo como referencia para la organización visual de experiencias, navegación por territorio y presentación de información turística.
 
 ### - Mapbox
-[![Mapbox](img/mapBox.jpg)](https://www.mapbox.com/)
+[![Mapbox](ProjectData/img/mapBox.jpg)](https://www.mapbox.com/)
 Plataforma de mapas interactivos con técnicas de implementación de mapas dinámicos, personalización visual y experiencia del usuario basada en geolocalización.
 
 ### - Google Maps
-[![Google Maps](img/googleMaps.jpg)](https://www.google.com/maps)
+[![Google Maps](ProjectData/img/googleMaps.jpg)](https://www.google.com/maps)
 Aplicación de navegación mediante puntos de interés con visualización clara de rutas.
 
 ## Tecnologías utilizadas
