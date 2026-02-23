@@ -1,0 +1,28 @@
+## [ Archivos de Compilación ]
+bin/
+obj/
+out/
+publish/
+
+## [ IDEs y Herramientas ]
+# Configuración local de Visual Studio (Carpeta .vs que se ve en tu imagen)
+.vs/
+.vscode/
+*.user
+*.userosscache
+*.suo
+
+## [ Archivos de Configuración Sensibles ]
+API/appsettings.Development.json
+API/appsettings.Local.json
+*.usersecrets
+secrets.json
+
+## [ Entity Framework Core ]
+# Archivos temporales de migraciones o logs
+*.log
+efbundle.exe
+
+## [ Sistema Operativo ]
+.DS_Store
+Thumbs.db
