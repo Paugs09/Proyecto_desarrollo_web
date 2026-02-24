@@ -1,0 +1,4 @@
+// Vacío o solo con estilos que NO usen @apply
+:host {
+  display: block; // Asegura que el footer ocupe su espacio
+}
