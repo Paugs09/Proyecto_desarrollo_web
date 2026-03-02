@@ -1,0 +1,51 @@
+<div class="min-h-screen flex items-center justify-center bg-[#FBF5EC] px-4">
+  <div class="bg-white rounded-xl shadow-md w-full max-w-md p-8">
+
+    <!-- Título -->
+    <h1 class="text-3xl font-bold text-center text-[#2D5016] mb-6">
+      Inicia sesión
+    </h1>
+
+    <!-- Formulario -->
+    <form class="space-y-4">
+
+      <!-- Correo -->
+      <div>
+        <label class="block text-sm font-medium mb-1">Correo electrónico</label>
+        <input
+          type="email"
+          placeholder="correo@ejemplo.com"
+          class="w-full bg-[#FBF5EC] border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#F4A261]"
+        />
+      </div>
+
+      <!-- Contraseña -->
+      <div>
+        <label class="block text-sm font-medium mb-1">Contraseña</label>
+        <input
+          type="password"
+          placeholder="Value"
+          class="w-full bg-[#FBF5EC] border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#F4A261]"
+        />
+      </div>
+
+      <!-- Botón -->
+      <button
+        type="submit"
+        class="w-full bg-[#F4A261] text-[#2D5016] font-semibold py-2 rounded hover:opacity-90 transition"
+      >
+        Inicia sesión
+      </button>
+
+    </form>
+
+    
+    <p class="text-sm text-center mt-6">
+      ¿No tienes cuenta?
+      <a routerLink="/registro" class="text-[#2D5016] font-semibold hover:underline">
+        Regístrate aquí
+      </a>
+    </p>
+
+  </div>
+</div>
