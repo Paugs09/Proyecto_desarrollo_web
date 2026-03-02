@@ -1,0 +1,131 @@
+$color-primary: #2e9e8e;
+$color-btn: #f5a623;
+
+.hero {
+  position: relative;
+  background-color: #c0c0c0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  min-height: 280px;
+
+  .flecha {
+    position: absolute;
+    background: transparent;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: white;
+
+    &.izquierda { left: 15px; }
+    &.derecha { right: 15px; }
+
+    &:hover { color: $color-btn; }
+  }
+
+  .hero-contenido {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    text-align: center;
+
+    h1 {
+      font-size: 28px;
+      font-weight: bold;
+      color: #333;
+    }
+
+    img {
+      width: 150px;
+    }
+
+    .btn-comenzar {
+      background-color: $color-btn;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 20px;
+      color: white;
+      cursor: pointer;
+      font-size: 14px;
+
+      &:hover {
+        background-color: darken($color-btn, 10%);
+      }
+    }
+  }
+
+  .puntos {
+    position: absolute;
+    bottom: 10px;
+    display: flex;
+    gap: 6px;
+
+    span {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #999;
+
+      &.activo {
+        background: #555;
+      }
+    }
+  }
+}
+
+.busqueda {
+  background-color: #f5f0e8;
+  padding: 30px 20px;
+  text-align: center;
+
+  p {
+    font-size: 16px;
+    margin-bottom: 15px;
+    color: #555;
+  }
+
+  .barra-busqueda {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-width: 400px;
+    margin: 0 auto;
+    background: #e0e0e0;
+    border-radius: 20px;
+    padding: 5px 15px;
+
+    input {
+      flex: 1;
+      border: none;
+      background: transparent;
+      outline: none;
+      font-size: 14px;
+    }
+
+    button {
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+    }
+  }
+}
+
+.lugares {
+  background-color: #f5f0e8;
+  padding: 20px;
+
+  h2 {
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+  }
+
+  .subtitulo {
+    color: #888;
+    font-size: 14px;
+    margin-top: 4px;
+  }
+}
