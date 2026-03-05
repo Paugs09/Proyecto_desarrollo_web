@@ -4,9 +4,9 @@ import { Component } from '@angular/core';
   selector: 'app-detalles',
   //standalone: true,
   imports: [],
-  templateUrl: './detalles.component.html',
-  styleUrl: './detalles.component.scss'
+  templateUrl: './details.component.html',
+  styleUrl: './details.component.scss'
 })
-export class DetallesComponent {
+export class DetailsComponent {
 
 }

@@ -34,7 +34,7 @@ Plataforma digital que narra experiencias turísticas desde un enfoque cultural 
 
 ### - Tus Guías de Viaje
 <a href="https://tusguiasdeviaje.com/mapa/">
-  <img src="img/TusGuiasdeViaje.jpg" alt="Tus Guías de Viaje" width="150">
+  <img src="ProjectData/img/TusGuiasdeViaje.jpg" alt="Tus Guías de Viaje" width="150">
 </a>
 Plataforma de exploración turística que presenta destinos y puntos de interés mediante mapas interactivos, sirviendo como referencia para la organización visual de experiencias, navegación por territorio y presentación de información turística.
 
@@ -206,7 +206,7 @@ ng version
 Todos los comandos deberían devolver sus respectivas versiones sin errores.
 
 ## Tablero sprint
-![Gestión de tareas](img/gestionTareas.png)
+![Gestión de tareas](ProjectData/img/gestionTareas.png)
 
 ## Notas Finales
 
