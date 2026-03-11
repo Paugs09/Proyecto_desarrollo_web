@@ -9,10 +9,5 @@ namespace API.Controllers
     {
         private readonly ICommonService _commonService = commonService;
 
-        [HttpGet("roles")]
-        public IActionResult GetRoles()
-        {
-            return Ok(_commonService.GetRoles());
-        }
     }
 }

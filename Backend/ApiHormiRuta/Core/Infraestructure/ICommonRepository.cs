@@ -4,6 +4,6 @@ namespace Core.Infraestructure
 {
     public interface ICommonRepository
     {
-        IQueryable<Role> GetRoles();
+
     }
 }

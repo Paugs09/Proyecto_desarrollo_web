@@ -1,4 +1,3 @@
-using Core.Enumerations;
 using Core.Infraestructure;
 using Core.Services.Imp;
 using Core.Services.Interfaces;
@@ -21,7 +20,7 @@ services.AddControllers().AddJsonOptions(options =>
 {
     // Esto permite que el JSON acepte "Medio" y lo convierta automáticamente a tu Enum
     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-}); ;
+});
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 services.AddOpenApi();
@@ -31,7 +30,6 @@ configuration.SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile($"appsett
 var connectionString = configuration.GetConnectionString("DefaultConnection");
 
 var dataSourceBuilder = new NpgsqlDataSourceBuilder(connectionString);
-dataSourceBuilder.EnableUnmappedTypes();
 var dataSource = dataSourceBuilder.Build();
 
 services.AddDbContext<AppDbContext>(options => options.UseNpgsql(dataSource));

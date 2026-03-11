@@ -1,8 +1,6 @@
 ﻿using Core.Entities;
-using Core.Enumerations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System.Reflection.Emit;
 
 namespace Infraestructure.Data.Configurations
 {
@@ -30,10 +28,7 @@ namespace Infraestructure.Data.Configurations
                 .IsRequired()
                 .HasColumnName("description");
 
-            builder.Property(a => a.Difficulty)
-                .IsRequired()
-                .HasColumnType("difficulty_level")
-                .HasColumnName("difficulty");
+
 
             builder.Property(a => a.Duration)
                 .IsRequired()
@@ -47,9 +42,18 @@ namespace Infraestructure.Data.Configurations
                 .IsRequired(false)
                 .HasColumnName("physical_requirements");
 
+            builder.Property(a => a.DifficultyId)
+                .IsRequired()
+                .HasColumnName("difficulty_id");
+
             builder.HasOne(a=> a.Category)
                 .WithMany(c => c.Adventures)
                 .HasForeignKey(a => a.CategoryId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasOne(a => a.DifficultyLevel)
+                .WithMany(c => c.Adventures)
+                .HasForeignKey(a => a.DifficultyId)
                 .OnDelete(DeleteBehavior.Cascade);
         }
     }

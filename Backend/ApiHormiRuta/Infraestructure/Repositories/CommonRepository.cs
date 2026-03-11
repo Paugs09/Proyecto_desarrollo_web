@@ -9,6 +9,5 @@ namespace Infraestructure.Repositories
     {
         private readonly AppDbContext _context = context;
 
-        public IQueryable<Role> GetRoles() => _context.Roles.AsNoTracking();
     }
 }

@@ -20,9 +20,9 @@ namespace Infraestructure.Data.Configurations
                 .IsRequired()
                 .HasColumnName("profile_id");
 
-            builder.Property(b => b.Status)
+            builder.Property(b => b.StatusId)
                 .IsRequired()
-                .HasColumnName("status");
+                .HasColumnName("status_id");
 
             builder.Property(b => b.TotalAmount)
                 .IsRequired()
@@ -40,6 +40,11 @@ namespace Infraestructure.Data.Configurations
             builder.HasOne(b=> b.Profile)
                 .WithMany(b=> b.Bookings)
                 .HasForeignKey(b => b.ProfileId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasOne(b=> b.Status)
+                .WithMany(b=> b.Bookings)
+                .HasForeignKey(b=> b.StatusId)
                 .OnDelete(DeleteBehavior.Cascade);  
         }
     }

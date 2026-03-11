@@ -8,6 +8,5 @@ namespace Core.Services.Imp
     {
         private readonly ICommonRepository _commonRepository = commonRepository;
 
-        public IQueryable<Role> GetRoles() => _commonRepository.GetRoles();
     }
 }

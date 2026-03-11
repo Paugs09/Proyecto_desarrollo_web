@@ -21,7 +21,7 @@ namespace Core.Services.Imp
                 CategoryId = dto.CategoryId,
                 Name = dto.Name,
                 Description = dto.Description,
-                Difficulty = dto.Difficulty,
+                DifficultyId = dto.DifficultyId,
                 Duration = dto.Duration,
                 MinAge = dto.MinAge,
                 PhysicalRequirements = dto.PhysicalRequirements
