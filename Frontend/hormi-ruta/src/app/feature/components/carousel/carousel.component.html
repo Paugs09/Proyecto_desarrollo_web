@@ -1,0 +1,26 @@
+<div class="dsc-carousel" [ngStyle]="{'min-height': finalHeight}">
+    <div class="dsc-carousel_btns">
+        <i class="fa fa-chevron-circle-left" (click)="setBack()"></i>
+        <i class="fa fa-chevron-circle-right" (click)="setNext()"></i>
+    </div>
+    <div class="dsc-carousel_content">
+        <ng-container *ngFor="let section of items;">
+            <div class="dsc-carousel_content-item" [ngStyle]="{'background-image': 'url(' + section.image + ')', 'margin-left': section.marginLeft + '%' }">
+                <div class="dsc-carousel_content-item-text">
+                    <h1>{{section.title?.first}} <span>{{section.title?.second}}</span></h1>
+                    <p>{{section.subtitle}}</p>
+                    <img *ngIf="section.overlayImage" [src]="section.overlayImage" alt="imagen slide">
+                    <button *ngIf="section.buttonText" type="button">{{section.buttonText}}</button>
+                </div>
+            </div>
+        </ng-container>
+    </div>
+    <div class="dsc-carousel_steps">
+        <div
+            class="dsc-carousel_steps-step"
+            [class.dsc-carousel_steps-step-active]="currentPosition === item.id"
+            *ngFor="let item of items"
+            (click)="setCurrentPosition(item.id ?? 0)">
+        </div>
+    </div>
+</div>
