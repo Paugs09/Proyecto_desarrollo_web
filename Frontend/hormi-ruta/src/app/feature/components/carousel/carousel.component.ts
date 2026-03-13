@@ -56,4 +56,8 @@ export class CarouselComponent implements OnInit {
     this.items.find(i => i.id === 0)!.marginLeft = finalPercentage;
     this.currentPosition = backPosition;
   }
+
+  scrollToSection(id: string) {
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+  }
 }

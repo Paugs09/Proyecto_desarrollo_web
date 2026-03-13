@@ -1,0 +1,25 @@
+
+<div class="place-card-wrapper">
+  <img class="place-card-wrapper__ant" src="assets/hormiga-feliz.gif" alt="hormiga">
+  <div class="place-card">
+    <div class="place-card__image">
+      <img [src]="place.image" [alt]="place.title">
+    </div>
+    <div class="place-card__content">
+      <h3 class="place-card__title">{{place.title}}</h3>
+      <p class="place-card__description">{{place.description}}</p>
+      <p class="place-card__price" *ngIf="place.price !== undefined && place.price >= 0">
+        {{ place.price === 0 ? '¡Gratis!' : (place.price | currency:'COP':'symbol-narrow':'1.0-0') }}
+        <span class="place-card__price-note" *ngIf="place.priceNote && place.price !== 0">{{place.priceNote}}</span>
+      </p>
+      <div class="place-card__actions">
+        <button class="place-card__btn-more">Ver más</button>
+        <button class="place-card__btn-save">
+          <svg viewBox="0 0 24 24" height="18" width="18" xmlns="http://www.w3.org/2000/svg">
+            <path d="M16 2v17.582l-4-3.512-4 3.512v-17.582h8zm2-2h-12v24l6-5.269 6 5.269v-24z"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -10,7 +10,7 @@
                     <h1>{{section.title?.first}} <span>{{section.title?.second}}</span></h1>
                     <p>{{section.subtitle}}</p>
                     <img *ngIf="section.overlayImage" [src]="section.overlayImage" alt="imagen slide">
-                    <button *ngIf="section.buttonText" type="button">{{section.buttonText}}</button>
+                   <button *ngIf="section.buttonText" type="button" (click)="section.scrollTo ? scrollToSection(section.scrollTo) : null">{{section.buttonText}}</button>
                 </div>
             </div>
         </ng-container>

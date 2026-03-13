@@ -3,3 +3,136 @@
     background-color: #F6F4EB;
     min-height: 100vh;
 }
+
+//Filtro de búsqueda
+.home-search {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 32px 16px;
+  background-color: #f5f0e8;
+
+  p {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #484848;
+    margin-bottom: 16px;
+  }
+
+  &_bar {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    max-width: 500px;
+    background: white;
+    border-radius: 25px;
+    padding: 8px 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    margin-bottom: 16px;
+
+    input {
+      flex: 1;
+      border: none;
+      outline: none;
+      font-size: 16px;
+      background: transparent;
+    }
+
+    button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #888;
+      font-size: 18px;
+
+      &:hover {
+        color: #F4A261;
+      }
+    }
+  }
+
+  &_filters {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+
+    button {
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 20px;
+      padding: 6px 16px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: 0.3s all ease;
+
+      &:hover, &.active {
+        background: #F4A261;
+        color: white;
+        border-color: #F4A261;
+      }
+    }
+  }
+}
+
+
+//Cards
+.home-places {
+  background-color: rgba(244, 162, 97, 0.12);
+  padding: 4%;
+
+  h2 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 4px;
+  }
+
+  &_subtitle {
+    color: #888;
+    font-style: italic;
+    font-size: 1.1rem;
+    font-weight: 450;
+  }
+
+  &_carousel {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+
+    &-btn {
+      background: none;
+      border: none;
+      font-size: 36px;
+      cursor: pointer;
+      color: #F4A261;
+      flex-shrink: 0;
+      transition: 0.3s ease;
+
+      &:hover { opacity: 0.7; }
+    }
+  }
+
+  &_track {
+    flex: 1;
+    overflow-x: hidden; 
+    overflow-y: visible;
+  }
+
+  &_wrapper {
+    display: flex;
+    gap: 16px;
+  }
+
+  &_item {
+    flex: 0 0 calc(33.333% - 11px);
+
+    @media (max-width: 768px) {
+      flex: 0 0 calc(50% - 8px);
+    }
+
+    @media (max-width: 480px) {
+      flex: 0 0 100%;
+    }
+  }
+}

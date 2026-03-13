@@ -9,6 +9,7 @@ export interface ICarouselItem {
     image: string;
     order?: number;
     marginLeft?: number;
-    buttonText?: string;      // ← texto del botón
-    overlayImage?: string;    // ← imagen encima (la hormiga u otra)
+    buttonText?: string;    
+    overlayImage?: string;   
+    scrollTo?: string;
 }
