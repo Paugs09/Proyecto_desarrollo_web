@@ -5,7 +5,7 @@ using Core.Services.Interfaces;
 
 namespace Core.Services.Imp
 {
-    public class AdventureService(IStorageService storageService, 
+    public class AdventureService(IStorageService storageService,
                                   IGenericRepository<Adventure> genericRepository,
                                   IGenericRepository<AdventureImage> genericAdventureImageRepository) : IAdventureService
     {
@@ -13,12 +13,27 @@ namespace Core.Services.Imp
         public readonly IGenericRepository<Adventure> _genericRepository = genericRepository;
         public readonly IGenericRepository<AdventureImage> _genericAdventureImageRepository = genericAdventureImageRepository;
 
-        public async Task<IEnumerable<Adventure>> GetAllAdventuresAsync()
+        public async Task<IEnumerable<AdventureDto>> GetAllAdventuresAsync()
         {
-            return await _genericRepository.GetAllAsync();
+            var adventures = await _genericRepository.GetAllAsync(
+                a => a.Category,
+                a => a.DifficultyLevel,
+                a => a.Images);
+
+            return adventures.Select(x => new AdventureDto
+            {
+                Id = x.Id,
+                Category = x.Category.Name,
+                Name = x.Name,
+                Description = x.Description,
+                Duration = x.Duration,
+                MinAge = x.MinAge,
+                Difficulty = x.DifficultyLevel.Name,
+                MainImageUrl = x.Images.FirstOrDefault(x => x.IsPrimary)?.ImageUrl ?? string.Empty
+            });
         }
 
-        public async Task CreateAdventure(CreateAdventureDto dto) 
+        public async Task CreateAdventure(CreateAdventureDto dto)
         {
             var adventure = new Adventure
             {
@@ -45,7 +60,7 @@ namespace Core.Services.Imp
                 DisplayOrder = imageDto.DisplayOrder,
                 IsPrimary = imageDto.IsPrimary,
                 ImageUrl = imagePath,
-                CreatedAt = DateTime.Now
+                CreatedAt = DateTime.UtcNow
             };
 
             await _genericAdventureImageRepository.AddAsync(adventureImage);

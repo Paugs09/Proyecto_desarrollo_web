@@ -60,7 +60,7 @@ services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 // Se agrega politica de origen cruzado
 services.AddCors(options => options.AddPolicy(CORS_POLICY_NAME, builder =>
 {
-    builder.WithOrigins();
+    builder.AllowAnyOrigin();
     builder.AllowAnyMethod();
     builder.AllowAnyHeader();
     builder.WithExposedHeaders("Content-Disposition");

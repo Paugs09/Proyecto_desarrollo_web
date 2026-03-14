@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { CurrencyPipe, NgIf} from '@angular/common';
+import { Adventure } from '../../interfaces/adventure.interface';
 
 export interface IPlaceCard {
   title: string;
@@ -17,5 +18,5 @@ export interface IPlaceCard {
   styleUrl: './cards.component.scss'
 })
 export class CardsComponent {
-  @Input() place!: IPlaceCard;
+  @Input() place!: Adventure;
 }

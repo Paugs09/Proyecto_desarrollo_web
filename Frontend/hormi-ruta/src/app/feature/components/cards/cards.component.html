@@ -3,10 +3,10 @@
   <img class="place-card-wrapper__ant" src="assets/hormiga-feliz.gif" alt="hormiga">
   <div class="place-card">
     <div class="place-card__image">
-      <img [src]="place.image" [alt]="place.title">
+      <img [src]="place.mainImageUrl" [alt]="place.name">
     </div>
     <div class="place-card__content">
-      <h3 class="place-card__title">{{place.title}}</h3>
+      <h3 class="place-card__title">{{place.name}}</h3>
       <p class="place-card__description">{{place.description}}</p>
       <p class="place-card__price" *ngIf="place.price !== undefined && place.price >= 0">
         {{ place.price === 0 ? '¡Gratis!' : (place.price | currency:'COP':'symbol-narrow':'1.0-0') }}
