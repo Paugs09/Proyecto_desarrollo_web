@@ -13,5 +13,6 @@
         // Navegación
         public Provider Provider { get; set; } = null!;
         public ICollection<RoomType> RoomTypes { get; set; } = [];
+        public virtual ICollection<HotelImage> Images { get; set; } = [];
     }
 }

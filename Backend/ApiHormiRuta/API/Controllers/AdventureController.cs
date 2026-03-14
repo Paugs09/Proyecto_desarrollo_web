@@ -22,5 +22,12 @@ namespace API.Controllers
             await _adventureService.CreateAdventure(dto);
             return Ok();
         }
+
+        [HttpPut("{adventureId:Guid}/images")]
+        public async Task<IActionResult> Create(Guid adventureId, [FromForm] CreateAdventureImageDto imageDto)
+        {
+            await _adventureService.CreateAdventureImage(adventureId, imageDto);
+            return Ok();
+        }
     }
 }

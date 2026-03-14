@@ -14,5 +14,6 @@
         public virtual Category Category { get; set; } = null!;
         public virtual DifficultyLevel DifficultyLevel { get; set; } = null!;
         public virtual ICollection<AdventureSlot> AdventureSlots { get; set; } = [];
+        public virtual ICollection<AdventureImage> Images { get; set; } = [];
     }
 }

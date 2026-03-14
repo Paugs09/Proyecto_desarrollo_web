@@ -7,5 +7,6 @@ namespace Core.Services.Interfaces
     {
         Task<IEnumerable<Adventure>> GetAllAdventuresAsync();
         Task CreateAdventure(CreateAdventureDto dto);
+        Task CreateAdventureImage(Guid adventureId, CreateAdventureImageDto imageDto);
     }
 }

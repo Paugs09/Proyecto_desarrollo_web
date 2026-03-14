@@ -15,6 +15,8 @@ namespace Infraestructure.Data
         public virtual DbSet<Adventure> Adventures { get; set; } = null!;
         public virtual DbSet<Booking> Bookings { get; set; } = null!;
         public virtual DbSet<Participant> Participants { get; set; } = null!;
+        public virtual DbSet<AdventureImage> AdventureImages { get; set; } = null!;
+        public virtual DbSet<HotelImage> HotelImages { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

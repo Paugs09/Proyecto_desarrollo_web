@@ -28,8 +28,6 @@ namespace Infraestructure.Data.Configurations
                 .IsRequired()
                 .HasColumnName("description");
 
-
-
             builder.Property(a => a.Duration)
                 .IsRequired()
                 .HasColumnName("duration");

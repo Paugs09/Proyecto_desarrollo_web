@@ -1,3 +1,4 @@
+using Amazon.S3;
 using Core.Infraestructure;
 using Core.Services.Imp;
 using Core.Services.Interfaces;
@@ -28,6 +29,7 @@ services.AddOpenApi();
 configuration.SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json");
 
 var connectionString = configuration.GetConnectionString("DefaultConnection");
+var s3Config = configuration.GetSection("SupabaseS3");
 
 var dataSourceBuilder = new NpgsqlDataSourceBuilder(connectionString);
 var dataSource = dataSourceBuilder.Build();
@@ -36,9 +38,19 @@ services.AddDbContext<AppDbContext>(options => options.UseNpgsql(dataSource));
 
 // Lista inyección de dependencias
 services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+builder.Services.AddSingleton<IAmazonS3>(sp =>
+{
+    var config = new AmazonS3Config
+    {
+        ServiceURL = s3Config["ServiceUrl"],
+        ForcePathStyle = true // Obligatorio para Supabase
+    };
+    return new AmazonS3Client(s3Config["AccessKey"], s3Config["SecretKey"], config);
+});
 
 //Services
 services.AddTransient<ICommonService, CommonService>();
+services.AddTransient<IStorageService, StorageService>();
 services.AddTransient<IAdventureService, AdventureService>();
 
 //Repositories
