@@ -1,0 +1,133 @@
+<app-carousel
+  [items]="carouselItems"
+  [height]="450">
+</app-carousel>
+
+<!--Filtro de busqueda-->
+<div class="home-search">
+  <p><i>¿A qué plan se le mide?</i></p>
+  <div class="home-search_bar">
+    <input type="text" placeholder="Buscar lugares, actividades, alojamientos...">
+    <button>
+      <i class="fas fa-search"></i>
+    </button>
+  </div>
+  <div class="home-search_filters">
+    <button
+      *ngFor="let filter of filters"
+      [class.active]="selectedFilter === filter.value"
+      (click)="setFilter(filter.value)">
+      {{filter.label}}
+    </button>
+  </div>
+</div>
+
+<!--Lugares turisticos-->
+<div class="home-places">
+  <h2>Lugares turísticos</h2>
+  <p class="home-places_subtitle">¡Destinos bien bacanos!</p>
+
+  <div class="home-places_carousel">
+    <button class="home-places_carousel-btn">
+      <i class="fas fa-chevron-circle-left"></i>
+    </button>
+
+    <div class="home-places_track">
+      <div class="home-places_wrapper">
+        <div class="home-places_item" *ngFor="let place of places">
+          <app-cards [place]="place"></app-cards>
+        </div>
+      </div>
+    </div>
+
+    <button class="home-places_carousel-btn">
+      <i class="fas fa-chevron-circle-right"></i>
+    </button>
+  </div>
+</div>
+
+<!--Filtro de busqueda-->
+<div class="home-search">
+  <p><i>¿A qué plan se le mide?</i></p>
+  <div class="home-search_bar">
+    <input type="text" placeholder="Buscar lugares, actividades, alojamientos...">
+    <button>
+      <i class="fas fa-search"></i>
+    </button>
+  </div>
+  <div class="home-search_filters">
+    <button
+      *ngFor="let filter of filters"
+      [class.active]="selectedFilter === filter.value"
+      (click)="setFilter(filter.value)">
+      {{filter.label}}
+    </button>
+  </div>
+</div>
+
+<!--Actividades de aventura-->
+<div class="home-places" id="actividades">
+  <h2>Actividades de aventura</h2>
+  <p class="home-places_subtitle">¡Atrévete a vivir la adrenalina!</p>
+
+  <div class="home-places_carousel">
+    <button class="home-places_carousel-btn">
+      <i class="fas fa-chevron-circle-left"></i>
+    </button>
+
+    <div class="home-places_track">
+      <div class="home-places_wrapper">
+        <div class="home-places_item" *ngFor="let activity of activities">
+          <app-cards [place]="activity"></app-cards>
+        </div>
+      </div>
+    </div>
+
+    <button class="home-places_carousel-btn">
+      <i class="fas fa-chevron-circle-right"></i>
+    </button>
+  </div>
+</div>
+
+<!--Filtro de busqueda-->
+<div class="home-search">
+  <p><i>¿A qué plan se le mide?</i></p>
+  <div class="home-search_bar">
+    <input type="text" placeholder="Buscar lugares, actividades, alojamientos...">
+    <button>
+      <i class="fas fa-search"></i>
+    </button>
+  </div>
+  <div class="home-search_filters">
+    <button
+      *ngFor="let filter of filters"
+      [class.active]="selectedFilter === filter.value"
+      (click)="setFilter(filter.value)">
+      {{filter.label}}
+    </button>
+  </div>
+</div>
+
+<!--Alojamientos-->
+<div class="home-places" id="alojamientos">
+  <h2>Alojamientos</h2>
+  <p class="home-places_subtitle">¡Tu hogar lejos de casa!</p>
+
+  <div class="home-places_carousel">
+    <button class="home-places_carousel-btn">
+      <i class="fas fa-chevron-circle-left"></i>
+    </button>
+
+    <div class="home-places_track">
+      <div class="home-places_wrapper">
+        <div class="home-places_item" *ngFor="let hotel of hotels">
+          <app-cards [place]="hotel"></app-cards>
+        </div>
+      </div>
+    </div>
+
+    <button class="home-places_carousel-btn">
+      <i class="fas fa-chevron-circle-right"></i>
+    </button>
+  </div>
+</div>
