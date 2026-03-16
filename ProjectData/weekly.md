@@ -1,3 +1,5 @@
+*Este documento se ha generado con el objetivo de realizar un seguimiento semanal del proyecto HormiRuta Santandereana.*
+
 # PRIMERA REUNIÓN
 =====================
 ---------------------------
@@ -146,6 +148,11 @@ Se definió la arquitectura de carpetas del proyecto tanto para frontend como pa
   │     ├── public/
   │     └── src/
   │           ├── app/
+  │             ├── feature/
+  │               ├── components/
+  │               ├── interfaces/
+  │               ├── services/
+  │           ├── shared/
   │           ├── assets/
   │           ├── environments/
   │           ├── index.html
@@ -212,5 +219,3 @@ Se realizó un documento con la búsqueda y definición de todos los productos a
 Se identificó la necesidad de replantear algunos enfoques del proyecto en cuanto a la categorización y presentación de productos. **Pendiente de confirmación con el docente.**
 
 ---
-
-*Documento generado como seguimiento semanal del proyecto HormiRuta Santandereana.*
