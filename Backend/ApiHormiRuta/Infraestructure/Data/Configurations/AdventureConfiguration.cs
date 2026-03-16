@@ -44,11 +44,6 @@ namespace Infraestructure.Data.Configurations
                 .IsRequired()
                 .HasColumnName("difficulty_id");
 
-            builder.HasOne(a=> a.Category)
-                .WithMany(c => c.Adventures)
-                .HasForeignKey(a => a.CategoryId)
-                .OnDelete(DeleteBehavior.Cascade);
-
             builder.HasOne(a => a.DifficultyLevel)
                 .WithMany(c => c.Adventures)
                 .HasForeignKey(a => a.DifficultyId)
