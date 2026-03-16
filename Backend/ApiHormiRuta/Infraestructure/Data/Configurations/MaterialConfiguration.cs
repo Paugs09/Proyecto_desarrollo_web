@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Infraestructure.Data.Configurations
 {
-    internal class CategoryConfiguration : IEntityTypeConfiguration<Category>
+    internal class MaterialConfiguration : IEntityTypeConfiguration<Material>
     {
-        public void Configure(EntityTypeBuilder<Category> builder)
+        public void Configure(EntityTypeBuilder<Material> builder)
         {
-            builder.ToTable("categories");
+            builder.ToTable("materials");
 
             builder.HasKey(c => c.Id);
 
@@ -18,10 +18,6 @@ namespace Infraestructure.Data.Configurations
 
             builder.Property(c => c.Name)
                 .HasColumnName("name")
-                .IsRequired();
-
-            builder.Property(c => c.Description)
-                .HasColumnName("description")
                 .IsRequired();
 
             builder.Property(c => c.CreatedAt)

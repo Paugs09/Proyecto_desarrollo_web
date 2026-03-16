@@ -1,9 +1,7 @@
 ﻿namespace Core.Entities
 {
-    public class Category : GeneralInfo
+    public class Municipality : GeneralInfo
     {
-        public string Description { get; set; } = string.Empty;
-
         public virtual ICollection<Product> Products { get; set; } = [];
     }
 }
