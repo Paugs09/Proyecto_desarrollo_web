@@ -46,23 +46,36 @@
   </div>
 </div>
 
-<!--Filtro de busqueda-->
-<div class="home-search">
-  <p><i>¿A qué plan se le mide?</i></p>
-  <div class="home-search_bar">
-    <input type="text" placeholder="Buscar lugares, actividades, alojamientos...">
-    <button>
-      <i class="fas fa-search"></i>
-    </button>
+<div class="home-divider">
+  <hr>
+  <span>¡Esto sí es una belleza!</span>
+  <hr>
+</div>
+
+<!--Banner-->
+<div class="home-banner" id="sesion-banner">
+  <div class="home-banner__overlay"></div>
+  <div class="home-banner__content">
+    <div class="home-banner__text">
+      <h2>Hormi Consejo</h2>
+      <hr>
+      <p><i>¡Mano, póngase las pilas y tenga su cuenta!</i></p>
+      <p>En Hormiruta le armamos el plan más berraco.</p>
+    </div>
+    <div class="home-banner__ant">
+      <img src="assets/hormiga-indicadora.png" alt="Hormi Consejo">
+    </div>
+    <div class="home-banner__buttons">
+      <button class="home-banner__btn home-banner__btn--primary" routerLink="/login">Iniciar sesión</button>
+      <button class="home-banner__btn home-banner__btn--secondary" routerLink="/register">Registrarse</button>
+    </div>
   </div>
-  <div class="home-search_filters">
-    <button
-      *ngFor="let filter of filters"
-      [class.active]="selectedFilter === filter.value"
-      (click)="setFilter(filter.value)">
-      {{filter.label}}
-    </button>
-  </div>
+</div>
+
+<div class="home-divider">
+  <hr>
+  <span>¡Venga y conozca, mano!</span>
+  <hr>
 </div>
 
 <!--Actividades de aventura-->
@@ -89,45 +102,11 @@
   </div>
 </div>
 
-<!--Filtro de busqueda-->
-<div class="home-search">
-  <p><i>¿A qué plan se le mide?</i></p>
-  <div class="home-search_bar">
-    <input type="text" placeholder="Buscar lugares, actividades, alojamientos...">
-    <button>
-      <i class="fas fa-search"></i>
-    </button>
-  </div>
-  <div class="home-search_filters">
-    <button
-      *ngFor="let filter of filters"
-      [class.active]="selectedFilter === filter.value"
-      (click)="setFilter(filter.value)">
-      {{filter.label}}
-    </button>
+<!--Frase inspiracional-->
+<div class="home-quote">
+  <img src="assets/hormiga-aventurera.png" alt="Hormiga aventurera">
+  <div class="home-quote__content">
+    <h3>"San Gil se recorre con ganas"</h3>
+    <hr>
   </div>
 </div>
-
-<!--Alojamientos-->
-<!-- <div class="home-places" id="alojamientos">
-  <h2>Alojamientos</h2>
-  <p class="home-places_subtitle">¡Tu hogar lejos de casa!</p>
-
-  <div class="home-places_carousel">
-    <button class="home-places_carousel-btn">
-      <i class="fas fa-chevron-circle-left"></i>
-    </button>
-
-    <div class="home-places_track">
-      <div class="home-places_wrapper">
-        <div class="home-places_item" *ngFor="let hotel of hotels">
-          <app-cards [place]="hotel"></app-cards>
-        </div>
-      </div>
-    </div>
-
-    <button class="home-places_carousel-btn">
-      <i class="fas fa-chevron-circle-right"></i>
-    </button>
-  </div>
-</div> -->
