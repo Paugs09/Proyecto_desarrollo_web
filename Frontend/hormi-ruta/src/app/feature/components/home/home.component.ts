@@ -6,11 +6,12 @@ import { ICarouselItem } from '../carousel/Icarousel-item.metadata';
 import { CardsComponent, IPlaceCard } from '../cards/cards.component';
 import { AdventureService } from '../../services/adventure.service';
 import { Adventure } from '../../interfaces/adventure.interface';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CarouselComponent, FormsModule, NgFor, CardsComponent],
+  imports: [CarouselComponent, FormsModule, NgFor, CardsComponent, RouterLink],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
@@ -57,6 +58,7 @@ export class HomeComponent {
       subtitle: 'Un destino lleno de lugares por descubrir',
       overlayImage: 'assets/hormiga-sangilena.png',
       buttonText: 'Comenzar mi ruta',
+      scrollTo: 'sesion-banner',
     },
     {
       image: 'assets/actividades-carrusel.jpg',
