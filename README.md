@@ -205,8 +205,11 @@ ng version
 
 Todos los comandos deberían devolver sus respectivas versiones sin errores.
 
-## Tablero sprint
-![Gestión de tareas](ProjectData/img/gestionTareas.png)
+## Tablero de Planificación (Scrum)
+
+La planificación y organización del sprint se gestiona mediante **Bitrix24 Scrum**.
+> 🔒 **Acceso restringido:** El tablero es privado. Si necesitas acceso, solicítalo al equipo para ser añadido como parte interesada.
+[🔗 Ver tablero Scrum - HormiRuta](https://b24-s0ulxn.bitrix24.co/workgroups/group/3/tasks/?scrum=Y&tab=plan)
 
 ## Notas Finales
 
