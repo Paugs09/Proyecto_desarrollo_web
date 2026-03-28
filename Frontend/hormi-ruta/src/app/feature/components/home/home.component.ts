@@ -98,4 +98,12 @@ export class HomeComponent {
     { title: 'Cueva de la Vaca', description: 'El Parque Natural El Gallineral es el sitio emblemático de San Gil, Santander, conocido por ser una isla natural de 4 hectáreas rodeada por el río Fonce y la quebrada Curití.', image: 'assets/sangil-carrusel.jpg', price: 20000, priceNote: 'Entrada al lugar' },
     { title: 'Río Fonce', description: 'El Parque Natural El Gallineral es el sitio emblemático de San Gil, Santander, conocido por ser una isla natural de 4 hectáreas rodeada por el río Fonce y la quebrada Curití.', image: 'assets/sangil-carrusel.jpg', price: 20000, priceNote: 'Entrada al lugar' },
   ];
+
+  scrollCarousel(trackId: string, direction: 'left' | 'right') {
+  const track = document.getElementById(trackId);
+  if (!track) return;
+  const item = track.querySelector('.home-places_item') as HTMLElement;
+  const itemWidth = item ? item.offsetWidth + 16 : 300;
+  track.scrollLeft += direction === 'right' ? itemWidth : -itemWidth;
+}
 }
