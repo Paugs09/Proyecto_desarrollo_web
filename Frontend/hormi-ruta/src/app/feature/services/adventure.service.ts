@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
 import { Adventure } from '../interfaces/adventure.interface';
 import { environment } from '../../../environments/environment'
@@ -19,6 +19,15 @@ export class AdventureService {
                 ...adv
             })))
         );
+    }
+
+    //crear
+     PostAdventures(adventure: object): Observable<any> {
+    const headers = new HttpHeaders({
+        'Content-Type': 'application/json'
+    });
+    
+    return this.http.post<Adventure>(this.apiUrl, adventure, { headers });
     }
 
     getAdventureById(id: string): Observable<Adventure> {
