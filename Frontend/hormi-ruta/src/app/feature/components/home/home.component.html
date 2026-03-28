@@ -28,11 +28,11 @@
   <p class="home-places_subtitle">¡Destinos bien bacanos!</p>
 
   <div class="home-places_carousel">
-    <button class="home-places_carousel-btn">
+    <button class="home-places_carousel-btn" (click)="scrollCarousel('placesTrack', 'left')">
       <i class="fas fa-chevron-circle-left"></i>
     </button>
 
-    <div class="home-places_track">
+    <div class="home-places_track" id="placesTrack">
       <div class="home-places_wrapper">
         <div class="home-places_item" *ngFor="let place of adventures">
           <app-cards [place]="place"></app-cards>
@@ -40,7 +40,7 @@
       </div>
     </div>
 
-    <button class="home-places_carousel-btn">
+    <button class="home-places_carousel-btn" (click)="scrollCarousel('placesTrack', 'right')">
       <i class="fas fa-chevron-circle-right"></i>
     </button>
   </div>
@@ -84,11 +84,11 @@
   <p class="home-places_subtitle">¡Atrévete a vivir la adrenalina!</p>
 
   <div class="home-places_carousel">
-    <button class="home-places_carousel-btn">
+    <button class="home-places_carousel-btn" (click)="scrollCarousel('activitiesTrack', 'left')">
       <i class="fas fa-chevron-circle-left"></i>
     </button>
 
-    <div class="home-places_track">
+    <div class="home-places_track" id="activitiesTrack">
       <div class="home-places_wrapper">
         <div class="home-places_item" *ngFor="let activity of activities">
           <app-cards [place]="activity"></app-cards>
@@ -96,7 +96,7 @@
       </div>
     </div>
 
-    <button class="home-places_carousel-btn">
+    <button class="home-places_carousel-btn" (click)="scrollCarousel('activitiesTrack', 'right')">
       <i class="fas fa-chevron-circle-right"></i>
     </button>
   </div>
