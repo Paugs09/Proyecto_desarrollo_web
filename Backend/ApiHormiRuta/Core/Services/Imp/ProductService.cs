@@ -1,185 +1,101 @@
 ﻿using Core.Dto.Product;
+using Core.Dto.Product.ProductImage;
+using Core.Dto.Product.ProductVariant;
 using Core.Entities;
 using Core.Infraestructure;
 using Core.QueryFilter.Product;
 using Core.Services.Interfaces;
+using Microsoft.EntityFrameworkCore;
+using System.Text.Json;
 
 namespace Core.Services.Imp
 {
-    public class ProductService(IUnitOfWork unitOfWork,
-                                IGenericRepository<Product> genericProductRepository,
-                                IGenericRepository<AttributeValue> genericAttributeValueRepository,
-                                IGenericRepository<ProductImage> genericProductImageRepository,
-                                IGenericRepository<VariantValue> genericVariantValueRepository,
-                                IGenericRepository<ProductVariant> genericProductVariantRepository) : IProductService
+    public class ProductService(ICommonRepository commonRepository,
+                                IGenericRepository<Product> genericProductRepository) : IProductService
     {
-        private readonly IUnitOfWork _unitOfWork = unitOfWork;
-        private readonly IGenericRepository<ProductVariant> _genericProductVariantRepository = genericProductVariantRepository;
+        private readonly ICommonRepository _commonRepository = commonRepository;
         private readonly IGenericRepository<Product> _genericProductRepository = genericProductRepository;
-        private readonly IGenericRepository<AttributeValue> _genericAttributeValueRepository = genericAttributeValueRepository;
-        private readonly IGenericRepository<VariantValue> _genericVariantValueRepository = genericVariantValueRepository;
-        private readonly IGenericRepository<ProductImage> _genericProductImageRepository = genericProductImageRepository;
 
         public async Task<IEnumerable<ProductDto>?> GetAllProductsAsync(ProductQueryFilter queryFilter)
         {
-            var products = await _genericProductRepository.GetAllAsync(x=> x.ProductImages);
+            var products = await _genericProductRepository.GetAllAsync(x => x.ProductImages);
 
             if (queryFilter.CategoryId.HasValue)
                 products = products.Where(x => x.CategoryId == queryFilter.CategoryId.Value);
 
-            if(!string.IsNullOrWhiteSpace(queryFilter.PorductName))
+            if (!string.IsNullOrWhiteSpace(queryFilter.PorductName))
                 products = products.Where(x => x.Name.Contains(queryFilter.PorductName));
 
-            return products.Select(x=> new ProductDto
+            return products.Select(x => new ProductDto
             {
                 Id = x.Id,
                 Name = x.Name,
                 ShortDescription = x.ShortDescription,
-                BasePrice = x.BasePrice,
-                ImageUrl = x.ProductImages.FirstOrDefault(x=> x.IsPrimary)?.ImageUrl,
+                //BasePrice = x.BasePrice,
+                ImageUrl = x.ProductImages.FirstOrDefault(x => x.IsPrimary)?.ImageUrl,
             });
         }
 
-        //public async Task CreateProduct(CreateProductDto createProductDto)
-        //{
-        //    var product = new Product
-        //    {
-        //        Name = createProductDto.Name,
-        //        ShortDescription = createProductDto.ShortDescription,
-        //        LongDescription = createProductDto.LongDescription,
-        //        BasePrice = createProductDto.BasePrice,
-        //        CategoryId = createProductDto.CategoryId,
-        //        MaterialId = createProductDto.MaterialId,
-        //        MunicipalityId = createProductDto.MunicipalityId,
-        //        Notes = createProductDto.Notes,
-        //        Dimensions = createProductDto.Dimensions
-        //    };
+        public async Task<DetailProductDto> GetDetailProduct(long id)
+        {
+            var product = await _genericProductRepository.FirstOrDefaultAsyncWithIncludes(
+                x => x.Id == id,
+                query => query
+                    .Include(p => p.Category)
+                    .Include(p => p.Material)
+                    .Include(p => p.Municipality)
+                    .Include(p => p.ProductImages)
+                    .Include(p => p.ProductVariants)
+                        .ThenInclude(pv => pv.VariantValues)
+                            .ThenInclude(vv => vv.AttributeValue)
+                                .ThenInclude(vv=> vv.Attribute)
+            ) ?? throw new Exception("Producto no encontrado");
 
-        //    await _genericProductRepository.AddAsync(product);
+            var p = new DetailProductDto
+            {
+                Id = product.Id,
+                ProductName = product.Name,
+                ShortDescription = product.ShortDescription,
+                LongDescription = product.LongDescription,
+                Category = product.Category.Name,
+                Material = product.Material != null ? product.Material.Name : null,
+                Municipality = product.Municipality.Name,
+                Notes = product.Notes,
+                Dimensions = product.Dimensions,
+                Images = [.. product.ProductImages.Select(x => new DetailProductImageDto
+                {
+                    Id = x.Id,
+                    ImageUrl = x.ImageUrl,
+                    IsPrimary = x.IsPrimary
+                })],
+                Variants = [.. product.ProductVariants.Select(x => new DetailProductVariantDto
+                {
+                    Id = x.Id,
+                    Sku = x.Sku,
+                    SpecificPrice = x.SpecificPrice,
+                    Stock = x.Stock,
+                    Values = [.. x.VariantValues.Select(vv => new DetailValueDto
+                    {
+                        AttributeName = vv.AttributeValue.Attribute.Name,
+                        Value = vv.AttributeValue.Value
+                    })]
+                })]
+            };
 
-        //    foreach (var productVariantItem in createProductDto.ProductVariants)
-        //    {
-        //        var productVariant = new ProductVariant
-        //        {
-        //            ProductId = product.Id,
-        //            Sku = productVariantItem.Sku,
-        //            EspecificPrice = productVariantItem.EspecificPrice,
-        //            Stock = productVariantItem.Stock
-        //        };
-
-        //        foreach (var productImageItem in createProductDto.ProductImages)
-        //        {
-        //            var productImage = new ProductImage
-        //            {
-        //                ProductId = product.Id,
-        //                VariantId = productVariant.Id,
-        //                ImageUrl = productImageItem.ImageUrl,
-        //                IsPrimary = productImageItem.IsPrimary,
-        //                DisplayOrder = productImageItem.DisplayOrder
-        //            };
-        //        }
-
-        //        //aqui haz el addAsync
-
-        //        foreach (var attributeValueItem in productVariantItem.AttributeValues)
-        //        {
-        //            var attributeValue = new AttributeValue
-        //            {
-        //                AttributeId = attributeValueItem.AttributeId,
-        //                Value = attributeValueItem.Value
-        //            };
-
-        //            //aqui haz el addAsync
-
-        //            var variantValue = new VariantValue
-        //            {
-        //                ProductVariantId = productVariant.Id,
-        //                AttributeValueId = attributeValue.Id
-        //            };
-
-        //            //aqui haz el addAsync
-        //        }
-        //    }
-        //}
+            return p;
+        }
 
         public async Task CreateProduct(CreateProductDto createProductDto)
         {
-            await _unitOfWork.BeginTransactionAsync();
-
             try
             {
-                var product = new Product
-                {
-                    Name = createProductDto.Name,
-                    ShortDescription = createProductDto.ShortDescription,
-                    LongDescription = createProductDto.LongDescription,
-                    BasePrice = createProductDto.BasePrice,
-                    CategoryId = createProductDto.CategoryId,
-                    MaterialId = createProductDto.MaterialId,
-                    MunicipalityId = createProductDto.MunicipalityId,
-                    Notes = createProductDto.Notes,
-                    Dimensions = createProductDto.Dimensions
-                };
+                var jsonPayload = JsonSerializer.Serialize(createProductDto);
 
-                await _genericProductRepository.AddAsync(product);
-                await _unitOfWork.SaveChangesAsync();
-
-                foreach (var productVariantItem in createProductDto.ProductVariants)
-                {
-                    var productVariant = new ProductVariant
-                    {
-                        ProductId = product.Id,
-                        Sku = productVariantItem.Sku,
-                        EspecificPrice = productVariantItem.EspecificPrice,
-                        Stock = productVariantItem.Stock
-                    };
-
-                    await _genericProductVariantRepository.AddAsync(productVariant);
-                    await _unitOfWork.SaveChangesAsync();
-
-                    // Imágenes
-                    foreach (var productImageItem in createProductDto.ProductImages)
-                    {
-                        var productImage = new ProductImage
-                        {
-                            ProductId = product.Id,
-                            VariantId = productVariant.Id,
-                            ImageUrl = productImageItem.ImageUrl,
-                            IsPrimary = productImageItem.IsPrimary,
-                            DisplayOrder = productImageItem.DisplayOrder
-                        };
-
-                        await _genericProductImageRepository.AddAsync(productImage);
-                    }
-
-                    // Atributos
-                    foreach (var attributeValueItem in productVariantItem.AttributeValues)
-                    {
-                        var attributeValue = new AttributeValue
-                        {
-                            AttributeId = attributeValueItem.AttributeId,
-                            Value = attributeValueItem.Value
-                        };
-
-                        await _genericAttributeValueRepository.AddAsync(attributeValue);
-                        await _unitOfWork.SaveChangesAsync();
-
-                        var variantValue = new VariantValue
-                        {
-                            ProductVariantId = productVariant.Id,
-                            AttributeValueId = attributeValue.Id
-                        };
-
-                        await _genericVariantValueRepository.AddAsync(variantValue);
-                    }
-                }
-
-                await _unitOfWork.CommitAsync();
+               var result = await _commonRepository.CallFunctionRegisterProducts(jsonPayload);
             }
-            catch
+            catch (Exception ex)
             {
-                await _unitOfWork.RollbackAsync();
-                throw;
+                throw new Exception("Error al procesar la creación del producto en la base de datos", ex);
             }
         }
     }

@@ -6,7 +6,6 @@
         public string Name { get; set; } = string.Empty;
         public string ShortDescription {  get; set; } = string.Empty;
         public string? LongDescription {  get; set; }
-        public decimal BasePrice { get; set; }
         public long CategoryId { get; set; }
         public long? MaterialId { get; set; }
         public long MunicipalityId { get; set; }

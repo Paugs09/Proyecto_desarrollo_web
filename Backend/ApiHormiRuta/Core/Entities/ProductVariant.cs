@@ -5,7 +5,7 @@
         public long Id { get; set; }
         public long ProductId { get; set; }
         public string Sku { get; set; } = string.Empty;
-        public decimal EspecificPrice { get; set; }
+        public decimal SpecificPrice { get; set; }
         public int Stock { get; set; }
         public DateTime CreatedAt { get; set; }
 

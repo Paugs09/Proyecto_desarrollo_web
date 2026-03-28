@@ -24,9 +24,9 @@ namespace Infraestructure.Data.Configurations
                 .IsRequired()
                 .HasColumnName("sku");
 
-            builder.Property(x => x.EspecificPrice)
+            builder.Property(x => x.SpecificPrice)
                 .IsRequired()
-                .HasColumnName("especific_price");
+                .HasColumnName("specific_price");
 
             builder.Property(x => x.Stock)
                 .IsRequired()

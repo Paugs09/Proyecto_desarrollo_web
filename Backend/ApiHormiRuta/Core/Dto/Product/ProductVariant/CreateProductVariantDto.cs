@@ -6,7 +6,7 @@ namespace Core.Dto.Product.ProductVariant
     {
         public long ProductId { get; set; }
         public string Sku { get; set; } = string.Empty;
-        public decimal EspecificPrice { get; set; }
+        public decimal SpecificPrice { get; set; }
         public int Stock { get; set; }
         public List<CreateAttributeValueDto> AttributeValues { get; set; } = [];
     }

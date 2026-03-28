@@ -15,7 +15,7 @@ namespace Infraestructure.Data.Configurations
 
             builder.Property(x => x.ProductVariantId)
                 .IsRequired()
-                .HasColumnName("product_variant_id");
+                .HasColumnName("variant_id");
 
             builder.Property(x => x.AttributeValueId)
                 .IsRequired()

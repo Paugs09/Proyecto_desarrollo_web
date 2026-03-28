@@ -18,6 +18,12 @@ namespace API.Controllers
             return Ok(await _productService.GetAllProductsAsync(queryFilter));
         }
 
+        [HttpGet("detail/{id:long}")]
+        public async Task<IActionResult> Detail(long id)
+        {
+            return Ok(await _productService.GetDetailProduct(id));
+        }
+
         [HttpPost()]
         [AdminOnly]
         public async Task<IActionResult> CreateProduct([FromBody] CreateProductDto dto)

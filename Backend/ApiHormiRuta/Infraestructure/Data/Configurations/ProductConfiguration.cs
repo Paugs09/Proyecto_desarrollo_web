@@ -28,10 +28,6 @@ namespace Infraestructure.Data.Configurations
                 .IsRequired(false)
                 .HasColumnName("long_description");
 
-            builder.Property(x => x.BasePrice)
-                .IsRequired()
-                .HasColumnName("base_price");
-
             builder.Property(x => x.CategoryId)
                 .IsRequired()
                 .HasColumnName("category_id");
