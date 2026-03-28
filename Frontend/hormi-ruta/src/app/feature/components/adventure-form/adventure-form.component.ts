@@ -61,7 +61,7 @@ export class AdventureFormComponent implements OnInit {
 
   guardar() {
     console.log('Modo:', this.isEditMode ? 'Edición' : 'Creación');
-    console.log('Datos:', this.form);
+    console.log('Datos:', this.form); 
 
     if (this.isEditMode && this.adventureId) {
       this.adventureService.PutAdventure(this.adventureId, this.form).subscribe({
