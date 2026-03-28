@@ -1,0 +1,55 @@
+<div class="max-w-lg mx-auto p-6 bg-white rounded-xl shadow">
+
+  <h2 class="text-2xl font-bold mb-6 text-[#F4A261]">
+    {{ isEditMode ? 'Editar Aventura' : 'Nueva Aventura' }}
+  </h2>
+
+  <form class="space-y-4">
+
+    <input type="text" placeholder="Nombre" [(ngModel)]="form.name" name="name"
+      class="w-full border rounded px-3 py-2" />
+
+    <input type="number" placeholder="Categoría" [(ngModel)]="form.categoryId" name="categoryId"
+      class="w-full border rounded px-3 py-2" />
+
+    <textarea placeholder="Descripción" [(ngModel)]="form.description" name="description"
+      class="w-full border rounded px-3 py-2"></textarea>
+
+    <input type="text" placeholder="Duración (ej: 3 horas)" [(ngModel)]="form.duration" name="duration"
+      class="w-full border rounded px-3 py-2" />
+
+    <input type="number" placeholder="Edad mínima" [(ngModel)]="form.minAge" name="minAge"
+      class="w-full border rounded px-3 py-2" />
+
+    <input type="number" placeholder="tipo de dificultad" [(ngModel)]="form.difficultyId" name="difficultyId"
+      class="w-full border rounded px-3 py-2" />
+
+    <!-- Select con motor de templates -->
+    <!-- <select [(ngModel)]="form.difficultyId" name="difficulty"
+      class="w-full border rounded px-3 py-2">
+      <option value="">-- Selecciona dificultad --</option>
+      <option *ngFor="let nivel of nivelesDificultad" [value]="nivel">
+        {{ nivel }}
+      </option>
+    </select> -->
+
+    <input type="text" placeholder="Requisitos físicos (opcional)" [(ngModel)]="form.physicalRequirements"
+      name="physicalRequirements" class="w-full border rounded px-3 py-2" />
+
+    <!-- <input type="file" accept="image/*"
+      (change)="onImageSelected($event)"
+      class="w-full border rounded px-3 py-2" /> -->
+
+    <!-- <input type="number" placeholder="Precio" [(ngModel)]="form.price" name="price"
+      class="w-full border rounded px-3 py-2" />
+
+    <input type="text" placeholder="Nota del precio" [(ngModel)]="form.priceNote" name="priceNote"
+      class="w-full border rounded px-3 py-2" /> -->
+
+    <button type="button" (click)="guardar()"
+      class="w-full bg-[#F4A261] hover:bg-[#E5954D] text-white font-semibold py-2 rounded">
+      {{ isEditMode ? 'Guardar cambios' : 'Crear aventura' }}
+    </button>
+
+  </form>
+</div>

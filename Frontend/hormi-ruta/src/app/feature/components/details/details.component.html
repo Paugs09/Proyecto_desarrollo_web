@@ -43,21 +43,43 @@
     <div class="bg-white rounded-lg shadow-md p-6 h-fit">
       <form class="space-y-8">
 
-        <input type="text" placeholder="Nombre" class="w-full border rounded px-3 py-2" />
-        <input type="text" placeholder="Teléfono" class="w-full border rounded px-3 py-2" />
-        <input type="email" placeholder="Correo" class="w-full border rounded px-3 py-2" />
-        <input type="date" class="w-full border rounded px-3 py-2" />
-        <input type="number" placeholder="Cantidad de adultos" class="w-full border rounded px-3 py-2" />
-        <input type="number" placeholder="Cantidad de niños" class="w-full border rounded px-3 py-2" />
+  <input type="text" placeholder="Nombre"
+    [(ngModel)]="reserva.nombre" name="nombre"
+    class="w-full border rounded px-3 py-2" />
 
-        <textarea placeholder="Observaciones" class="w-full border rounded px-3 py-2"></textarea>
+  <input type="text" placeholder="Teléfono"
+    [(ngModel)]="reserva.telefono" name="telefono"
+    class="w-full border rounded px-3 py-2" />
 
-       <button type="button"
-  class="w-full bg-[#F4A261] hover:bg-[#E5954D] text-white font-semibold py-2 rounded">
-  Reservar
-</button>
+  <input type="email" placeholder="Correo"
+    [(ngModel)]="reserva.correo" name="correo"
+    class="w-full border rounded px-3 py-2" />
 
-      </form>
+  <input type="date"
+    [(ngModel)]="reserva.fecha" name="fecha"
+    class="w-full border rounded px-3 py-2" />
+
+  <input type="number" placeholder="Cantidad de adultos"
+    [(ngModel)]="reserva.adultos" name="adultos"
+    class="w-full border rounded px-3 py-2" />
+
+  <input type="number" placeholder="Cantidad de niños"
+    [(ngModel)]="reserva.ninos" name="ninos"
+    class="w-full border rounded px-3 py-2" />
+
+  <textarea placeholder="Observaciones"
+    [(ngModel)]="reserva.observaciones" name="observaciones"
+    class="w-full border rounded px-3 py-2"></textarea>
+
+  <button type="button"
+    (click)="crearReserva()"
+    class="w-full bg-[#F4A261] hover:bg-[#E5954D] text-white font-semibold py-2 rounded">
+    Reservar
+  </button>
+
+</form>
+      
+
     </div>
 
   </div>

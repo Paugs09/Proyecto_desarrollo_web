@@ -10,6 +10,12 @@ namespace API.Controllers
     {
         private readonly IAdventureService _adventureService = adventureService;
 
+        [HttpGet("{id:Guid}")]
+        public async Task<IActionResult> GetById(Guid id)
+        {
+            return Ok(await _adventureService.GetAdventureByIdAsync(id));
+        }
+
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
@@ -20,6 +26,13 @@ namespace API.Controllers
         public async Task<IActionResult> Create([FromBody] CreateAdventureDto dto)
         {
             await _adventureService.CreateAdventure(dto);
+            return Ok();
+        }
+
+        [HttpPut("{id:Guid}")]
+        public async Task<IActionResult> Create(Guid id, [FromBody] CreateAdventureDto dto)
+        {
+            await _adventureService.UpdateAdventure(id, dto);
             return Ok();
         }
 

@@ -13,6 +13,8 @@ namespace Core.Services.Imp
         public readonly IGenericRepository<Adventure> _genericRepository = genericRepository;
         public readonly IGenericRepository<AdventureImage> _genericAdventureImageRepository = genericAdventureImageRepository;
 
+        public async Task<Adventure?> GetAdventureByIdAsync(Guid id) => await _genericRepository.GetByIdAsync(id);
+
         public async Task<IEnumerable<AdventureDto>> GetAllAdventuresAsync()
         {
             var adventures = await _genericRepository.GetAllAsync(
@@ -47,6 +49,22 @@ namespace Core.Services.Imp
             };
 
             await _genericRepository.AddAsync(adventure);
+            await _genericRepository.SaveAsync();
+        }
+
+        public async Task UpdateAdventure(Guid id, CreateAdventureDto dto)
+        {
+            var adventure = await _genericRepository.GetByIdAsync(id);
+
+            adventure.CategoryId = dto.CategoryId;
+            adventure.Name = dto.Name;
+            adventure.Description = dto.Description;
+            adventure.DifficultyId = dto.DifficultyId;
+            adventure.Duration = dto.Duration;
+            adventure.MinAge = dto.MinAge;
+            adventure.PhysicalRequirements = dto.PhysicalRequirements;
+
+            _genericRepository.Update(adventure);
             await _genericRepository.SaveAsync();
         }
 
