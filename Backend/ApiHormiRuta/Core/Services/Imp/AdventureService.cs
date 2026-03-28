@@ -13,6 +13,8 @@ namespace Core.Services.Imp
         public readonly IGenericRepository<Adventure> _genericRepository = genericRepository;
         public readonly IGenericRepository<AdventureImage> _genericAdventureImageRepository = genericAdventureImageRepository;
 
+        public async Task<Adventure?> GetAdventureByIdAsync(Guid id) => await _genericRepository.GetByIdAsync(id);
+
         public async Task<IEnumerable<AdventureDto>> GetAllAdventuresAsync()
         {
             var adventures = await _genericRepository.GetAllAsync(

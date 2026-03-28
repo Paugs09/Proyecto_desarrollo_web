@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { CreateAdventure } from '../../interfaces/adventure.interface';
 import { AdventureService } from '../../services/adventure.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-adventure-form',
@@ -15,6 +16,7 @@ import { AdventureService } from '../../services/adventure.service';
 export class AdventureFormComponent implements OnInit {
 
   isEditMode = false;
+  adventureId : string | null = null;
 
   nivelesDificultad = ['Fácil', 'Moderada', 'Difícil', 'Extrema'];
 
@@ -29,31 +31,20 @@ export class AdventureFormComponent implements OnInit {
   };
 
   constructor(
-    private route: ActivatedRoute,
-    private adventureService: AdventureService
+    private activateRoute: ActivatedRoute,
+    private adventureService: AdventureService,
+    private router: Router
   ) { }
 
   ngOnInit() {
-    const id = this.route.snapshot.paramMap.get('id');
-    if (id) {
+    this.adventureId = this.activateRoute.snapshot.paramMap.get('id');
+    if (this.adventureId) {
       this.isEditMode = true;
-      // cuando el back esté listo prueba:
-      // this.adventureService.getAdventureById(id).subscribe(data => {
-      //   this.form = { ...data };
-      // });
-      /**this.form = {
-        id: id,
-        category: 'Aventura',
-        name: 'Senderismo Sierra Nevada',
-        description: 'Una experiencia increíble',
-        duration: '4 horas',
-        minAge: 12,
-        difficulty: 'Moderada',
-        physicalRequirements: 'Buena condición física',
-        mainImageUrl: '',
-        price: 150000,
-        priceNote: 'Entrada al lugar'
-      };**/
+
+      this.adventureService.getAdventureById(this.adventureId).subscribe(data => {
+        console.log("detalle: ", data);
+        this.form = data;
+      });
     }
   }
 
@@ -70,24 +61,33 @@ export class AdventureFormComponent implements OnInit {
 
   guardar() {
     console.log('Modo:', this.isEditMode ? 'Edición' : 'Creación');
-    console.log('Datos:', this.form);
+    console.log('Datos:', this.form); 
 
-    this.adventureService.PostAdventures(this.form).subscribe({
-      next: (data) => {
-        console.log('¡Aventura creada con éxito!', data);
-        // 1. Mostrar una notificación de éxito (Toastr, SweetAlert, etc.)
-        // 2. Redirigir al usuario o limpiar el formulario
-      },
-      error: (err) => {
-        console.error('Error al crear la aventura:', err);
-        // 3. Manejar el error (mostrar mensaje al usuario)
-      },
-      complete: () => {
-        // 4. Lógica opcional al terminar la suscripción
-      }
-    });
+    if (this.isEditMode && this.adventureId) {
+      this.adventureService.PutAdventure(this.adventureId, this.form).subscribe({
+        next: (data) => {
+        },
+        error: (err) => {
+          console.error('Error al crear la aventura:', err);
+        },
+        complete: () => {
+          this.router.navigate(['/home']);
+        }
+      });
+    }
+    else {
 
-
+      this.adventureService.PostAdventures(this.form).subscribe({
+        next: (data) => {
+        },
+        error: (err) => {
+          console.error('Error al crear la aventura:', err);
+        },
+        complete: () => {
+          this.router.navigate(['/home']);
+        }
+      });
+    }
   }
 
 

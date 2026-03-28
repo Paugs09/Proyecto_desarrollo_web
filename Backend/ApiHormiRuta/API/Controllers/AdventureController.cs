@@ -10,6 +10,12 @@ namespace API.Controllers
     {
         private readonly IAdventureService _adventureService = adventureService;
 
+        [HttpGet("{id:Guid}")]
+        public async Task<IActionResult> GetById(Guid id)
+        {
+            return Ok(await _adventureService.GetAdventureByIdAsync(id));
+        }
+
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {

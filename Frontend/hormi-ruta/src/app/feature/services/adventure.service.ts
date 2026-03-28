@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
-import { Adventure } from '../interfaces/adventure.interface';
+import { Adventure, CreateAdventure } from '../interfaces/adventure.interface';
 import { environment } from '../../../environments/environment'
 
 @Injectable({
@@ -22,15 +22,23 @@ export class AdventureService {
     }
 
     //crear
-     PostAdventures(adventure: object): Observable<any> {
-    const headers = new HttpHeaders({
-        'Content-Type': 'application/json'
-    });
-    
-    return this.http.post<Adventure>(this.apiUrl, adventure, { headers });
+    PostAdventures(adventure: object): Observable<any> {
+        const headers = new HttpHeaders({
+            'Content-Type': 'application/json'
+        });
+
+        return this.http.post<Adventure>(this.apiUrl, adventure, { headers });
     }
 
-    getAdventureById(id: string): Observable<Adventure> {
-        return this.http.get<Adventure>(`${this.apiUrl}/${id}`);
+    PutAdventure(id: string, adventure: object): Observable<any> {
+        const headers = new HttpHeaders({
+            'Content-Type': 'application/json'
+        });
+
+        return this.http.put<Adventure>(`${this.apiUrl}/${id}`, adventure, { headers });
+    }
+
+    getAdventureById(id: string): Observable<CreateAdventure> {
+        return this.http.get<CreateAdventure>(`${this.apiUrl}/${id}`);
     }
 }
