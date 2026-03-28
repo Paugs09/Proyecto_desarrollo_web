@@ -6,6 +6,7 @@ namespace Core.Services.Interfaces
     {
         Task<IEnumerable<AdventureDto>> GetAllAdventuresAsync();
         Task CreateAdventure(CreateAdventureDto dto);
+        Task UpdateAdventure(Guid id, CreateAdventureDto dto);
         Task CreateAdventureImage(Guid adventureId, CreateAdventureImageDto imageDto);
     }
 }

@@ -50,6 +50,22 @@ namespace Core.Services.Imp
             await _genericRepository.SaveAsync();
         }
 
+        public async Task UpdateAdventure(Guid id, CreateAdventureDto dto)
+        {
+            var adventure = await _genericRepository.GetByIdAsync(id);
+
+            adventure.CategoryId = dto.CategoryId;
+            adventure.Name = dto.Name;
+            adventure.Description = dto.Description;
+            adventure.DifficultyId = dto.DifficultyId;
+            adventure.Duration = dto.Duration;
+            adventure.MinAge = dto.MinAge;
+            adventure.PhysicalRequirements = dto.PhysicalRequirements;
+
+            _genericRepository.Update(adventure);
+            await _genericRepository.SaveAsync();
+        }
+
         public async Task CreateAdventureImage(Guid adventureId, CreateAdventureImageDto imageDto)
         {
             var imagePath = await _storageService.UploadImageAsync(imageDto.FormFile, "adventures");
