@@ -219,3 +219,19 @@ Se realizó un documento con la búsqueda y definición de todos los productos a
 Se identificó la necesidad de replantear algunos enfoques del proyecto en cuanto a la categorización y presentación de productos. **Pendiente de confirmación con el docente.**
 
 ---
+---
+
+# SEXTA REUNIÓN
+=====================
+---------------------------
+
+### RETROSPECTIVA SPRINT 3, NUEVAS TAREAS Y MEJORA DE HERRAMIENTAS
+
+#### Retrospectiva Sprint 3
+Se llevó a cabo la retrospectiva correspondiente al Sprint 3, en la que el equipo evaluó el trabajo realizado durante el sprint, identificando aspectos positivos, oportunidades de mejora y acciones concretas a implementar en el siguiente ciclo.
+
+#### Nuevas tareas asignadas
+A partir de los resultados de la retrospectiva, se fijaron nuevas tareas en el tablero Scrum para el siguiente sprint, distribuyendo responsabilidades entre los integrantes del equipo.
+
+#### Objetivo de mejora — Herramientas para reuniones semanales
+Como objetivo de mejora planteado en la retrospectiva, el equipo exploró y probó nuevas herramientas para la realización de las reuniones semanales, con el fin de optimizar la comunicación, la colaboración y el seguimiento del proyecto.
