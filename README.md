@@ -34,7 +34,7 @@ plataforma oficial de comercio electrónico diseñada para comercializar product
 Sitio web de la Gobernación del Atlántico que funciona como vitrina comercial para venta de productos de artesanos
 
 ### - Caseteja
-[![Caseteja](ProjectData/img/Casejetapng)](https://caseteja.co)
+[![Caseteja](ProjectData/img/Casejeta.png)](https://caseteja.co)
 Página oficial dedicada a la comercialización de productos naturales y diversos alimentos artesanales de la región
 
 ### - Ecofibras
