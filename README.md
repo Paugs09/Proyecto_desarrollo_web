@@ -18,41 +18,49 @@ La plataforma web presenta su catálogo de productos mediante un mapa interactiv
 - María Paula Gómez Silva
 - Angie Maria Moreno Mantilla
 
-
 ## Inspiraciones o referencias
 
 ### - Market Colombia
-[![Market Colombia](ProjectData/img/MarketColombia.png)](https://elmarketcolombia.com)
+<a href="https://elmarketcolombia.com">
+  <img src="ProjectData/img/MarketColombia.png" alt="Market Colombia" width="150">
+</a>
 Plataforma comercial enfocada en la venta de artesanías, souvenirs, alimentos típicos y regalos que representan la cultura nacional.
 
 ### - Artesanías de Colombia
-[![Artesanías de Colombia](ProjectData/img/artesaniaColombia.png)](https://earth.google.com/)
-plataforma oficial de comercio electrónico diseñada para comercializar productos artesanales auténticos y resaltar la diversidad cultural de los artesanos del país.
+<a href="https://earth.google.com/">
+  <img src="ProjectData/img/artesaniaColombia.png" alt="Artesanías de Colombia" width="150">
+</a>
+Plataforma oficial de comercio electrónico diseñada para comercializar productos artesanales auténticos y resaltar la diversidad cultural de los artesanos del país.
 
 ### - Artesanías del Atlántico
-[![Artesanías del Atlántico](ProjectData/img/artesaniasAtantico.png)](https://artesaniasdelatlantico.com/)
-Sitio web de la Gobernación del Atlántico que funciona como vitrina comercial para venta de productos de artesanos
+<a href="https://artesaniasdelatlantico.com/">
+  <img src="ProjectData/img/artesaniasAtantico.png" alt="Artesanías del Atlántico" width="150">
+</a>
+Sitio web de la Gobernación del Atlántico que funciona como vitrina comercial para venta de productos de artesanos.
 
 ### - Caseteja
-[![Caseteja](ProjectData/img/Casejeta.png)](https://caseteja.co)
-Página oficial dedicada a la comercialización de productos naturales y diversos alimentos artesanales de la región
+<a href="https://caseteja.co">
+  <img src="ProjectData/img/Casejeta.png" alt="Caseteja" width="150">
+</a>
+Página oficial dedicada a la comercialización de productos naturales y diversos alimentos artesanales de la región.
 
 ### - Ecofibras
 <a href="https://www.ecofibrascuriti.com/">
-  <img src="ProjectData/img/Ecofibra.png" alt=" Ecofibras " width="150">
+  <img src="ProjectData/img/Ecofibra.png" alt="Ecofibras" width="150">
 </a>
 Plataforma de comercialización de artesanías en fique e información de historia.
 
 ### - Casa Fique
-[![Casa fique](ProjectData/img/casaFique.png)](https://www.casafique.com/)
+<a href="https://www.casafique.com/">
+  <img src="ProjectData/img/casaFique.png" alt="Casa Fique" width="150">
+</a>
 Plataforma de la marca colombiana de moda artesanal, venta de productos sofisticados en fique.
 
 ### - Souvenirs Colombianos
 <a href="https://souvenirscolombianos.com">
   <img src="ProjectData/img/souvenirsColombianos.png" alt="Souvenirs Colombianos" width="150">
 </a>
-
-vitrina digital especializada en recuerdos auténticos y artesanías típicas organizadas por ciudades colombianas
+Vitrina digital especializada en recuerdos auténticos y artesanías típicas organizadas por ciudades colombianas.
 
 ## Tecnologías utilizadas
 
