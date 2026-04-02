@@ -1,11 +1,11 @@
-# HormiRuta Santandereana
-## ¡Marcando un camino de experiencias, aventura y cultura!
+# HormiGuane
+## ¡De la tierrita para ti!
 
 ## Descripción
 
-HormiRuta Santandereana es una tienda virtual de servicios y experiencias turísticas enfocada en el municipio de San Gil - Santander, con proyección y escalabilidad provincial y departamental, promoviendo el aprendizaje sobre el entorno natural, cultural y turístico del territorio antes de la adquisición de los servicios.
+HormiGuane es una tienda virtual de productos típicos que representan la identidad cultural y tradicional de la provincia guanentina. La plataforma busca resaltar la riqueza gastronómica, artesanal y cultural del territorio, permitiendo a los usuarios conocer y valorar estos productos antes de adquirirlos.
 
-La plataforma web presenta su catálogo de productos mediante un mapa interactivo, desde donde el usuario puede acceder a información, actividades disponibles y opciones de compra y reserva, utilizando a la hormiga culona como símbolo cultural y personaje guía en la exploración del territorio.
+El sitio web presenta su catálogo mediante un diseño colonial e interactivo, inspirado en la esencia arquitectónica y cultural de la región. Desde allí, el usuario puede explorar información detallada, visualizar productos disponibles y acceder a opciones de compra, utilizando a la hormiga culona como símbolo cultural y personaje guía que acompaña la experiencia de navegación.
 
 ## Público objetivo
 
