@@ -51,6 +51,7 @@ Plataforma de la marca colombiana de moda artesanal, venta de productos sofistic
 <a href="https://souvenirscolombianos.com">
   <img src="ProjectData/img/souvenirsColombianos.png" alt="Souvenirs Colombianos" width="150">
 </a>
+
 vitrina digital especializada en recuerdos auténticos y artesanías típicas organizadas por ciudades colombianas
 
 ## Tecnologías utilizadas
