@@ -18,33 +18,40 @@ La plataforma web presenta su catálogo de productos mediante un mapa interactiv
 - María Paula Gómez Silva
 - Angie Maria Moreno Mantilla
 
+
 ## Inspiraciones o referencias
 
-### - Google Earth
-[![Google Earth](ProjectData/img/googleEarth.jpg)](https://earth.google.com/)
-Plataforma de exploración geográfica de territorios de manera visual e intuitiva haciendo uso de mapas interactivos.
+### - Market Colombia
+[![Market Colombia](ProjectData/img/MarketColombia.png)](https://elmarketcolombia.com)
+Plataforma comercial enfocada en la venta de artesanías, souvenirs, alimentos típicos y regalos que representan la cultura nacional.
 
-### - Visit Norway
-[![Visit Norway](ProjectData/img/visitNorway.jpg)](https://www.visitnorway.com/)
-Sitio oficial de turismo que presenta destinos turísticos combinando información cultural, natural y visual.
+### - Artesanías de Colombia
+[![Artesanías de Colombia](ProjectData/img/artesaniaColombia.png)](https://earth.google.com/)
+plataforma oficial de comercio electrónico diseñada para comercializar productos artesanales auténticos y resaltar la diversidad cultural de los artesanos del país.
 
-### - Culture Trip
-[![Culture Trip](ProjectData/img/cultureTrip.jpg)](https://theculturetrip.com/)
-Plataforma digital que narra experiencias turísticas desde un enfoque cultural y educativo.
+### - Artesanías del Atlántico
+[![Artesanías del Atlántico](ProjectData/img/artesaniasAtantico.png)](https://artesaniasdelatlantico.com/)
+Sitio web de la Gobernación del Atlántico que funciona como vitrina comercial para venta de productos de artesanos
 
-### - Tus Guías de Viaje
-<a href="https://tusguiasdeviaje.com/mapa/">
-  <img src="ProjectData/img/TusGuiasdeViaje.jpg" alt="Tus Guías de Viaje" width="150">
+### - Caseteja
+[![Caseteja](ProjectData/img/Casejetapng)](https://caseteja.co)
+Página oficial dedicada a la comercialización de productos naturales y diversos alimentos artesanales de la región
+
+### - Ecofibras
+<a href="https://www.ecofibrascuriti.com/">
+  <img src="ProjectData/img/Ecofibra.png" alt=" Ecofibras " width="150">
 </a>
-Plataforma de exploración turística que presenta destinos y puntos de interés mediante mapas interactivos, sirviendo como referencia para la organización visual de experiencias, navegación por territorio y presentación de información turística.
+Plataforma de comercialización de artesanías en fique e información de historia.
 
-### - Mapbox
-[![Mapbox](ProjectData/img/mapBox.jpg)](https://www.mapbox.com/)
-Plataforma de mapas interactivos con técnicas de implementación de mapas dinámicos, personalización visual y experiencia del usuario basada en geolocalización.
+### - Casa Fique
+[![Casa fique](ProjectData/img/casaFique.png)](https://www.casafique.com/)
+Plataforma de la marca colombiana de moda artesanal, venta de productos sofisticados en fique.
 
-### - Google Maps
-[![Google Maps](ProjectData/img/googleMaps.jpg)](https://www.google.com/maps)
-Aplicación de navegación mediante puntos de interés con visualización clara de rutas.
+### - Souvenirs Colombianos
+<a href="https://souvenirscolombianos.com">
+  <img src="ProjectData/img/souvenirsColombianos.png" alt="Souvenirs Colombianos" width="150">
+</a>
+vitrina digital especializada en recuerdos auténticos y artesanías típicas organizadas por ciudades colombianas
 
 ## Tecnologías utilizadas
 
