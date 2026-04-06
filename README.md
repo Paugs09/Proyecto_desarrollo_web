@@ -1,16 +1,17 @@
-# HormiRuta Santandereana
-## ¡Marcando un camino de experiencias, aventura y cultura!
+# HormiGuane
+## ¡De la tierrita para ti!
 
 ## Descripción
 
-HormiRuta Santandereana es una tienda virtual de servicios y experiencias turísticas enfocada en el municipio de San Gil - Santander, con proyección y escalabilidad provincial y departamental, promoviendo el aprendizaje sobre el entorno natural, cultural y turístico del territorio antes de la adquisición de los servicios.
+HormiGuane es una moderna tienda virtual enfocada en la comercialización de productos artesanales y gastronómicos originarios de la provincia Guanentina. Nuestro objetivo es ser el puente digital que conecta a los artesanos y productores locales con el mundo, promoviendo el consumo de productos autóctonos y exaltando el trabajo hecho a mano.
 
-La plataforma web presenta su catálogo de productos mediante un mapa interactivo, desde donde el usuario puede acceder a información, actividades disponibles y opciones de compra y reserva, utilizando a la hormiga culona como símbolo cultural y personaje guía en la exploración del territorio.
+El sitio web ofrece un catálogo dinámico y estructurado donde el usuario puede explorar desde piezas artesanales en fibras naturales (fique, iraca, yute) y barro, hasta productos emblemáticos de la región como el sabajón, dulces de feijoa, café de origen y las tradicionales hormigas culonas. Conservando a la hormiga culona como símbolo de nuestra identidad, la tienda permite a los usuarios descubrir la historia, los materiales y el municipio de origen detrás de cada producto antes de su compra.
 
 ## Público objetivo
 
-- Turistas nacionales e internacionales interesados en conocer San Gil y la tierra santandereana.
-- Usuarios que buscan profundizar en el conocimiento del turismo, naturaleza, cultura y aventura de diferentes territorios.
+- **Turistas y visitantes:** Personas nacionales e internacionales que desean adquirir un recuerdo auténtico, artesanía o producto gastronómico de la región para llevar un pedazo de Santander consigo.
+- **Amantes de la cultura y lo artesanal:** Compradores que valoran la calidad de los productos hechos a mano, las fibras naturales y el apoyo directo a los productores locales.
+- **Locales nostálgicos y residentes:** Santandereanos en otras partes del país (o del mundo) que buscan sus sabores tradicionales, así como habitantes locales que desean un canal digital rápido y confiable para comprar lo mejor de su propia tierra.
 
 ## Integrantes
 
@@ -71,14 +72,28 @@ Vitrina digital especializada en recuerdos auténticos y artesanías típicas or
 ### Frontend
 ![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)
 ![Angular](https://img.shields.io/badge/Angular-DD0031?style=for-the-badge&logo=angular&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)
 - **Node.js** - Entorno de ejecución JavaScript
 - **Angular** - Framework web para desarrollo de aplicaciones SPA
+- **Tailwind CSS** - Framework de utilidades para diseño responsivo y moderno
 
 ### Backend
 ![.NET](https://img.shields.io/badge/.NET-512BD4?style=for-the-badge&logo=dotnet&logoColor=white)
 ![C#](https://img.shields.io/badge/C%23-239120?style=for-the-badge&logo=csharp&logoColor=white)
 - **.NET** - Framework para desarrollo del API REST
 - **C#** - Lenguaje de programación orientado a objetos
+
+### Base de datos e infraestructura
+![Supabase](https://img.shields.io/badge/Supabase-3FCF8E?style=for-the-badge&logo=supabase&logoColor=white)
+
+- **Supabase** - Plataforma backend como servicio (BaaS) basada en PostgreSQL
+
+## Arquitectura del proyecto
+
+El proyecto está construido bajo un enfoque moderno y escalable, pensado para manejar variantes complejas de productos y un flujo de compra seguro.
+
+- **Frontend:** Desarrollo ágil con **Angular 21** utilizando componentes *standalone*, interfaces responsivas y atractivas construidas con **Tailwind CSS**.
+- **Backend y Base de Datos:** Arquitectura centrada en **Supabase** (PostgreSQL como motor de base de datos), con un modelo relacional bien definido que soporta atributos dinámicos de productos (SKUs variables), gestión de inventario en tiempo real, almacenamiento de imágenes mediante **Supabase Storage** y autenticación segura para usuarios y clientes.
 
 # Instalación y uso
 
