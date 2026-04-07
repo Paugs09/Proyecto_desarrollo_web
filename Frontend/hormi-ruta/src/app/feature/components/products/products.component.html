@@ -1,0 +1,49 @@
+<section class="products-banner">
+  <div class="banner-content">
+    <h1>Productos</h1>
+  </div>
+</section>
+
+<div class="mobile-filter-wrapper">
+  <button class="mobile-filter-btn" (click)="toggleMenu()">
+    Filtrar por Categoría
+  </button>
+</div>
+
+<div class="main-container">
+  <aside class="sidebar" [class.active]="isMenuOpen">
+    <div class="sidebar-header">
+        <button class="close-menu-btn" (click)="toggleMenu()">×</button>
+        <h3>ㅤ</h3>
+        <h3><strong>Categorías</strong></h3>
+      <h3>ㅤ</h3>
+      
+    </div>
+    <ul>
+      <li><a href="#">Artesanías Guanentinas</a></li>
+      <li><a href="#">Dulces y Sabores</a></li>
+      <li><a href="#">Bebidas y Bar</a></li>
+      <li><a href="#">Línea Fique y Café</a></li>
+      <li><a href="#">Naturaleza y Salud</a></li>
+    </ul>
+    <div class="sidebar-promo">
+      <img src="assets/img/prducts.png" alt="Promo">
+    </div>
+  </aside>
+
+  <section class="products-content">
+    <div class="search-bar">
+      <input type="text" placeholder="Buscar productos...">
+    </div>
+
+    <div class="products-grid">
+      @for (item of [1,2,3,4,5,6,7,8]; track item) {
+        <app-product-card></app-product-card>
+      }
+    </div>
+  </section>
+</div>
+
+@if (isMenuOpen) {
+  <div class="sidebar-overlay" (click)="toggleMenu()"></div>
+}

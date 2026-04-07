@@ -1,0 +1,109 @@
+.product-card {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  position: relative;
+  border: 1px solid #eee;
+
+  .image-container {
+    width: 100%;
+    aspect-ratio: 2 / 3;
+    position: relative;
+    background: #f0f0f0;
+    overflow: hidden;
+
+    img {
+      width: 100%;
+      height: 100%;
+      /* COVER: Hace que la imagen llene todo el cuadro sin dejar espacios blancos */
+      object-fit: cover; 
+      display: block;
+      transition: transform 0.4s ease;
+    }
+  }
+
+  .product-info {
+    padding: 12px;
+    background: white;
+    z-index: 2; 
+    
+    .price { font-weight: bold; font-size: 1.1rem; margin: 0; }
+    .title { color: #666; font-size: 0.85rem; margin: 2px 0 0; }
+  }
+}
+
+/* --- RESPONSIVE ESCRITORIO --- */
+@media (min-width: 769px) {
+  .mobile-icons { display: none; }
+
+  .product-card:hover .image-container img {
+    transform: scale(1.1); 
+  }
+
+  .desktop-actions {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.2); 
+    display: flex;
+    flex-direction: column;
+    justify-content:center;
+
+    align-items: center;
+    gap: 10px;
+    padding: 20px;
+    opacity: 0; 
+    transition: opacity 0.3s ease;
+    z-index: 5;
+
+    button {
+      width: 80%;
+      padding: 10px;
+      border-radius: 25px;
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+
+    .btn-details { background: white; color: #333; }
+    .btn-add { background: #ffccbc; color: #333; }
+  }
+
+  /* Al pasar el mouse, aparecen los botones */
+  .product-card:hover .desktop-actions {
+    opacity: 1;
+  }
+}
+
+/* --- RESPONSIVE CELULAR --- */
+@media (max-width: 768px) {
+  .desktop-actions { display: none; }
+  
+  .product-info { text-align: center; }
+
+  .mobile-icons {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+
+    .icon-btn {
+      pointer-events: auto;
+      position: absolute;
+      width: 35px; height: 35px;
+      border-radius: 50%;
+      background: white;
+      border: 1.5px solid #333;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+    }
+    .detail-icon { top: 10px; left: 10px; }
+    .cart-icon { bottom: 10px; right: 10px; }
+  }
+}
