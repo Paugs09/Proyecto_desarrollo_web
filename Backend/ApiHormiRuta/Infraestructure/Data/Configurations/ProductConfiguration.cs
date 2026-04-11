@@ -44,6 +44,14 @@ namespace Infraestructure.Data.Configurations
                 .IsRequired()
                 .HasColumnName("municipality_id");
 
+            builder.Property(x => x.Notes)
+                .IsRequired()
+                .HasColumnName("notes");
+
+            builder.Property(x => x.Dimensions)
+                .IsRequired()
+                .HasColumnName("dimensions");
+
             builder.Property(x => x.CreatedAt)
                 .IsRequired()
                 .HasColumnName("created_at");

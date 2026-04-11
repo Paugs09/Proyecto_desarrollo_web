@@ -9,5 +9,10 @@ namespace API.Controllers
     {
         private readonly ICommonService _commonService = commonService;
 
+        [HttpGet("category-presentation")]
+        public async Task<IActionResult> GetAll()
+        {
+            return Ok(await _commonService.GetPresentationCategoryList());
+        }
     }
 }

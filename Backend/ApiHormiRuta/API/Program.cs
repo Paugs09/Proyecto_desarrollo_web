@@ -51,7 +51,7 @@ builder.Services.AddSingleton<IAmazonS3>(sp =>
 //Services
 services.AddTransient<ICommonService, CommonService>();
 services.AddTransient<IStorageService, StorageService>();
-services.AddTransient<IAdventureService, AdventureService>();
+//services.AddTransient<IAdventureService, AdventureService>();
 
 //Repositories
 services.AddTransient<ICommonRepository, CommonRepository>();
