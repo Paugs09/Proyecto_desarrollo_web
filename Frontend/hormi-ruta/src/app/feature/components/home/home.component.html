@@ -1,112 +1,251 @@
 <app-carousel
   [items]="carouselItems"
-  [height]="450">
+  [height]="550">
 </app-carousel>
 
+
 <!--Filtro de busqueda-->
-<div class="home-search">
-  <p><i>¿A qué plan se le mide?</i></p>
+<div class="home-search mt-8 text-center">
+  <p><i>¡Encuentra los mejores productos guanentinos!</i></p>
+  <img src="assets/hormiga-feliz.gif" alt="hormiga" class="w-10 h-10 object-contain mx-3">
   <div class="home-search_bar">
-    <input type="text" placeholder="Buscar lugares, actividades, alojamientos...">
+    <input type="text" placeholder="Hormigas culonas...">
     <button>
       <i class="fas fa-search"></i>
     </button>
   </div>
-  <div class="home-search_filters">
-    <button
-      *ngFor="let filter of filters"
-      [class.active]="selectedFilter === filter.value"
-      (click)="setFilter(filter.value)">
-      {{filter.label}}
-    </button>
-  </div>
 </div>
 
-<!--Lugares turisticos-->
-<div class="home-places">
-  <h2>Lugares turísticos</h2>
-  <p class="home-places_subtitle">¡Destinos bien bacanos!</p>
 
-  <div class="home-places_carousel">
-    <button class="home-places_carousel-btn" (click)="scrollCarousel('placesTrack', 'left')">
-      <i class="fas fa-chevron-circle-left"></i>
-    </button>
 
-    <div class="home-places_track" id="placesTrack">
-      <div class="home-places_wrapper">
-        <div class="home-places_item" *ngFor="let place of adventures">
-          <app-cards [place]="place"></app-cards>
+<!--Categories-->
+<!-- Desktop -->
+<div class="hidden md:flex overflow-visible w-full items-center mt-8 mb-16">
+  <a
+    *ngFor="let category of categories"
+    [routerLink]="category.url"
+    class="relative transition ease-in-out duration-500 delay-150 transform
+           cursor-pointer hover:-translate-y-6 hover:z-10
+           flex-1 -ml-6 first:ml-0"
+    style="aspect-ratio: 3/4;">
+
+    <article
+      class="w-full h-full overflow-hidden bg-cover bg-center relative
+             transform duration-500 group"
+      [style.background-image]="'url(' + category.image + ')'">
+
+      <div class="relative w-full h-full flex flex-col justify-end">
+        <div class="absolute inset-0 bg-gradient-to-t
+                from-black/80 via-black/20 to-transparent
+                group-hover:from-black/70 group-hover:via-black/30">
         </div>
+        <div class="group-hover:bg-black/40 duration-500 group-hover:backdrop-blur-sm
+                    p-6 flex flex-col justify-end">
+
+          <div class="w-0 group-hover:w-10 h-0.5 bg-[#F4A261]
+                      transition-all duration-300 mb-3">
+          </div>
+
+          <h3 class="text-white font-bold uppercase tracking-widest text-sm mb-2
+                     transform translate-y-4 group-hover:translate-y-0
+                     transition-transform duration-300 group-hover:text-[#F4A261]">
+            {{ category.title }}
+          </h3>
+
+          <p class="opacity-0 text-white text-xs group-hover:opacity-90
+                    transform duration-500 leading-relaxed">
+            {{ category.description }}
+          </p>
+
+        </div>
+      </div>
+    </article>
+
+  </a>
+</div>
+
+<!-- Mobile -->
+<div class="flex md:hidden gap-3 overflow-x-auto px-4 py-6 snap-x snap-mandatory
+            scrollbar-hide">
+    <a
+    *ngFor="let category of categories"
+    [routerLink]="category.url"
+    class="relative flex-shrink-0 w-[75vw] h-[100vw] rounded-2xl overflow-hidden
+           snap-start cursor-pointer group">
+
+    <img
+      [src]="category.image"
+      [alt]="category.title"
+      class="absolute inset-0 w-full h-full object-cover
+             scale-105 group-active:scale-100 transition-transform duration-700">
+    <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent">
+    </div>
+
+    <div class="absolute bottom-0 left-0 right-0 p-4">
+      <div class="w-6 h-0.5 bg-[#F4A261] mb-2"></div>
+      <h3 class="text-white font-bold uppercase tracking-wider text-xs">
+        {{ category.title }}
+      </h3>
+      <p class="text-gray-300 text-xs mt-1 leading-snug opacity-80">
+        {{ category.description }}
+      </p>
+    </div>
+
+  </a>
+</div>
+
+
+<!--Top products-->
+<div class="container-top text-center mt-16">
+  <h2 class="text-center text-2xl font-semibold italic text-gray-700 mb-8">Los más vendidos</h2>
+  <br>
+  <section class="products-content">
+    <!-- Desktop -->
+    <div class="products-grid">
+      @for (item of products; track item) {
+        <app-product-card></app-product-card>
+      }
+    </div>
+
+    <!-- Mobile-->
+    <div class="products-carousel">
+      <div class="products-carousel__track">
+        @for (item of products; track item; let i = $index) {
+          <div class="products-carousel__slide"
+               [class.active]="i === currentSlide">
+            <app-product-card></app-product-card>
+          </div>
+        }
+      </div>
+
+      <!-- Dots -->
+      <div class="products-carousel__dots">
+        @for (item of products; track item; let i = $index) {
+          <button
+            class="products-carousel__dot"
+            [class.active]="i === currentSlide"
+            (click)="goToSlide(i)">
+          </button>
+        }
       </div>
     </div>
 
-    <button class="home-places_carousel-btn" (click)="scrollCarousel('placesTrack', 'right')">
-      <i class="fas fa-chevron-circle-right"></i>
-    </button>
+  </section>
+  <button class="bg-[#F4A261] hover:bg-[#e8935a] mt-10 text-lg text-white font-bold px-6 py-3 rounded-full 
+            transition-all duration-200 transform hover:-translate-y-1 hover:shadow-lg 
+            active:scale-95 active:brightness-90" routerLink="/products">Ver todo</button>
+</div>
+
+
+<!-- Section buttons login/register -->
+<section class="bg-[#F8EDD9] px-6 py-10 mt-16">
+  <h2 class="text-center text-3xl text-[#333] font-semibold italic text-gray-700 mb-8">
+    Impacto Social, Sostenible y Económico
+  </h2>
+
+  <!-- Icons -->
+  <div class="flex flex-col sm:flex-row justify-center items-start gap-8 max-w-6xl mx-auto mb-10 mt-10">
+
+    <div class="icons-home flex items-start gap-4 flex-1">
+      <svg class="w-14 h-14 flex-shrink-0 text-[#b85c2a]" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="m6.115 5.19.319 1.913A6 6 0 0 0 8.11 10.36L9.75 12l-.387.775c-.217.433-.132.956.21 1.298l1.348 1.348c.21.21.329.497.329.795v1.089c0 .426.24.815.622 1.006l.153.076c.433.217.956.132 1.298-.21l.723-.723a8.7 8.7 0 0 0 2.288-4.042 1.087 1.087 0 0 0-.358-1.099l-1.33-1.108c-.251-.21-.582-.299-.905-.245l-1.17.195a1.125 1.125 0 0 1-.98-.314l-.295-.295a1.125 1.125 0 0 1 0-1.591l.13-.132a1.125 1.125 0 0 1 1.3-.21l.603.302a.809.809 0 0 0 1.086-1.086L14.25 7.5l1.256-.837a4.5 4.5 0 0 0 1.528-1.732l.146-.292M6.115 5.19A9 9 0 1 0 17.18 4.64M6.115 5.19A8.965 8.965 0 0 1 12 3c1.929 0 3.716.607 5.18 1.64" />
+      </svg>
+      <p class="text-gray-700 text-m leading-snug">
+        Productos ecológicamente sostenibles con materia prima local hechos a mano.
+      </p>
+    </div>
+
+    <div class="icons-home flex items-start gap-4 flex-1">
+      <svg xmlns="http://www.w3.org/2000/svg"class="w-14 h-14 flex-shrink-0 text-[#b85c2a]" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+         <path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-4.682-2.72m.94 3.198.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0 1 12 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 0 1 6 18.719m12 0a5.971 5.971 0 0 0-.941-3.197m0 0A5.995 5.995 0 0 0 12 12.75a5.995 5.995 0 0 0-5.058 2.772m0 0a3 3 0 0 0-4.681 2.72 8.986 8.986 0 0 0 3.74.477m.94-3.197a5.971 5.971 0 0 0-.94 3.197M15 6.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm6 3a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Zm-13.5 0a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Z" />
+      </svg>
+      <p class="text-gray-700 text-m leading-snug">
+        Con tu aporte en esta compra apoyas a campesinos y artesanos guanentinos.
+      </p>
+    </div>
+
+    <div class="icons-home flex items-start gap-4 flex-1">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-14 h-14 flex-shrink-0 text-[#b85c2a]" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 0 1-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 0 0-3.213-9.193 2.056 2.056 0 0 0-1.58-.86H14.25M16.5 18.75h-2.25m0-11.177v-.958c0-.568-.422-1.048-.987-1.106a48.554 48.554 0 0 0-10.026 0 1.106 1.106 0 0 0-.987 1.106v7.635m12-6.677v6.677m0 4.5v-4.5m0 0h-12" />
+      </svg>
+      <p class="text-gray-700 text-m leading-snug">
+        Nuestros envíos son garantizados a toda Colombia y el mundo.
+      </p>
+    </div>
+
   </div>
-</div>
 
-<div class="home-divider">
-  <hr>
-  <span>¡Esto sí es una belleza!</span>
-  <hr>
-</div>
 
-<!--Banner-->
-<div class="home-banner" id="sesion-banner">
-  <div class="home-banner__overlay"></div>
-  <div class="home-banner__content">
-    <div class="home-banner__text">
-      <h2>Hormi Consejo</h2>
-      <hr>
-      <p><i>¡Mano, póngase las pilas y tenga su cuenta!</i></p>
-      <p>En Hormiruta le armamos el plan más berraco.</p>
-    </div>
-    <div class="home-banner__ant">
-      <img src="assets/hormiga-indicadora.png" alt="Hormi Consejo">
-    </div>
-    <div class="home-banner__buttons">
-      <button class="home-banner__btn home-banner__btn--primary" routerLink="/login">Iniciar sesión</button>
-      <button class="home-banner__btn home-banner__btn--secondary" routerLink="/register">Registrarse</button>
-    </div>
-  </div>
-</div>
-
-<div class="home-divider">
-  <hr>
-  <span>¡Venga y conozca, mano!</span>
-  <hr>
-</div>
-
-<!--Actividades de aventura-->
-<div class="home-places" id="actividades">
-  <h2>Actividades de aventura</h2>
-  <p class="home-places_subtitle">¡Atrévete a vivir la adrenalina!</p>
-
-  <div class="home-places_carousel">
-    <button class="home-places_carousel-btn" (click)="scrollCarousel('activitiesTrack', 'left')">
-      <i class="fas fa-chevron-circle-left"></i>
-    </button>
-
-    <div class="home-places_track" id="activitiesTrack">
-      <div class="home-places_wrapper">
-        <div class="home-places_item" *ngFor="let activity of activities">
-          <app-cards [place]="activity"></app-cards>
-        </div>
+  <!-- Banner -->
+  <div class="flex flex-col sm:flex-row items-center justify-center gap-6 max-w-4xl mx-auto">
+    <img src="assets/hormiga-indicadora.png" alt="Hormiga"
+         class="w-40 lg:w-48 object-contain flex-shrink-0 sm:rotate-0">
+    <div class="flex flex-col items-center gap-4 text-center sm:text-left">
+      <p class="text-gray-700 text-xl font-semibold leading-relaxed text-center">
+        ¡No olvides tener tu cuenta para una experiencia única y convertirte en una hormiga guanentina!
+      </p>
+      <div class="flex gap-4 justify-center items-center">
+        <a routerLink="/register"
+           class="bg-[#F4A261] hover:bg-[#e8935a] text-lg text-white font-bold px-6 py-3 rounded-full 
+            transition-all duration-200 transform hover:-translate-y-1 hover:shadow-lg 
+            active:scale-95 active:brightness-90">
+          Registrarte
+        </a>
+        <a routerLink="/login"
+           class="bg-[#b85c2a] hover:bg-[#a04e22] text-lg text-white font-bold px-6 py-3 rounded-full 
+            transition-all duration-200 transform hover:-translate-y-1 hover:shadow-lg 
+            active:scale-95 active:brightness-90">
+          Iniciar sesión
+        </a>
       </div>
     </div>
-
-    <button class="home-places_carousel-btn" (click)="scrollCarousel('activitiesTrack', 'right')">
-      <i class="fas fa-chevron-circle-right"></i>
-    </button>
   </div>
-</div>
+</section>
 
-<!--Frase inspiracional-->
-<div class="home-quote">
-  <img src="assets/hormiga-aventurera.png" alt="Hormiga aventurera">
-  <div class="home-quote__content">
-    <h3>"San Gil se recorre con ganas"</h3>
-    <hr>
+
+<!-- Sección final-->
+<section class="bg-[#f5f0e8] px-6 py-12 mt-16 mb-16">
+  <div class="flex flex-col md:flex-row items-center justify-center gap-10 max-w-6xl mx-auto">
+    <div class="flex-1">
+      <h2 class="text-3xl font-bold italic text-[#333] mb-4 text-center">Origen guanentino</h2>
+      <p class="text-gray-600 italic text-xl mb-8 text-center">
+        ¡En HormiGuane ofrecemos los mejores productos tradicionales de los municipios guanentinos!
+      </p>
+
+      <div class="relative flex items-center mb-8 drop-shadow-md">
+        <div class="flex-1 h-1 bg-gradient-to-r from-transparent to-[#F4A261] opacity-50 rounded-full"></div>
+        <img
+          src="assets/hormiga-feliz.gif"
+          alt="hormiga"
+          class="w-10 h-10 object-contain mx-3">
+        <div class="flex-1 h-1 bg-gradient-to-r from-[#F4A261] to-transparent opacity-50 rounded-full"></div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <span class="stat-card__number">18</span>
+          <span class="stat-card__label">Municipios guanentinos</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-card__number">+200</span>
+          <span class="stat-card__label">Artesanos y productores</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-card__number">+500</span>
+          <span class="stat-card__label">Productos disponibles</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-card__number">100%</span>
+          <span class="stat-card__label">Hecho a mano con amor</span>
+        </div>
+      </div>
+
+    </div> 
+
+    <div class="flex-shrink-0 w-full md:w-80">
+      <img src="assets/mapa-provincia.png" alt="Mapa provincia de Guanentá"
+           class="w-full object-contain rounded-xl">
+    </div>
   </div>
-</div>
+</section>
+  
