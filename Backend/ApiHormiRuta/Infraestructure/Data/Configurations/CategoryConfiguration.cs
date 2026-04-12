@@ -24,6 +24,10 @@ namespace Infraestructure.Data.Configurations
                 .HasColumnName("description")
                 .IsRequired();
 
+            builder.Property(c => c.ImageUrl)
+                .IsRequired(false)
+                .HasColumnName("image_url");
+
             builder.Property(c => c.CreatedAt)
                 .HasColumnName("created_at")
                 .IsRequired();
