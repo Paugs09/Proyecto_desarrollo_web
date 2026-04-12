@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Infraestructure.Data.Configurations
 {
-    internal class CategoryConfiguration : IEntityTypeConfiguration<Category>
+    internal class MunicipalityConfiguration : IEntityTypeConfiguration<Municipality>
     {
-        public void Configure(EntityTypeBuilder<Category> builder)
+        public void Configure(EntityTypeBuilder<Municipality> builder)
         {
-            builder.ToTable("categories");
+            builder.ToTable("municipalities");
 
             builder.HasKey(c => c.Id);
 
@@ -19,14 +19,6 @@ namespace Infraestructure.Data.Configurations
             builder.Property(c => c.Name)
                 .HasColumnName("name")
                 .IsRequired();
-
-            builder.Property(c => c.Description)
-                .HasColumnName("description")
-                .IsRequired();
-
-            builder.Property(c => c.ImageUrl)
-                .IsRequired(false)
-                .HasColumnName("image_url");
 
             builder.Property(c => c.CreatedAt)
                 .HasColumnName("created_at")

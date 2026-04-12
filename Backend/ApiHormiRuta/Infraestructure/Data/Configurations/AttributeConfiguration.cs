@@ -1,14 +1,13 @@
-﻿using Core.Entities;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Infraestructure.Data.Configurations
 {
-    internal class DifficultyLevelConfiguration : IEntityTypeConfiguration<DifficultyLevel>
+    internal class AttributeConfiguration : IEntityTypeConfiguration<Core.Entities.Attribute>
     {
-        public void Configure(EntityTypeBuilder<DifficultyLevel> builder)
+        public void Configure(EntityTypeBuilder<Core.Entities.Attribute> builder)
         {
-            builder.ToTable("difficulty_level");
+            builder.ToTable("attributes");
 
             builder.HasKey(x => x.Id);
 
@@ -19,6 +18,10 @@ namespace Infraestructure.Data.Configurations
             builder.Property(x => x.Name)
                 .IsRequired()
                 .HasColumnName("name");
+
+            builder.Property(x => x.CreatedAt)
+                .IsRequired()
+                .HasColumnName("created_at");
         }
     }
 }

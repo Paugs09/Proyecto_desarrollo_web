@@ -1,10 +1,10 @@
 ﻿namespace Core.Entities
 {
-    public class Category
+    public class Category : GeneralInfo
     {
-        public int Id { get; set; }
-        public string Name { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
+        public string? ImageUrl { get; set; }
 
-        public ICollection<Adventure> Adventures { get; set; } = [];
+        public virtual ICollection<Product> Products { get; set; } = [];
     }
 }
