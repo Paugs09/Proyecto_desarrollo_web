@@ -4,10 +4,10 @@ import { NgFor } from '@angular/common';
 import { CarouselComponent } from '../carousel/carousel.component';
 import { ICarouselItem } from '../carousel/Icarousel-item.metadata';
 import { CardsComponent, IPlaceCard } from '../cards/cards.component';
-import { AdventureService } from '../../services/adventure.service';
-import { Adventure } from '../../interfaces/adventure.interface';
 import { RouterLink } from '@angular/router';
 import { ProductCardComponent } from '../product-card/product-card.component';
+import { CategoryService } from '../../services/category.service';
+import { Category } from '../../interfaces/category.interface';
 
 @Component({
   selector: 'app-home',
@@ -18,8 +18,7 @@ import { ProductCardComponent } from '../product-card/product-card.component';
 })
 export class HomeComponent {
 
-  adventures: Adventure[] = [];
-  activities: Adventure[] = [];
+  categories: Category[] = [];
 
   //Control del carrusel de productos
   currentSlide = 0;
@@ -29,53 +28,19 @@ export class HomeComponent {
     this.currentSlide = index;
   }
 
-  categories = [
-    {
-      title: 'Artesanías de fique',
-      description: 'Descubre los mejores productos artesanales de fique directos de Curití',
-      image: 'assets/img/prducts.png',
-      url: '/categoria/artesanias-fique'
-    },
-    {
-      title: 'Dulces tradicionales',
-      description: 'Los dulces más típicos y deliciosos de la región.',
-      image: 'assets/img/prducts.png',
-      url: '/categoria/dulces-tradicionales'
-    },
-    {
-      title: 'Sabores de origen',
-      description: 'Productos auténticos con sabor a tierra guanentina.',
-      image: 'assets/img/prducts.png',
-      url: '/categoria/sabores-origen'
-    },
-    {
-      title: 'Bebidas típicas',
-      description: 'Las bebidas más representativas de nuestra región.',
-      image: 'assets/img/prducts.png',
-      url: '/categoria/bebidas-tipicas'
-    },
-    {
-      title: 'Artesanías de barro',
-      description: 'Piezas únicas elaboradas a mano por artesanos locales.',
-      image: 'assets/img/prducts.png',
-      url: '/categoria/artesanias-barro'
-    },
-  ];
-
-  constructor(private adventureService: AdventureService) {}
+  constructor(private categoryService: CategoryService) {}
 
   ngOnInit(){
-    this.getAdventures();
+    this.getCategories();
   }
 
-  private getAdventures() {
-    this.adventureService.getAdventures().subscribe({
-      next: (data) =>{
-        this.adventures = data.filter(x=> x.category != "Deportes Extremos");
-        this.activities = data.filter(x=> x.category == "Deportes Extremos");
+  private getCategories() {
+    this.categoryService.getCategories().subscribe({
+      next: (data) => {
+        this.categories = data;
       },
       error: (error) => {
-
+        console.error('Error cargando categorías', error);
       }
     });
   }

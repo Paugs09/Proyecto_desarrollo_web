@@ -11,6 +11,7 @@ import { NgClass } from '@angular/common';
 })
 export class HeaderComponent {
   menuOpen = false;
+  cartOpen = false
 
   toggleMenu() {
     this.menuOpen = !this.menuOpen;
