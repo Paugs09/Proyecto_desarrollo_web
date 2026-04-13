@@ -61,7 +61,7 @@ export class AdventureFormComponent implements OnInit {
 
   guardar() {
     console.log('Modo:', this.isEditMode ? 'Edición' : 'Creación');
-    console.log('Datos:', this.form); 
+    console.log('Datos:', this.form);
 
     if (this.isEditMode && this.adventureId) {
       this.adventureService.PutAdventure(this.adventureId, this.form).subscribe({
@@ -77,16 +77,20 @@ export class AdventureFormComponent implements OnInit {
     }
     else {
 
-      this.adventureService.PostAdventures(this.form).subscribe({
-        next: (data) => {
-        },
-        error: (err) => {
-          console.error('Error al crear la aventura:', err);
-        },
-        complete: () => {
+    this.adventureService.PostAdventures(this.form).subscribe({
+      next: (data) => {
+        console.log('¡Aventura creada con éxito!', data);
+        // 1. Mostrar una notificación de éxito (Toastr, SweetAlert, etc.)
+        // 2. Redirigir al usuario o limpiar el formulario
+      },
+      error: (err) => {
+        console.error('Error al crear la aventura:', err);
+        // 3. Manejar el error (mostrar mensaje al usuario)
+      },
+      complete: () => {
           this.router.navigate(['/home']);
-        }
-      });
+      }
+    });
     }
   }
 
