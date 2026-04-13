@@ -1,3 +1,4 @@
+
 <div class="bg-[#FBF5EC] min-h-screen px-4 py-8 md:px-12 flex flex-col font-sans">
   <div class="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-10">
 
@@ -30,11 +31,6 @@
 
     <div class="lg:col-span-8 flex flex-col">
       <div class="flex items-center gap-6 border-b border-gray-100 mb-8 px-4">
-        <button (click)="pestanaActiva = 'mis-productos'" 
-                class="pb-3 text-sm font-semibold transition-all border-b-2"
-                [ngClass]="pestanaActiva === 'mis-productos' ? 'text-[#A66C44] border-[#A66C44]' : 'text-gray-400 border-transparent hover:text-gray-500'">
-          Mis productos
-        </button>
         <button (click)="pestanaActiva = 'favoritos'" 
                 class="pb-3 text-sm font-semibold transition-all border-b-2"
                 [ngClass]="pestanaActiva === 'favoritos' ? 'text-[#A66C44] border-[#A66C44]' : 'text-gray-400 border-transparent hover:text-gray-500'">
@@ -82,3 +78,4 @@
     </div>
   </div>
 </div>
+

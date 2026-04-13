@@ -1,3 +1,4 @@
+
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms'; // checkboxes
 import { CommonModule } from '@angular/common'; //para *ngFor y [ngClass]
@@ -10,7 +11,7 @@ import { CommonModule } from '@angular/common'; //para *ngFor y [ngClass]
   styleUrl: './profile.component.scss'
 })
 export class ProfileComponent {
-pestanaActiva = 'mis-productos'; 
+pestanaActiva = 'favoritos'; 
 
 usuario = {
 
@@ -24,7 +25,7 @@ usuario = {
   };
   // Datos de prueba para la lista (Simulando base de datos)
  misProductos = [
-    { nombre: 'Chicha Regional', precio: 85000, seleccionado: true, categoria: 'mis-productos' },
+    { nombre: 'Chicha Regional', precio: 85000, seleccionado: true, categoria: 'favoritos' },
     { nombre: 'Artesanía de Barro', precio: 45000, seleccionado: false, categoria: 'favoritos' },
     { nombre: 'masato', precio: 10000, seleccionado: true, categoria: 'frecuentes' },
     { nombre: 'Hormigas Culonas', precio: 60000, seleccionado: false, categoria: 'favoritos' }
