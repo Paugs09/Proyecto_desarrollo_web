@@ -5,15 +5,18 @@ using Core.Entities;
 using Core.Infraestructure;
 using Core.QueryFilter.Product;
 using Core.Services.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
 
 namespace Core.Services.Imp
 {
     public class ProductService(ICommonRepository commonRepository,
+                                IStorageService storageService,
                                 IGenericRepository<Product> genericProductRepository) : IProductService
     {
         private readonly ICommonRepository _commonRepository = commonRepository;
+        private readonly IStorageService _storageService = storageService;
         private readonly IGenericRepository<Product> _genericProductRepository = genericProductRepository;
 
         public async Task<IEnumerable<ProductDto>?> GetAllProductsAsync(ProductQueryFilter queryFilter)
@@ -51,7 +54,7 @@ namespace Core.Services.Imp
                                 .ThenInclude(vv=> vv.Attribute)
             ) ?? throw new Exception("Producto no encontrado");
 
-            var p = new DetailProductDto
+            var detailProduct = new DetailProductDto
             {
                 Id = product.Id,
                 ProductName = product.Name,
@@ -62,18 +65,20 @@ namespace Core.Services.Imp
                 Municipality = product.Municipality.Name,
                 Notes = product.Notes,
                 Dimensions = product.Dimensions,
-                Images = [.. product.ProductImages.Select(x => new DetailProductImageDto
-                {
-                    Id = x.Id,
-                    ImageUrl = x.ImageUrl,
-                    IsPrimary = x.IsPrimary
-                })],
                 Variants = [.. product.ProductVariants.Select(x => new DetailProductVariantDto
                 {
                     Id = x.Id,
                     Sku = x.Sku,
                     SpecificPrice = x.SpecificPrice,
                     Stock = x.Stock,
+                    Images = [.. x.ProductImages.Select(i => new DetailProductImageDto
+                    {
+                        Id = i.Id,
+                        ProductVariantId = i.ProductVariant.Id,
+                        ImageUrl = i.ImageUrl,
+                        IsPrimary = i.IsPrimary,
+                        DisplayOrder = i.DisplayOrder
+                    })],
                     Values = [.. x.VariantValues.Select(vv => new DetailValueDto
                     {
                         AttributeName = vv.AttributeValue.Attribute.Name,
@@ -82,7 +87,7 @@ namespace Core.Services.Imp
                 })]
             };
 
-            return p;
+            return detailProduct;
         }
 
         public async Task CreateProduct(CreateProductDto createProductDto)
@@ -97,6 +102,12 @@ namespace Core.Services.Imp
             {
                 throw new Exception("Error al procesar la creación del producto en la base de datos", ex);
             }
+        }
+
+        public async Task<string> CreateProductImage(IFormFile formFile)
+        {
+            var imagePath = await _storageService.UploadImageAsync(formFile, "products");
+            return imagePath;
         }
     }
 }

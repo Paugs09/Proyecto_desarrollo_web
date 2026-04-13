@@ -14,7 +14,6 @@ namespace Core.Dto.Product
         public string Municipality { get; set; } = string.Empty;
         public string Notes { get; set; } = string.Empty;
         public string Dimensions { get; set; } = string.Empty;
-        public List<DetailProductImageDto> Images { get; set; } = [];
         public List<DetailProductVariantDto> Variants { get; set; } = [];
     }
 }
