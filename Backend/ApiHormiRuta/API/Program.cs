@@ -4,10 +4,10 @@ using Core.Services.Imp;
 using Core.Services.Interfaces;
 using Infraestructure.Data;
 using Infraestructure.Filters;
+using Infraestructure.Persistence;
 using Infraestructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi;
-using Microsoft.AspNetCore.OpenApi;
 using Npgsql;
 using Scalar.AspNetCore;
 using Supabase;
@@ -23,6 +23,7 @@ var configuration = builder.Configuration;
 
 services.AddControllers(options =>
 {
+    options.Filters.Add<ValidateTokenFilter>();
     options.Filters.Add<GlobalExceptionFilter>();
 })
 .AddJsonOptions(options =>
@@ -36,7 +37,6 @@ builder.Services.AddOpenApi(options =>
 {
     options.AddDocumentTransformer((document, context, cancellationToken) =>
     {
-        // ✅ Inicializar ambos por separado
         document.Components ??= new OpenApiComponents();
         document.Components.SecuritySchemes ??= new Dictionary<string, IOpenApiSecurityScheme>();
 
@@ -48,7 +48,7 @@ builder.Services.AddOpenApi(options =>
             Description = "Pega tu token de Supabase aquí"
         };
 
-        document.Security ??= new List<OpenApiSecurityRequirement>();
+        document.Security ??= [];
         document.Security.Add(new OpenApiSecurityRequirement
         {
             [new OpenApiSecuritySchemeReference("Bearer")] = []
@@ -97,10 +97,13 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 services.AddTransient<ICommonService, CommonService>();
 services.AddTransient<IStorageService, StorageService>();
 services.AddTransient<IAuthService, AuthService>();
+services.AddTransient<IProductService, ProductService>();
 services.AddScoped<IRoleService, RoleService>();
 services.AddScoped<AdminOnlyFilter>();
+services.AddScoped<ValidateTokenFilter>();
 
 //Repositories
+services.AddTransient<IUnitOfWork, UnitOfWork>();
 services.AddTransient<ICommonRepository, CommonRepository>();
 services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 

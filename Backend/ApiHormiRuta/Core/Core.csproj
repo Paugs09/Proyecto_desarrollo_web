@@ -10,8 +10,13 @@
     <PackageReference Include="AWSSDK.S3" Version="4.0.19" />
     <PackageReference Include="Microsoft.AspNet.Mvc" Version="5.3.0" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.17" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.3" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="10.0.3" />
     <PackageReference Include="supabase-csharp" Version="0.16.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Enumerations\" />
   </ItemGroup>
 
 </Project>

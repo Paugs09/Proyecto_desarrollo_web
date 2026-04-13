@@ -1,8 +1,10 @@
-﻿namespace Core.Services.Interfaces
+﻿using Core.Dto.Auth;
+
+namespace Core.Services.Interfaces
 {
     public interface IAuthService
     {
-        Task<string> RegisterAsync(string email, string password, string firstName, string lastName);
+        Task<string> RegisterAsync(UserRegister userRegister);
         Task<string> LoginAsync(string email, string password);
     }
 }

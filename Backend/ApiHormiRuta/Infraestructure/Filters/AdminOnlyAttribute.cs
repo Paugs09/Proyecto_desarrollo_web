@@ -1,4 +1,5 @@
-﻿using Core.Services.Interfaces;
+﻿using Core.CustomEntities;
+using Core.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
@@ -9,50 +10,54 @@ namespace Infraestructure.Filters
         public AdminOnlyAttribute() : base(typeof(AdminOnlyFilter)) { }
     }
 
-    public class AdminOnlyFilter : IAsyncAuthorizationFilter
+    public class AdminOnlyFilter(IRoleService roleService) : IAsyncAuthorizationFilter
     {
-        private readonly IRoleService _roleService;
-        private readonly Supabase.Client _supabase;
-
-        public AdminOnlyFilter(IRoleService roleService, Supabase.Client supabase)
-        {
-            _roleService = roleService;
-            _supabase = supabase;
-        }
+        private readonly IRoleService _roleService = roleService;
 
         public async Task OnAuthorizationAsync(AuthorizationFilterContext context)
         {
-            // 1. Extraer el token de los Headers
-            var token = context.HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+            // El token ya fue validado por ValidateTokenFilter
+            var userId = context.HttpContext.Items["UserId"]?.ToString();
 
-            if (string.IsNullOrEmpty(token))
+            if (string.IsNullOrEmpty(userId) || !Guid.TryParse(userId, out Guid parsedUserId))
             {
-                context.Result = new UnauthorizedResult();
+                var response = new Response
+                {
+                    Status = 401,
+                    Message = "Unauthorized access.",
+                    Description = "Your authentication token is missing or invalid. Please log in to access this resource."
+                };
+
+                context.Result = new ObjectResult(response);
                 return;
             }
 
             try
             {
-                // 2. Obtener el usuario del token usando el SDK de Supabase
-                var user = await _supabase.Auth.GetUser(token);
-
-                if (user == null || !Guid.TryParse(user.Id, out Guid userId))
-                {
-                    context.Result = new UnauthorizedResult();
-                    return;
-                }
-
-                // 3. Validar en la BD si es admin
-                var isAdmin = await _roleService.IsAdmin(userId);
+                var isAdmin = await _roleService.IsAdmin(parsedUserId);
 
                 if (!isAdmin)
                 {
-                    context.Result = new ForbidResult(); // 403 Forbidden si no es admin
+                    var response = new Response
+                    {
+                        Status = 403,
+                        Message = "Access denied. Admins only.",
+                        Description = "You do not have the necessary permissions to access this resource."
+                    };
+
+                    context.Result = new ObjectResult(response);
                 }
             }
             catch
             {
-                context.Result = new UnauthorizedResult();
+                var response = new Response
+                {
+                    Status = 401,
+                    Message = "Unauthorized access.",
+                    Description = "An error occurred while verifying your permissions. Please try again later."
+                };
+
+                context.Result = new ObjectResult(response);
             }
         }
     }

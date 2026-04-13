@@ -1,25 +1,18 @@
 ﻿using Core.Entities;
+using Core.Infraestructure;
 using Core.Services.Interfaces;
-using static Postgrest.Constants;
 
 namespace Core.Services.Imp
 {
-    public class RoleService(Supabase.Client supabase) : IRoleService
+    public class RoleService(IGenericRepository<UserProfile> userGenericRepository) : IRoleService
     {
-        private readonly Supabase.Client _supabase = supabase;
+        private readonly IGenericRepository<UserProfile> _userGenericRepository = userGenericRepository;
 
         public async Task<bool> IsAdmin(Guid userId)
         {
-            // En Supabase .NET, los joins se hacen mediante strings en .Select()
-            // "roles!inner(name)" hace un INNER JOIN con la tabla roles y filtra por el nombre.
-            var result = await _supabase.From<UserProfile>()
-                .Select("id, roles!inner(name)")
-                .Filter("id", Operator.Equals, userId)
-                .Filter("roles.name", Operator.Equals, "admin")
-                .Single();
+            var user = await _userGenericRepository.FirstOrDefaultAsyncWithIncludes(x=> x.Id == userId, x=> x.Role) ?? throw new Exception("User not found");
 
-            // Si result no es nulo, el usuario existe Y es administrador.
-            return result != null;
+            return user.Role.Name.Equals(constants.Role.Admin, StringComparison.OrdinalIgnoreCase);
         }
     }
 }

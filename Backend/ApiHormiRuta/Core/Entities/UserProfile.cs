@@ -1,8 +1,6 @@
-﻿using Postgrest.Models;
-
-namespace Core.Entities
+﻿namespace Core.Entities
 {
-    public class UserProfile : BaseModel
+    public class UserProfile
     {
         public Guid Id { get; set; }
         public string FirstName { get; set; } = string.Empty;

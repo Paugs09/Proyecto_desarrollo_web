@@ -25,7 +25,7 @@ namespace Infraestructure.Data.Configurations
                 .HasColumnName("short_description");
 
             builder.Property(x => x.LongDescription)
-                .IsRequired()
+                .IsRequired(false)
                 .HasColumnName("long_description");
 
             builder.Property(x => x.BasePrice)
@@ -37,7 +37,7 @@ namespace Infraestructure.Data.Configurations
                 .HasColumnName("category_id");
 
             builder.Property(x => x.MaterialId)
-                .IsRequired()
+                .IsRequired(false)
                 .HasColumnName("material_id");
 
             builder.Property(x => x.MunicipalityId)
