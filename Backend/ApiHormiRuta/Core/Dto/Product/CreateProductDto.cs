@@ -14,6 +14,5 @@ namespace Core.Dto.Product
         public string Notes { get; set; } = string.Empty;
         public string Dimensions { get; set; } = string.Empty;
         public List<CreateProductVariantDto> ProductVariants { get; set; } = [];
-        public List<CreateProductImageDto> ProductImages { get; set; } = [];
     }
 }

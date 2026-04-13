@@ -31,5 +31,13 @@ namespace API.Controllers
             await _productService.CreateProduct(dto);
             return Created();
         }
+
+        [HttpPost("upload-image")]
+        [AdminOnly]
+        public async Task<IActionResult> CreateProductImage([FromForm] IFormFile formFile)
+        {
+            var imagePath = await _productService.CreateProductImage(formFile);
+            return Ok(imagePath);
+        }
     }
 }
