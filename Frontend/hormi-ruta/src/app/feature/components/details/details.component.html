@@ -1,64 +1,71 @@
-<div class="bg-[#FBF5EC] min-h-screen px-6 py-10">
-
+<div class="bg-[#FBF5EC] min-h-screen px-4 py-8 md:px-12 flex justify-center items-center">
   
-  <h1 class="text-3xl font-bold mb-6">Nombre</h1>
+  <div class="max-w-6xl w-full bg-[#FDF8F1] rounded-3xl shadow-sm p-6 lg:p-10 border border-orange-100">
+    
+    <h1 class="text-4xl font-bold text-slate-800 mb-8">{{ producto.nombre }}</h1>
 
-  <!-- Contenido principal -->
-  <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
+      
+      <div class="lg:col-span-7 flex flex-col md:flex-row gap-4">
+        
+        <div class="flex md:flex-col gap-3 order-2 md:order-1">
+          <div *ngFor="let img of producto.imagenes; let i = index" 
+               (click)="cambiarImagen(i)"
+               class="w-20 h-20 rounded-xl border-2 cursor-pointer overflow-hidden transition-all"
+               [ngClass]="i === imagenPrincipalIdx ? 'border-[#F4A261] scale-105' : 'border-transparent bg-gray-200 opacity-70 hover:opacity-100'">
+            <img [src]="img" class="w-full h-full object-cover">
+          </div>
+        </div>
 
-    <!-- Galeria fotos -->
-    <div class="lg:col-span-2">
-      <div class="bg-gray-300 h-64 rounded-lg mb-4 flex items-center justify-center">
-        <span class="text-gray-500">Imagen principal</span>
-      </div>
-
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div class="bg-gray-200 h-32 rounded"></div>
-        <div class="bg-gray-200 h-32 rounded"></div>
-        <div class="bg-gray-200 h-32 rounded"></div>
-        <div class="bg-gray-200 h-32 rounded"></div>
-      </div>
-
-      <!-- Ubicacion  -->
-      <div class="mt-6 flex items-center justify-between">
-        <p class="font-semibold">Ubicación</p>
-        <div class="flex text-yellow-500 text-5xl">
-          ★★★★☆
+        <div class="flex-1 bg-gray-200 rounded-2xl aspect-square overflow-hidden shadow-inner order-1 md:order-2 border border-gray-100">
+          <img [src]="producto.imagenes[imagenPrincipalIdx]" class="w-full h-full object-cover transition-all duration-500">
         </div>
       </div>
 
+      <div class="lg:col-span-5 flex flex-col">
+        
+        <div class="mb-6">
+          <h2 class="text-2xl font-semibold text-slate-800 mb-3">Descripción</h2>
+          <p class="text-slate-600 leading-relaxed">{{ producto.descripcion }}</p>
+        </div>
 
-      <!-- Descripcion -->
-      <div class="mt-6">
-        <h2 class="font-semibold mb-2">Descripción</h2>
-        <p class="text-gray-700 leading-relaxed">
-          ................................................................................<br>
-          ................................................................................<br>
-          ..........................................................................................................................
-        </p>
+        <div class="flex items-center justify-between mb-10">
+          <span class="text-3xl font-bold text-slate-900">{{ producto.precio | currency:'USD':'symbol':'1.0-0' }}</span>
+          <div class="flex text-yellow-500 text-xl italic">
+            ★★★★<span class="text-gray-300">☆</span>
+          </div>
+        </div>
+
+        <div class="bg-white p-6 rounded-3xl shadow-md border border-orange-50">
+          
+          <label class="block text-sm font-medium text-slate-500 mb-3">{{ producto.tipoEleccion }}</label>
+          <div class="flex flex-wrap gap-2 mb-8">
+            <button *ngFor="let opt of producto.opciones"
+                    (click)="seleccionarOpcion(opt)"
+                    class="px-5 py-2 rounded-full border text-sm transition-all"
+                    [ngClass]="opcionSeleccionada === opt ? 'bg-[#F4A261] text-white border-[#F4A261]' : 'bg-[#FDF8F1] text-slate-700 border-gray-100 hover:border-orange-200'">
+              {{ opt }}
+            </button>
+          </div>
+
+          <label class="block text-sm font-medium text-slate-500 mb-2">Cantidad</label>
+          <div class="flex items-center w-36 border border-gray-100 rounded-xl overflow-hidden mb-8 bg-gray-50">
+            <button (click)="restar()" class="w-12 h-10 hover:bg-orange-100 transition-colors font-bold text-slate-600">-</button>
+            <input type="number" [(ngModel)]="cantidad" class="w-12 text-center bg-transparent border-none focus:ring-0 font-bold text-slate-800">
+            <button (click)="sumar()" class="w-12 h-10 hover:bg-orange-100 transition-colors font-bold text-slate-600">+</button>
+          </div>
+
+          <div class="space-y-3">
+            <button class="w-full bg-[#F4A261] text-white font-bold py-4 rounded-2xl hover:bg-[#e78e46] transition-all shadow-lg shadow-orange-100 active:scale-95">
+              Añadir al carrito
+            </button>
+            <button class="w-full bg-[#FBC396] text-[#8B4513] font-bold py-4 rounded-2xl hover:bg-[#f9b278] transition-all active:scale-95">
+              Comprar ahora
+            </button>
+          </div>
+        </div>
+
       </div>
     </div>
-
-    <!-- Formulario -->
-    <div class="bg-white rounded-lg shadow-md p-6 h-fit">
-      <form class="space-y-8">
-
-        <input type="text" placeholder="Nombre" class="w-full border rounded px-3 py-2" />
-        <input type="text" placeholder="Teléfono" class="w-full border rounded px-3 py-2" />
-        <input type="email" placeholder="Correo" class="w-full border rounded px-3 py-2" />
-        <input type="date" class="w-full border rounded px-3 py-2" />
-        <input type="number" placeholder="Cantidad de adultos" class="w-full border rounded px-3 py-2" />
-        <input type="number" placeholder="Cantidad de niños" class="w-full border rounded px-3 py-2" />
-
-        <textarea placeholder="Observaciones" class="w-full border rounded px-3 py-2"></textarea>
-
-       <button type="button"
-  class="w-full bg-[#F4A261] hover:bg-[#E5954D] text-white font-semibold py-2 rounded">
-  Reservar
-</button>
-
-      </form>
-    </div>
-
   </div>
 </div>

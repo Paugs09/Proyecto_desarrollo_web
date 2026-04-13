@@ -136,6 +136,30 @@
             background: color.adjust(#F4A261, $lightness: -10%);
         }
     }
+    &__btn-edit {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: rgb(165, 110, 64);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 18px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border-radius: 20px;
+    transition: 0.3s ease;
+
+    &:hover {
+        background: color.adjust(rgb(165, 110, 64), $lightness: -10%);
+        color: white;
+    }
+
+    svg {
+        fill: none;
+        stroke: currentColor;
+    }
+}
 
     &__btn-save {
         background: transparent;

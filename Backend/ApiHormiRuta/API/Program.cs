@@ -28,7 +28,7 @@ services.AddControllers(options =>
 })
 .AddJsonOptions(options =>
 {
-    // Esto permite que el JSON acepte "Medio" y lo convierta automáticamente a tu Enum
+    // Esto permite que el JSON acepte "Medio" y lo convierta autom�ticamente a tu Enum
     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
 });
 
@@ -45,7 +45,7 @@ builder.Services.AddOpenApi(options =>
             Type = SecuritySchemeType.Http,
             Scheme = "bearer",
             BearerFormat = "JWT",
-            Description = "Pega tu token de Supabase aquí"
+            Description = "Pega tu token de Supabase aqu�"
         };
 
         document.Security ??= [];
@@ -69,7 +69,7 @@ var dataSource = dataSourceBuilder.Build();
 
 services.AddDbContext<AppDbContext>(options => options.UseNpgsql(dataSource));
 
-// Lista inyección de dependencias
+// Lista inyecci�n de dependencias
 services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddSingleton<IAmazonS3>(sp =>
 {

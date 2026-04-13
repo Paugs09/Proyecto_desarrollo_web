@@ -8,6 +8,16 @@ export interface Adventure {
   difficulty: string;
   physicalRequirements?: string;
   mainImageUrl?: string;
-  price: 0,
+  price: number,
   priceNote: "Entrada al lugar"
+}
+
+export interface CreateAdventure {
+  categoryId: number;
+  name: string;
+  description: string;
+  difficultyId: number;
+  duration: string;
+  minAge: number;
+  physicalRequirements?: string;
 }

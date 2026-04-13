@@ -4,59 +4,55 @@ import { NgFor } from '@angular/common';
 import { CarouselComponent } from '../carousel/carousel.component';
 import { ICarouselItem } from '../carousel/Icarousel-item.metadata';
 import { CardsComponent, IPlaceCard } from '../cards/cards.component';
-import { AdventureService } from '../../services/adventure.service';
-import { Adventure } from '../../interfaces/adventure.interface';
+import { RouterLink } from '@angular/router';
+import { ProductCardComponent } from '../product-card/product-card.component';
+import { CategoryService } from '../../services/category.service';
+import { Category } from '../../interfaces/category.interface';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CarouselComponent, FormsModule, NgFor, CardsComponent],
+  imports: [CarouselComponent, FormsModule, NgFor, CardsComponent, RouterLink, ProductCardComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
 export class HomeComponent {
 
-  adventures: Adventure[] = [];
-  activities: Adventure[] = [];
+  categories: Category[] = [];
 
-  constructor(private adventureService: AdventureService) {
+  //Control del carrusel de productos
+  currentSlide = 0;
+  products = [1, 2, 3];
+
+  goToSlide(index: number){
+    this.currentSlide = index;
   }
+
+  constructor(private categoryService: CategoryService) {}
 
   ngOnInit(){
-    this.getAdventures();
+    this.getCategories();
   }
 
-  private getAdventures() {
-    this.adventureService.getAdventures().subscribe({
-      next: (data) =>{
-        this.adventures = data.filter(x=> x.category != "Deportes Extremos");
-        this.activities = data.filter(x=> x.category == "Deportes Extremos");
+  private getCategories() {
+    this.categoryService.getCategories().subscribe({
+      next: (data) => {
+        this.categories = data;
       },
       error: (error) => {
-
+        console.error('Error cargando categorías', error);
       }
     });
   }
 
-  filters = [
-    { label: 'Aventura', value: 'aventura' },
-    { label: 'Alojamientos', value: 'alojamientos' },
-    { label: 'Lugares turísticos', value: 'lugares' },
-  ];
-
-  selectedFilter = 'aventura';
-
-  setFilter(filter: string) {
-    this.selectedFilter = filter;
-  }
-
   carouselItems: ICarouselItem[] = [
     {
-      image: 'assets/sangil-carrusel.jpg',
-      title: { first: '¡Bienvenido a', second: 'San Gil!' },
-      subtitle: 'Un destino lleno de lugares por descubrir',
-      overlayImage: 'assets/hormiga-sangilena.png',
-      buttonText: 'Comenzar mi ruta',
+      image: 'assets/img/bannerHome.jpeg',
+      title: { first: '¡Bienvenido a', second: 'HormiGuane!' },
+      subtitle: 'Una tienda llena de productos por descubrir',
+      overlayImage: 'assets/hormiga-indicadora.png',
+      buttonText: 'Comenzar compras',
+      scrollTo: 'sesion-banner',
     },
     {
       image: 'assets/actividades-carrusel.jpg',
@@ -76,24 +72,11 @@ export class HomeComponent {
     },
   ];
 
-  // places: IPlaceCard[] = [
-  //   { title: 'Parque El Gallineral', description: 'El Parque Natural El Gallineral es el sitio emblemático de San Gil, Santander, conocido por ser una isla natural de 4 hectáreas rodeada por el río Fonce y la quebrada Curití.', image: 'assets/sangil-carrusel.jpg', price: 20000, priceNote: 'Entrada al lugar' },
-  //   { title: 'Cascada Juan Curí', description: 'El Parque Natural El Gallineral es el sitio emblemático de San Gil, Santander, conocido por ser una isla natural de 4 hectáreas rodeada por el río Fonce y la quebrada Curití.', image: 'assets/sangil-carrusel.jpg', price: 0, priceNote: 'Entrada gratis' },
-  //   { title: 'Cueva de la Vaca', description: 'El Parque Natural El Gallineral es el sitio emblemático de San Gil, Santander, conocido por ser una isla natural de 4 hectáreas rodeada por el río Fonce y la quebrada Curití.', image: 'assets/sangil-carrusel.jpg', price: 20000, priceNote: 'Entrada al lugar' },
-  //   { title: 'Río Fonce', description: 'El Parque Natural El Gallineral es el sitio emblemático de San Gil, Santander, conocido por ser una isla natural de 4 hectáreas rodeada por el río Fonce y la quebrada Curití.', image: 'assets/sangil-carrusel.jpg', price: 20000, priceNote: 'Entrada al lugar' },
-  // ];
-
-  // activities: IPlaceCard[] = [
-  //   { title: 'Parque El Gallineral', description: 'El Parque Natural El Gallineral es el sitio emblemático de San Gil, Santander, conocido por ser una isla natural de 4 hectáreas rodeada por el río Fonce y la quebrada Curití.', image: 'assets/sangil-carrusel.jpg', price: 20000, priceNote: 'Entrada al lugar' },
-  //   { title: 'Cascada Juan Curí', description: 'El Parque Natural El Gallineral es el sitio emblemático de San Gil, Santander, conocido por ser una isla natural de 4 hectáreas rodeada por el río Fonce y la quebrada Curití.', image: 'assets/sangil-carrusel.jpg', price: 0, priceNote: 'Entrada gratis' },
-  //   { title: 'Cueva de la Vaca', description: 'El Parque Natural El Gallineral es el sitio emblemático de San Gil, Santander, conocido por ser una isla natural de 4 hectáreas rodeada por el río Fonce y la quebrada Curití.', image: 'assets/sangil-carrusel.jpg', price: 20000, priceNote: 'Entrada al lugar' },
-  //   { title: 'Río Fonce', description: 'El Parque Natural El Gallineral es el sitio emblemático de San Gil, Santander, conocido por ser una isla natural de 4 hectáreas rodeada por el río Fonce y la quebrada Curití.', image: 'assets/sangil-carrusel.jpg', price: 20000, priceNote: 'Entrada al lugar' },
-  // ];
-
-  hotels: IPlaceCard[] = [
-    { title: 'Parque El Gallineral', description: 'El Parque Natural El Gallineral es el sitio emblemático de San Gil, Santander, conocido por ser una isla natural de 4 hectáreas rodeada por el río Fonce y la quebrada Curití.', image: 'assets/sangil-carrusel.jpg', price: 20000, priceNote: 'Entrada al lugar' },
-    { title: 'Cascada Juan Curí', description: 'El Parque Natural El Gallineral es el sitio emblemático de San Gil, Santander, conocido por ser una isla natural de 4 hectáreas rodeada por el río Fonce y la quebrada Curití.', image: 'assets/sangil-carrusel.jpg', price: 0, priceNote: 'Entrada gratis' },
-    { title: 'Cueva de la Vaca', description: 'El Parque Natural El Gallineral es el sitio emblemático de San Gil, Santander, conocido por ser una isla natural de 4 hectáreas rodeada por el río Fonce y la quebrada Curití.', image: 'assets/sangil-carrusel.jpg', price: 20000, priceNote: 'Entrada al lugar' },
-    { title: 'Río Fonce', description: 'El Parque Natural El Gallineral es el sitio emblemático de San Gil, Santander, conocido por ser una isla natural de 4 hectáreas rodeada por el río Fonce y la quebrada Curití.', image: 'assets/sangil-carrusel.jpg', price: 20000, priceNote: 'Entrada al lugar' },
-  ];
+  scrollCarousel(trackId: string, direction: 'left' | 'right') {
+  const track = document.getElementById(trackId);
+  if (!track) return;
+  const item = track.querySelector('.home-places_item') as HTMLElement;
+  const itemWidth = item ? item.offsetWidth + 16 : 300;
+  track.scrollLeft += direction === 'right' ? itemWidth : -itemWidth;
+}
 }

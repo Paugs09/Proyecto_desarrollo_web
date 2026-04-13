@@ -1,0 +1,84 @@
+<div class="bg-[#FBF5EC] min-h-screen px-4 py-8 md:px-12 flex flex-col font-sans">
+  <div class="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-10">
+
+    <div class="lg:col-span-4 self-start bg-white rounded-3xl shadow-sm p-8 flex flex-col items-center border border-orange-50">
+      <div class="flex flex-col items-center mb-6">
+        <h1 class="text-3xl font-bold text-gray-900">{{ usuario.FirstName }} {{ usuario.LastName }}</h1>
+        <span class="mt-2 px-3 py-1 bg-[#FDF8F1] text-[#A66C44] text-xs font-semibold rounded-full border border-orange-100 shadow-inner">
+          {{ usuario.rol }}
+        </span>
+      </div>
+
+      <div class="w-40 h-40 bg-gray-200 rounded-full border-2 border-orange-100 flex items-center justify-center mb-6 overflow-hidden shadow-inner">
+        <img *ngIf="usuario.foto" [src]="usuario.foto" class="w-full h-full object-cover">
+        <svg *ngIf="!usuario.foto" class="w-20 h-20 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path>
+        </svg>
+      </div>
+
+      <div class="w-full space-y-3 mb-8 text-center text-sm text-gray-600">
+        <p>{{ usuario.Email }}</p>
+        <p>{{ usuario.Phone }}</p>
+        <p>Direccion: {{ usuario.ShippingAddress }}</p>
+      </div>
+
+      <div class="w-full space-y-3">
+        <button class="w-full bg-[#E5954D] text-white font-bold py-3 rounded-xl hover:bg-[#D5853D] transition-colors shadow-sm">Editar perfil</button>
+        <button class="w-full bg-[#F4A261] text-white font-semibold py-3 rounded-xl hover:bg-[#E5954D] transition-colors">Ver mis compras</button>
+      </div>
+    </div>
+
+    <div class="lg:col-span-8 flex flex-col">
+      <div class="flex items-center gap-6 border-b border-gray-100 mb-8 px-4">
+        <button (click)="pestanaActiva = 'mis-productos'" 
+                class="pb-3 text-sm font-semibold transition-all border-b-2"
+                [ngClass]="pestanaActiva === 'mis-productos' ? 'text-[#A66C44] border-[#A66C44]' : 'text-gray-400 border-transparent hover:text-gray-500'">
+          Mis productos
+        </button>
+        <button (click)="pestanaActiva = 'favoritos'" 
+                class="pb-3 text-sm font-semibold transition-all border-b-2"
+                [ngClass]="pestanaActiva === 'favoritos' ? 'text-[#A66C44] border-[#A66C44]' : 'text-gray-400 border-transparent hover:text-gray-500'">
+          Favoritos
+        </button>
+        <button (click)="pestanaActiva = 'frecuentes'" 
+                class="pb-3 text-sm font-semibold transition-all border-b-2"
+                [ngClass]="pestanaActiva === 'frecuentes' ? 'text-[#A66C44] border-[#A66C44]' : 'text-gray-400 border-transparent hover:text-gray-500'">
+          Compras frecuentes
+        </button>
+      </div>
+
+      <div class="bg-white rounded-3xl shadow-sm p-8 border border-orange-50">
+        
+        <div *ngFor="let item of productosFiltrados; let i = index" 
+             class="flex items-center gap-6 p-6 rounded-2xl mb-5 last:mb-0 transition-colors border border-transparent"
+             [ngClass]="item.seleccionado ? 'bg-[#FDF8F1] border-orange-100' : 'bg-white hover:bg-gray-50'">
+          
+          <div class="flex-shrink-0">
+            <input type="checkbox" [(ngModel)]="item.seleccionado" class="w-5 h-5 rounded text-[#E5954D]">
+          </div>
+
+          <div class="w-24 h-24 bg-gray-100 rounded-2xl flex items-center justify-center border border-gray-100 overflow-hidden">
+            <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 002-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+            </svg>
+          </div>
+
+          <div class="flex-grow">
+            <h3 class="text-xl font-semibold text-gray-800">{{ item.nombre }}</h3>
+            <p class="text-xs text-gray-400 mt-1 italic text-[#A66C44]">HormiGuane Oficial</p>
+          </div>
+
+          <div class="text-right flex-shrink-0">
+            <p class="text-xl font-bold text-gray-900">{{ item.precio | currency:'COP':'$':'1.0-0' }}</p>
+            <p class="text-xs text-gray-400 mt-1">COP</p>
+          </div>
+        </div>
+
+        <div *ngIf="productosFiltrados.length === 0" class="text-center py-20 text-gray-400 italic">
+          No tienes productos en esta sección todavía 
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
