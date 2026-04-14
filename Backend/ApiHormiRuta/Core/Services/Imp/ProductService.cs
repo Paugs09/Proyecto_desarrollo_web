@@ -11,12 +11,14 @@ using System.Text.Json;
 
 namespace Core.Services.Imp
 {
-    public class ProductService(ICommonRepository commonRepository,
-                                IStorageService storageService,
+    public class ProductService(IStorageService storageService,
+                                ICommonRepository commonRepository,
+                                IGenericRepository<WishList> genericWishListRepository,
                                 IGenericRepository<Product> genericProductRepository) : IProductService
     {
         private readonly ICommonRepository _commonRepository = commonRepository;
         private readonly IStorageService _storageService = storageService;
+        private readonly IGenericRepository<WishList> _genericWishListRepository = genericWishListRepository;
         private readonly IGenericRepository<Product> _genericProductRepository = genericProductRepository;
 
         public async Task<IEnumerable<ProductDto>?> GetAllProductsAsync(ProductQueryFilter queryFilter)
@@ -39,6 +41,27 @@ namespace Core.Services.Imp
             });
         }
 
+        public async Task AddProductToWishList(CreateWishListDto createDto, Guid userId)
+        {
+            var wishListItem = await _genericWishListRepository.FirstOrDefaultAsyncWithIncludes(x => x.UserId == userId && x.ProductVariantId == createDto.ProductVariantId);
+
+            if (!createDto.IsFavorite && wishListItem != null)
+            {
+                await _genericWishListRepository.DeleteAsync(wishListItem);
+                await _genericWishListRepository.SaveAsync();
+                return;
+            }
+            else
+            {
+                await _genericWishListRepository.AddAsync(new WishList
+                {
+                    UserId = userId,
+                    ProductVariantId = createDto.ProductVariantId,
+                });
+                await _genericWishListRepository.SaveAsync();
+            }
+        }
+
         public async Task<DetailProductDto> GetDetailProduct(long id)
         {
             var product = await _genericProductRepository.FirstOrDefaultAsyncWithIncludes(
@@ -51,7 +74,7 @@ namespace Core.Services.Imp
                     .Include(p => p.ProductVariants)
                         .ThenInclude(pv => pv.VariantValues)
                             .ThenInclude(vv => vv.AttributeValue)
-                                .ThenInclude(vv=> vv.Attribute)
+                                .ThenInclude(vv => vv.Attribute)
             ) ?? throw new Exception("Producto no encontrado");
 
             var detailProduct = new DetailProductDto
@@ -96,7 +119,7 @@ namespace Core.Services.Imp
             {
                 var jsonPayload = JsonSerializer.Serialize(createProductDto);
 
-               var result = await _commonRepository.CallFunctionRegisterProducts(jsonPayload);
+                var result = await _commonRepository.CallFunctionRegisterProducts(jsonPayload);
             }
             catch (Exception ex)
             {

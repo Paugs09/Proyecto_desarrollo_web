@@ -32,22 +32,6 @@ namespace Infraestructure.Repositories
             return await _dbSet.FindAsync(id);
         }
 
-        //public async Task<T?> FirstOrDefaultAsyncWithIncludes(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includes)
-        //{
-        //    IQueryable<T> query = _dbSet;
-
-        //    // Guard clause opcional
-        //    if (includes != null)
-        //    {
-        //        foreach (var include in includes)
-        //        {
-        //            query = query.Include(include);
-        //        }
-        //    }
-
-        //    return await query.FirstOrDefaultAsync(predicate);
-        //}
-
         public async Task<T?> FirstOrDefaultAsyncWithIncludes(
             Expression<Func<T, bool>> predicate,
             Func<IQueryable<T>, IQueryable<T>>? includeFunc = null)

@@ -24,6 +24,16 @@ namespace API.Controllers
             return Ok(await _productService.GetDetailProduct(id));
         }
 
+        [HttpPost("wish-list")]
+        public async Task<IActionResult> AddWishList(CreateWishListDto wishListDto)
+        {
+            var userId = HttpContext.Items["UserId"]?.ToString();
+            _ = Guid.TryParse(userId, out Guid parsedUserId);
+
+            await _productService.AddProductToWishList(wishListDto, parsedUserId);
+            return Ok();
+        }
+
         [HttpPost()]
         [AdminOnly]
         public async Task<IActionResult> CreateProduct([FromBody] CreateProductDto dto)
