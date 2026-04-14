@@ -12,5 +12,6 @@
         public long RoleId { get; set; }
 
         public Role Role { get; set; } = null!;
+        public ICollection<WishList> WishLists { get; set; } = [];
     }
 }
