@@ -46,6 +46,15 @@ export class HomeComponent {
         console.error('Error cargando categorías', error);
       }
     });
+
+    this.categoryService.getWish().subscribe({
+      next: (data) => {
+
+      },
+      error: (error) => {
+        console.error('Error cargando categorías', error);
+      }
+    });
   }
 
   carouselItems: ICarouselItem[] = [
