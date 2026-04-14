@@ -4,7 +4,6 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/internal/Observable';
 import { catchError, Subject, tap, throwError } from 'rxjs';
 import { isPlatformBrowser } from '@angular/common';
-import { Router } from 'express';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +11,7 @@ import { Router } from 'express';
 
 export class AuthService {
   private readonly apiUrl = `${environment.apiUrl}/auth`;
-  private readonly http = inject(HttpClient); // Inyección moderna
+  private readonly http = inject(HttpClient);
   //private readonly router = inject(Router);
   private platformId = inject(PLATFORM_ID);
 
@@ -34,13 +33,19 @@ export class AuthService {
       return userJson ? JSON.parse(userJson) : null;
     }
 
-    return null; // Si no es browser, no hay usuario
+    return null;
   }
 
   login(credentials: object): Observable<any> {
     this.logout();
     return this.http.post<any>(`${this.apiUrl}/login`, credentials).pipe(
       tap(response => this.setSession(response))
+    );
+  }
+
+  register(credentials: object): Observable<any> {
+    this.logout();
+    return this.http.post<any>(`${this.apiUrl}/register`, credentials).pipe(
     );
   }
 
