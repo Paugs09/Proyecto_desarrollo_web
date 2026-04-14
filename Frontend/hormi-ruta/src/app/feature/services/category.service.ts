@@ -15,4 +15,8 @@ export class CategoryService {
   getCategories(): Observable<Category[]> {
     return this.http.get<Category[]>(this.apiUrl);
   }
+
+    getWish(): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/product`);
+  }
 }

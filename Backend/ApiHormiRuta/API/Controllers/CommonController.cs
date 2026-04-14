@@ -1,4 +1,5 @@
 ﻿using Core.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -10,6 +11,7 @@ namespace API.Controllers
         private readonly ICommonService _commonService = commonService;
 
         [HttpGet("category-presentation")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetAll()
         {
             return Ok(await _commonService.GetPresentationCategoryList());

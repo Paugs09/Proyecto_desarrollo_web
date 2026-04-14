@@ -1,51 +1,126 @@
-<div class="min-h-screen flex items-center justify-center bg-[#FBF5EC] px-4">
-  <div class="bg-white rounded-xl shadow-md w-full max-w-md p-8">
-
-    <!-- Título -->
-    <h1 class="text-3xl font-bold text-center text-[#2D5016] mb-6">
-      Inicia sesión
-    </h1>
-
-    <!-- Formulario -->
-    <form class="space-y-4">
-
-      <!-- Correo -->
-      <div>
-        <label class="block text-sm font-medium mb-1">Correo electrónico</label>
-        <input
-          type="email"
-          placeholder="correo@ejemplo.com"
-          class="w-full bg-[#FBF5EC] border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#F4A261]"
-        />
+    <div class="min-h-screen flex items-center justify-center bg-[#FBF5EC] px-4">
+      <div class="bg-white rounded-xl shadow-md w-full max-w-md p-8">
+        <!-- Título -->
+        <h1 class="text-3xl font-bold text-center text-[#2D5016] mb-6">
+          Inicia sesión
+        </h1>
+ 
+        <!-- Formulario Reactivo -->
+        <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-4">
+          <!-- Correo -->
+          <div>
+            <label for="email" class="block text-sm font-medium mb-1">
+              Correo electrónico
+            </label>
+            <input
+              id="email"
+              type="email"
+              formControlName="email"
+              placeholder="correo@ejemplo.com"
+              [class.border-red-500]="isFieldInvalid('email')"
+              class="w-full bg-[#FBF5EC] border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#F4A261] transition"
+              [disabled]="isLoading()"
+            />
+            @if (isFieldInvalid('email')) {
+              <p class="text-red-500 text-xs mt-1">{{ getErrorMessage('email') }}</p>
+            }
+          </div>
+ 
+          <!-- Contraseña -->
+          <div>
+            <label for="password" class="block text-sm font-medium mb-1">
+              Contraseña
+            </label>
+            <div class="relative">
+              <input
+                id="password"
+                [type]="showPassword() ? 'text' : 'password'"
+                formControlName="password"
+                placeholder="Ingresa tu contraseña"
+                [class.border-red-500]="isFieldInvalid('password')"
+                class="w-full bg-[#FBF5EC] border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#F4A261] transition"
+                [disabled]="isLoading()"
+              />
+              <button
+                type="button"
+                (click)="togglePasswordVisibility()"
+                class="absolute right-3 top-1/2 -translate-y-1/2 text-[#2D5016] hover:opacity-70"
+              >
+                @if (showPassword()) {
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-4.803m5.596-3.856a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                    />
+                  </svg>
+                } @else {
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                    />
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                    />
+                  </svg>
+                }
+              </button>
+            </div>
+            @if (isFieldInvalid('password')) {
+              <p class="text-red-500 text-xs mt-1">{{ getErrorMessage('password') }}</p>
+            }
+          </div>
+ 
+          <!-- Recordarme -->
+          <div class="flex items-center">
+            <input
+              id="remember"
+              type="checkbox"
+              formControlName="rememberMe"
+              class="w-4 h-4 rounded border-gray-300"
+            />
+            <label for="remember" class="ml-2 text-sm">Recuérdame</label>
+          </div>
+ 
+          <!-- Error General -->
+          @if (error()) {
+            <div class="bg-red-50 border border-red-200 rounded px-3 py-2 text-red-700 text-sm">
+              {{ error() }}
+            </div>
+          }
+ 
+          <!-- Botón Envío -->
+          <button
+            type="submit"
+            [disabled]="!form.valid || isLoading()"
+            class="w-full bg-[#F4A261] text-[#2D5016] font-semibold py-2 rounded hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition"
+          >
+            @if (isLoading()) {
+              <span class="flex items-center justify-center gap-2">
+                <svg class="w-4 h-4 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 1v6m4.22-4.22l-4.24 4.24m6 4.24h-6m0 6v-6m-4.24 4.24l4.24-4.24" />
+                </svg>
+                Iniciando sesión...
+              </span>
+            } @else {
+              Inicia sesión
+            }
+          </button>
+        </form>
+ 
+        <!-- Enlace Registro -->
+        <p class="text-sm text-center mt-6">
+          ¿No tienes cuenta?
+          <a routerLink="/registro" class="text-[#2D5016] font-semibold hover:underline">
+            Regístrate aquí
+          </a>
+        </p>
       </div>
-
-      <!-- Contraseña -->
-      <div>
-        <label class="block text-sm font-medium mb-1">Contraseña</label>
-        <input
-          type="password"
-          placeholder="Value"
-          class="w-full bg-[#FBF5EC] border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#F4A261]"
-        />
-      </div>
-
-      <!-- Botón -->
-      <button
-        type="submit"
-        class="w-full bg-[#F4A261] text-[#2D5016] font-semibold py-2 rounded hover:opacity-90 transition"
-      >
-        Inicia sesión
-      </button>
-
-    </form>
-
-    
-    <p class="text-sm text-center mt-6">
-      ¿No tienes cuenta?
-      <a routerLink="/registro" class="text-[#2D5016] font-semibold hover:underline">
-        Regístrate aquí
-      </a>
-    </p>
-
-  </div>
-</div>
+    </div>

@@ -2,6 +2,7 @@
 using Core.QueryFilter.Product;
 using Core.Services.Interfaces;
 using Infraestructure.Filters;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -13,12 +14,14 @@ namespace API.Controllers
         private readonly IProductService _productService = productService;
 
         [HttpGet()]
+        [AllowAnonymous]
         public async Task<IActionResult> GetAll([FromQuery] ProductQueryFilter queryFilter)
         {
             return Ok(await _productService.GetAllProductsAsync(queryFilter));
         }
 
         [HttpGet("detail/{id:long}")]
+        [AllowAnonymous]
         public async Task<IActionResult> Detail(long id)
         {
             return Ok(await _productService.GetDetailProduct(id));
