@@ -27,28 +27,17 @@ namespace Core.Services.Imp
 
         public async Task<AuthInfoDto> LoginAsync(string email, string password)
         {
-            try
+            var session = await _supabaseClient.Auth.SignIn(email, password);
+
+            var userId = Guid.Parse(session?.User?.Id ?? string.Empty);
+            var isAdmin = await _roleService.IsAdmin(userId);
+
+            return new AuthInfoDto
             {
-
-
-
-                var session = await _supabaseClient.Auth.SignIn(email, password);
-
-                var userId = Guid.Parse(session?.User?.Id ?? string.Empty);
-                var isAdmin = await _roleService.IsAdmin(userId);
-
-                return new AuthInfoDto
-                {
-                    AccessToken = session?.AccessToken ?? throw new Exception("Credenciales inválidas"),
-                    RefreshToken = session?.RefreshToken ?? throw new Exception("Credenciales inválidas"),
-                    IsAdmin = isAdmin
-                };
-            }
-            catch (Exception ex)
-            {
-
-                throw;
-            }
+                AccessToken = session?.AccessToken ?? throw new Exception("Credenciales inválidas"),
+                RefreshToken = session?.RefreshToken ?? throw new Exception("Credenciales inválidas"),
+                IsAdmin = isAdmin
+            };
         }
 
         public async Task<AuthInfoDto> RefreshTokenAsync(string accessToken, string refreshToken)

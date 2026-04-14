@@ -1,106 +1,115 @@
 <div class="bg-[#FBF5EC] min-h-screen flex items-center justify-center px-4 py-10">
-
-  
   <div class="bg-white rounded-xl shadow-md w-full max-w-md p-8">
-
-    <!-- Título -->
+    
     <h1 class="text-3xl font-bold text-center text-[#2D5016] mb-6">
       Regístrate
     </h1>
 
-    <!-- Formulario -->
-    <form class="space-y-4">
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-4">
 
-      <!-- Primer nombre class="w-full bg-[#FBF5EC] border rounded px-3 py-2 focus:outline-none" -->
       <div>
-        <label class="block text-sm font-medium mb-1">Primer Nombre</label>
+        <label for="firstName" class="block text-sm font-medium mb-1">Nombre</label>
         <input
+          id="firstName"
           type="text"
-          placeholder="Value"
-          class="w-full bg-[#FBF5EC] border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#F4A261]"
+          formControlName="firstName"
+          placeholder="Tu nombre"
+          [class.border-red-500]="isFieldInvalid('firstName')"
+          class="w-full bg-[#FBF5EC] border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#F4A261] transition"
         />
       </div>
 
-      <!-- Segundo nombre -->
       <div>
-        <label class="block text-sm font-medium mb-1">
-          Segundo Nombre <span class="text-gray-500">(opcional)</span>
-        </label>
+        <label for="lastName" class="block text-sm font-medium mb-1">Apellidos</label>
         <input
+          id="lastName"
           type="text"
-          placeholder="Value"
-          class="w-full bg-[#FBF5EC] border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#F4A261]"
+          formControlName="lastName"
+          placeholder="Tus apellidos"
+          [class.border-red-500]="isFieldInvalid('lastName')"
+          class="w-full bg-[#FBF5EC] border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#F4A261] transition"
         />
       </div>
 
-      <!-- Apellidos -->
       <div>
-        <label class="block text-sm font-medium mb-1">Apellidos</label>
+        <label for="phone" class="block text-sm font-medium mb-1">Número Telefónico</label>
         <input
-          type="text"
-          placeholder="Value"
-          class="w-full bg-[#FBF5EC] border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#F4A261]"
+          id="phone"
+          type="tel"
+          formControlName="phone"
+          placeholder="Ej: +57..."
+          class="w-full bg-[#FBF5EC] border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#F4A261] transition"
         />
       </div>
 
-      <!-- Identificacion -->
       <div>
-        <label class="block text-sm font-medium mb-1">Número Identificación</label>
+        <label for="email" class="block text-sm font-medium mb-1">Correo Electrónico</label>
         <input
-          type="text"
-          placeholder="Value"
-          class="w-full bg-[#FBF5EC] border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#F4A261]"
-        />
-      </div>
-
-      <!-- Telefono -->
-      <div>
-        <label class="block text-sm font-medium mb-1">Número Telefónico</label>
-        <input
-          type="text"
-          placeholder="Value"
-          class="w-full bg-[#FBF5EC] border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#F4A261]"
-        />
-      </div>
-
-      <!-- Correo -->
-      <div>
-        <label class="block text-sm font-medium mb-1">Correo Electrónico</label>
-        <input
+          id="email"
           type="email"
-          placeholder="Value"
-          class="w-full bg-[#FBF5EC] border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#F4A261]"
+          formControlName="email"
+          placeholder="ejemplo@correo.com"
+          [class.border-red-500]="isFieldInvalid('email')"
+          class="w-full bg-[#FBF5EC] border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#F4A261] transition"
         />
       </div>
 
-      <!-- Contraseña -->
       <div>
-        <label class="block text-sm font-medium mb-1">Contraseña</label>
-        <input
-          type="password"
-          placeholder="Value"
-          class="w-full bg-[#FBF5EC] border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#F4A261]"
-        />
+        <label for="password" class="block text-sm font-medium mb-1">Contraseña</label>
+        <div class="relative">
+          <input
+            id="password"
+            [type]="showPassword() ? 'text' : 'password'"
+            formControlName="password"
+            placeholder="Mínimo 6 caracteres"
+            [class.border-red-500]="isFieldInvalid('password')"
+            class="w-full bg-[#FBF5EC] border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#F4A261] transition"
+          />
+          <button 
+            type="button" 
+            (click)="togglePasswordVisibility()"
+            class="absolute right-3 top-1/2 -translate-y-1/2 text-[#2D5016] opacity-60 hover:opacity-100"
+          >
+            @if (showPassword()) {
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-4.803m5.596-3.856a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+            } @else {
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+            }
+          </button>
+        </div>
       </div>
 
-      <!-- Botón -->
+      <div>
+        <label for="shippingAddress" class="block text-sm font-medium mb-1">Dirección de Envío <span class="text-gray-500">(opcional)</span></label>
+        <textarea
+          id="shippingAddress"
+          formControlName="shippingAddress"
+          rows="2"
+          placeholder="Calle, ciudad..."
+          class="w-full bg-[#FBF5EC] border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#F4A261] transition"
+        ></textarea>
+      </div>
+
       <button
         type="submit"
-        class="w-full font-semibold py-2 rounded bg-[#F4A261] text-[#2D5016] hover:opacity-90 transition"
->
-        Registrar
+        [disabled]="form.invalid || isLoading()"
+        class="w-full font-semibold py-2 rounded bg-[#F4A261] text-[#2D5016] hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition"
+      >
+        @if (isLoading()) {
+          Registrando...
+        } @else {
+          Registrar
+        }
       </button>
 
     </form>
 
-    
-    <p class="text-center text-sm mt-4">
+    <p class="text-center text-sm mt-6">
       ¿Ya tienes cuenta?
-      <span class="text-green-700 font-semibold cursor-pointer">
+      <a routerLink="/login" class="text-green-700 font-semibold hover:underline cursor-pointer">
         Inicia sesión
-      </span>
+      </a>
     </p>
 
   </div>
-
 </div>
