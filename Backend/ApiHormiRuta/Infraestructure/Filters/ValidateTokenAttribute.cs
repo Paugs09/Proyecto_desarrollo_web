@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;
+using Supabase.Gotrue.Exceptions;
 using System.Reflection;
 
 namespace Infraestructure.Filters
@@ -34,7 +35,7 @@ namespace Infraestructure.Filters
 
             if (string.IsNullOrEmpty(token))
             {
-                context.Result = new ObjectResult(new { error = "Token no proporcionado" });
+                context.Result = new ObjectResult(new { error = "Token no proporcionado." }) { StatusCode = 401 };
                 return;
             }
 
@@ -44,17 +45,17 @@ namespace Infraestructure.Filters
 
                 if (user == null)
                 {
-                    context.Result = new ObjectResult(new { error = "Token inválido o expirado" });
+                    context.Result = new ObjectResult(new { error = "Token inválido o expirado." }) { StatusCode = 401 };
                     return;
                 }
 
                 context.HttpContext.Items["UserId"] = user.Id;
                 context.HttpContext.Items["User"] = user;
             }
-            catch (Exception ex)
+            catch (GotrueException ex)
             {
                 _logger.LogError($"Error validando token: {ex.Message}");
-                context.Result = new ObjectResult(new { error = "Token expirado o inválido" });
+                context.Result = new ObjectResult(new { error = "Token inválido o expirado." }) { StatusCode = 401 };
             }
         }
 

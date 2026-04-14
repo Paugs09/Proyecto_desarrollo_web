@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgFor } from '@angular/common';
 import { CarouselComponent } from '../carousel/carousel.component';
@@ -8,6 +8,7 @@ import { RouterLink } from '@angular/router';
 import { ProductCardComponent } from '../product-card/product-card.component';
 import { CategoryService } from '../../services/category.service';
 import { Category } from '../../interfaces/category.interface';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-home',
@@ -18,19 +19,21 @@ import { Category } from '../../interfaces/category.interface';
 })
 export class HomeComponent {
 
+  private readonly authService = inject(AuthService);
   categories: Category[] = [];
 
   //Control del carrusel de productos
   currentSlide = 0;
   products = [1, 2, 3];
 
-  goToSlide(index: number){
+  goToSlide(index: number) {
     this.currentSlide = index;
   }
 
-  constructor(private categoryService: CategoryService) {}
+  constructor(private categoryService: CategoryService) { }
 
-  ngOnInit(){
+  ngOnInit() {
+    console.log('Usuario actual:', this.authService.isAdmin());
     this.getCategories();
   }
 
@@ -38,6 +41,15 @@ export class HomeComponent {
     this.categoryService.getCategories().subscribe({
       next: (data) => {
         this.categories = data;
+      },
+      error: (error) => {
+        console.error('Error cargando categorías', error);
+      }
+    });
+
+    this.categoryService.getWish().subscribe({
+      next: (data) => {
+
       },
       error: (error) => {
         console.error('Error cargando categorías', error);
@@ -73,10 +85,10 @@ export class HomeComponent {
   ];
 
   scrollCarousel(trackId: string, direction: 'left' | 'right') {
-  const track = document.getElementById(trackId);
-  if (!track) return;
-  const item = track.querySelector('.home-places_item') as HTMLElement;
-  const itemWidth = item ? item.offsetWidth + 16 : 300;
-  track.scrollLeft += direction === 'right' ? itemWidth : -itemWidth;
-}
+    const track = document.getElementById(trackId);
+    if (!track) return;
+    const item = track.querySelector('.home-places_item') as HTMLElement;
+    const itemWidth = item ? item.offsetWidth + 16 : 300;
+    track.scrollLeft += direction === 'right' ? itemWidth : -itemWidth;
+  }
 }
