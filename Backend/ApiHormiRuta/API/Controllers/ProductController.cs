@@ -45,6 +45,14 @@ namespace API.Controllers
             return Created();
         }
 
+        [HttpDelete("{id:long}")]
+        [AdminOnly]
+        public async Task<IActionResult> DeleteProduct(long id)
+        {
+            await _productService.DeleteProduct(id);
+            return NoContent();
+        }
+
         [HttpPost("upload-image")]
         [AdminOnly]
         public async Task<IActionResult> CreateProductImage([FromForm] IFormFile formFile)

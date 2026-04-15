@@ -13,5 +13,6 @@
         public virtual ICollection<VariantValue> VariantValues { get; set; } = [];
         public virtual ICollection<ProductImage> ProductImages { get; set; } = [];
         public virtual ICollection<WishList> WishLists { get; set; } = [];
+        public virtual ICollection<OrderItem> OrderItems { get; set; } = [];
     }
 }

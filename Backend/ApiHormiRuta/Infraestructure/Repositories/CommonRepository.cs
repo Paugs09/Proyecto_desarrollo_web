@@ -24,5 +24,22 @@ namespace Infraestructure.Repositories
                 throw new Exception("Error al llamar a la función create_full_product", ex);
             }
         }
+
+        public async Task CallFunctionDeleteProduct(long productId)
+        {
+            try
+            {
+                // Al ser una función que no retorna datos (void), usamos ExecuteSqlRawAsync
+                await _context.Database.ExecuteSqlRawAsync(
+                    "SELECT public.delete_product_complete({0})",
+                    productId
+                );
+            }
+            catch (Exception ex)
+            {
+                // Por ejemplo: "No se puede eliminar: El producto tiene historial en órdenes..."
+                throw new Exception(ex.Message, ex);
+            }
+        }
     }
 }

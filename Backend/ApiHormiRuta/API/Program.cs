@@ -98,6 +98,7 @@ services.AddTransient<ICommonService, CommonService>();
 services.AddTransient<IStorageService, StorageService>();
 services.AddTransient<IAuthService, AuthService>();
 services.AddTransient<IProductService, ProductService>();
+services.AddTransient<ICartService, CartService>();
 services.AddScoped<IRoleService, RoleService>();
 services.AddScoped<AdminOnlyFilter>();
 services.AddScoped<ValidateTokenFilter>();

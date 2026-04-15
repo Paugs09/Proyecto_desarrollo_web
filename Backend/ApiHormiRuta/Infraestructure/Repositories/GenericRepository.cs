@@ -62,6 +62,11 @@ namespace Infraestructure.Repositories
             await _dbSet.AddAsync(entity);
         }
 
+        public async Task AddRangeAsync(List<T> entities)
+        {
+            await _dbSet.AddRangeAsync(entities);
+        }
+
         public void Update(T entity)
         {
             _dbSet.Attach(entity);

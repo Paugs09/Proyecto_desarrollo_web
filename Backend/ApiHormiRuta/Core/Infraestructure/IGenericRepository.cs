@@ -6,12 +6,12 @@ namespace Core.Infraestructure
     {
         Task<IEnumerable<T>> GetAllAsync(params Expression<Func<T, object>>[] includes);
         Task<T?> GetByIdAsync(object id);
-        //Task<T?> FirstOrDefaultAsyncWithIncludes(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includes);
         Task<T?> FirstOrDefaultAsyncWithIncludes(
             Expression<Func<T, bool>> predicate,
             Func<IQueryable<T>, IQueryable<T>>? includeFunc = null);
         Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includes);
         Task AddAsync(T entity);
+        Task AddRangeAsync(List<T> entities);
         void Update(T entity);
         Task DeleteAsync(object id);
         Task<bool> SaveAsync();

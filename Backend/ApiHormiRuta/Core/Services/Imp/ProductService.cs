@@ -36,8 +36,8 @@ namespace Core.Services.Imp
                 Id = x.Id,
                 Name = x.Name,
                 ShortDescription = x.ShortDescription,
-                //BasePrice = x.BasePrice,
-                ImageUrl = x.ProductImages.FirstOrDefault(x => x.IsPrimary)?.ImageUrl,
+                BasePrice = x.ProductVariants.FirstOrDefault()?.SpecificPrice ?? 0,
+                ImageUrl = x.ProductVariants.FirstOrDefault()?.ProductImages.FirstOrDefault(i => i.IsPrimary)?.ImageUrl,
             });
         }
 
@@ -125,6 +125,11 @@ namespace Core.Services.Imp
             {
                 throw new Exception("Error al procesar la creación del producto en la base de datos", ex);
             }
+        }
+
+        public async Task DeleteProduct(long productId)
+        {
+            await _commonRepository.CallFunctionDeleteProduct(productId);
         }
 
         public async Task<string> CreateProductImage(IFormFile formFile)
