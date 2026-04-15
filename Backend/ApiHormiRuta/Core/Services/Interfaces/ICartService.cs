@@ -4,6 +4,7 @@ namespace Core.Services.Interfaces
 {
     public interface ICartService
     {
-        Task CreateOrder(CreateOrderDto createOrderDto, Guid userId);
+        Task CreateOrder(List<CreateOrderItemDto> createOrderItemDto, Guid userId);
+        Task<IEnumerable<OrderItemDto>> ListOrderItems(Guid userId);
     }
 }

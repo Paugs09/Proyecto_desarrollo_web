@@ -1,4 +1,4 @@
-﻿using Core.Entities;
+﻿using Core.Dto.Cart;
 
 namespace Core.Infraestructure
 {
@@ -6,5 +6,6 @@ namespace Core.Infraestructure
     {
         Task<List<long>> CallFunctionRegisterProducts(string jsonPayload);
         Task CallFunctionDeleteProduct(long productId);
+        Task CallFunctionAddOrder(List<CreateOrderItemDto> items, Guid userId);
     }
 }
