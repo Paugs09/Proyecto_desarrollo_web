@@ -23,7 +23,7 @@ namespace Core.Services.Imp
 
         public async Task<IEnumerable<ProductDto>?> GetAllProductsAsync(ProductQueryFilter queryFilter)
         {
-            var products = await _genericProductRepository.GetAllAsync(x => x.ProductImages);
+            var products = await _genericProductRepository.GetAllAsync(query => query.Include(x=> x.ProductVariants).ThenInclude(pv => pv.ProductImages));
 
             if (queryFilter.CategoryId.HasValue)
                 products = products.Where(x => x.CategoryId == queryFilter.CategoryId.Value);
@@ -104,6 +104,7 @@ namespace Core.Services.Imp
                     })],
                     Values = [.. x.VariantValues.Select(vv => new DetailValueDto
                     {
+                        AttributeId = vv.AttributeValue.AttributeId,
                         AttributeName = vv.AttributeValue.Attribute.Name,
                         Value = vv.AttributeValue.Value
                     })]

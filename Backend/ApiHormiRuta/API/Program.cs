@@ -64,10 +64,10 @@ var connectionString = configuration.GetConnectionString("DefaultConnection");
 var s3Config = configuration.GetSection("SupabaseS3");
 var supabaseConfig = configuration.GetSection("Supabase");
 
-var dataSourceBuilder = new NpgsqlDataSourceBuilder(connectionString);
-var dataSource = dataSourceBuilder.Build();
-
-services.AddDbContext<AppDbContext>(options => options.UseNpgsql(dataSource));
+services.AddDbContext<AppDbContext>(options =>
+    options.UseNpgsql(connectionString, npgsqlOptions => {
+        npgsqlOptions.EnableRetryOnFailure(3); // Importante para latencia en Colombia
+    }));
 
 // Lista inyecci�n de dependencias
 services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -91,21 +91,20 @@ builder.Services.AddSingleton(provider =>
         AutoConnectRealtime = true
     })
 );
-builder.Services.AddScoped<IAuthService, AuthService>();
 
 //Services
-services.AddTransient<ICommonService, CommonService>();
-services.AddTransient<IStorageService, StorageService>();
-services.AddTransient<IAuthService, AuthService>();
-services.AddTransient<IProductService, ProductService>();
-services.AddTransient<ICartService, CartService>();
+services.AddScoped<ICommonService, CommonService>();
+services.AddScoped<IStorageService, StorageService>();
+services.AddScoped<IAuthService, AuthService>();
+services.AddScoped<IProductService, ProductService>();
+services.AddScoped<ICartService, CartService>();
 services.AddScoped<IRoleService, RoleService>();
 services.AddScoped<AdminOnlyFilter>();
 services.AddScoped<ValidateTokenFilter>();
 
 //Repositories
-services.AddTransient<IUnitOfWork, UnitOfWork>();
-services.AddTransient<ICommonRepository, CommonRepository>();
+services.AddScoped<IUnitOfWork, UnitOfWork>();
+services.AddScoped<ICommonRepository, CommonRepository>();
 services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
 // Se agrega politica de origen cruzado

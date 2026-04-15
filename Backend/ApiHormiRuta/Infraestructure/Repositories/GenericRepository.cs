@@ -17,12 +17,12 @@ namespace Infraestructure.Repositories
         }
 
         // Obtener todos con posibilidad de incluir tablas relacionadas
-        public async Task<IEnumerable<T>> GetAllAsync(params Expression<Func<T, object>>[] includes)
+        public async Task<IEnumerable<T>> GetAllAsync(Func<IQueryable<T>, IQueryable<T>>? includeFunc = null)
         {
             IQueryable<T> query = _dbSet;
-            foreach (var include in includes)
+            if (includeFunc != null)
             {
-                query = query.Include(include);
+                query = includeFunc(query);
             }
             return await query.ToListAsync();
         }
@@ -47,12 +47,12 @@ namespace Infraestructure.Repositories
             return await query.FirstOrDefaultAsync(predicate);
         }
 
-        public async Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includes)
+        public async Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate, Func<IQueryable<T>, IQueryable<T>>? includeFunc = null)
         {
             IQueryable<T> query = _dbSet;
-            foreach (var include in includes)
+            if (includeFunc != null)
             {
-                query = query.Include(include);
+                query = includeFunc(query);
             }
             return await query.Where(predicate).ToListAsync();
         }

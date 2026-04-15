@@ -1,7 +1,8 @@
-﻿using Core.Entities;
+﻿using Core.Dto.Cart;
 using Core.Infraestructure;
 using Infraestructure.Data;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json;
 
 namespace Infraestructure.Repositories
 {
@@ -39,6 +40,33 @@ namespace Infraestructure.Repositories
             {
                 // Por ejemplo: "No se puede eliminar: El producto tiene historial en órdenes..."
                 throw new Exception(ex.Message, ex);
+            }
+        }
+
+        public async Task CallFunctionAddOrder(List<CreateOrderItemDto> items, Guid userId)
+        {
+            try
+            {
+                // Importante: Que las propiedades coincidan con el jsonb_to_recordset de la función
+                var jsonPayload = JsonSerializer.Serialize(items);
+
+                // Usamos FromSqlRaw para funciones que devuelven valores.
+                // Como devuelve un JSONB, lo capturamos como string.
+                var result = await _context.Database
+                    .SqlQueryRaw<string>(
+                        "SELECT public.handle_cart_operations({0}::uuid, {1}::jsonb)::text",
+                        userId,
+                        jsonPayload
+                    )
+                    .ToListAsync();
+
+                var jsonResult = result.FirstOrDefault();
+                // Aquí jsonResult contiene: {"order_id": 123, "total_amount": 45000}
+            }
+            catch (Exception ex)
+            { 
+                // caerá aquí con el mensaje personalizado de Postgres.
+                throw new Exception($"Error en la base de datos: {ex.Message}", ex);
             }
         }
     }
