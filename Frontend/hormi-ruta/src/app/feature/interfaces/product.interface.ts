@@ -16,12 +16,12 @@ export interface ProductImage {
   id: number;
   imageUrl: string;
   isPrimary: boolean;
-  displayOrder: number; // Agregado según tu JSON
+  displayOrder: number; 
 }
 
 export interface ProductVariant {
   id: number;
-  sku: string;           // ¡Esta es la que faltaba!
+  sku: string;           
   specificPrice: number;
   stock: number;
   images: ProductImage[];

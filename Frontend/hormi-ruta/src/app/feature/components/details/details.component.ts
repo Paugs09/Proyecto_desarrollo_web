@@ -2,8 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
-import { ProductService } from '../../services/product.services'; 
+import { ProductService } from '../../services/product.service'; 
 import { ProductDetail, ProductVariant } from '../../interfaces/product.interface';
+import { CartService } from '../../services/cart.service';
 
 @Component({
   selector: 'app-detalles',
@@ -17,14 +18,13 @@ export class DetailsComponent implements OnInit {
   imagenPrincipalUrl: string = '';
   cantidad = 1;
 
-  // NUEVO: Para manejar la variante que está activa
   varianteSeleccionada?: ProductVariant;
-  // Guardamos qué valor tiene cada atributo (ej: { "Talla": "37", "Referencia/Color": "Multicolor" })
   seleccionActual: { [key: string]: string } = {};
 
   constructor(
     private route: ActivatedRoute,
-    private productService: ProductService
+    private productService: ProductService,
+    private cartService: CartService
   ) {}
 
   ngOnInit(): void {
@@ -34,7 +34,6 @@ export class DetailsComponent implements OnInit {
         next: (data) => {
           this.producto = data;
           if (this.producto && this.producto.variants.length > 0) {
-            // Inicializamos con la primera variante
             this.seleccionarVariante(this.producto.variants[0]);
           }
         },
@@ -43,18 +42,14 @@ export class DetailsComponent implements OnInit {
     }
   }
 
-  // Setea toda la info basada en una variante
   seleccionarVariante(variant: ProductVariant) {
     this.varianteSeleccionada = variant;
     this.imagenPrincipalUrl = variant.images[0]?.imageUrl || '';
-    
-    // Llenamos el objeto de selección actual
     variant.values.forEach(v => {
       this.seleccionActual[v.attributeName] = v.value;
     });
   }
 
-  // Para el HTML: Obtiene lista de botones (ej: todos los colores o todas las tallas)
   getValoresAtributo(nombreAtributo: string): string[] {
     const valores = new Set<string>();
     this.producto?.variants.forEach(v => {
@@ -65,11 +60,8 @@ export class DetailsComponent implements OnInit {
     return Array.from(valores);
   }
 
-  // Cuando haces clic en un botón (ej: clic en talla 38)
   actualizarSeleccion(nombreAtributo: string, valor: string) {
     this.seleccionActual[nombreAtributo] = valor;
-    
-    // Buscamos si existe una variante que coincida con lo que el usuario quiere
     const coincidencia = this.producto?.variants.find(v => 
       v.values.every(val => this.seleccionActual[val.attributeName] === val.value)
     );
@@ -77,8 +69,6 @@ export class DetailsComponent implements OnInit {
     if (coincidencia) {
       this.seleccionarVariante(coincidencia);
     } else {
-      // Si no existe esa combinación (ej: no hay Multicolor en 37), 
-      // buscamos la primera variante que sí tenga el valor que acabas de tocar
       const nuevaSugerencia = this.producto?.variants.find(v => 
         v.values.some(val => val.attributeName === nombreAtributo && val.value === valor)
       );
@@ -86,7 +76,6 @@ export class DetailsComponent implements OnInit {
     }
   }
 
-  // Getters para el HTML
   get nombresAtributos(): string[] {
     if (!this.producto?.variants[0]) return [];
     return this.producto.variants[0].values.map(v => v.attributeName);
@@ -95,4 +84,64 @@ export class DetailsComponent implements OnInit {
   cambiarImagen(url: string) { this.imagenPrincipalUrl = url; }
   sumar() { this.cantidad++; }
   restar() { if (this.cantidad > 1) this.cantidad--; }
+
+  // --- LÓGICA DE DECODIFICACIÓN Y CARRITO ---
+
+  private decodificarToken(token: string): any {
+    try {
+      const base64Url = token.split('.')[1];
+      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      const jsonPayload = decodeURIComponent(atob(base64).split('').map(c => {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+      }).join(''));
+      return JSON.parse(jsonPayload);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  agregarAlCarrito() {
+    if (!this.varianteSeleccionada) {
+      alert("Por favor selecciona una opción (talla/color)");
+      return;
+    }
+
+    const userDataJson = sessionStorage.getItem('user_data');
+    const userData = userDataJson ? JSON.parse(userDataJson) : null;
+
+    if (!userData || !userData.accessToken) {
+      alert("Debes iniciar sesión para añadir productos al carrito.");
+      return;
+    }
+
+    // Obtenemos el ID del usuario
+    let userId = userData.id || userData.userId;
+    if (!userId) {
+      const tokenData = this.decodificarToken(userData.accessToken);
+      userId = tokenData?.nameid || tokenData?.sub || tokenData?.id;
+    }
+
+    if (!userId) {
+      alert("Error: No se pudo identificar al usuario.");
+      return;
+    }
+
+    const itemsParaEnviar = [{
+      productVariantId: this.varianteSeleccionada.id,
+      quantity: this.cantidad
+    }];
+
+    console.log("Enviando pedido para:", userId, itemsParaEnviar);
+
+    // Llamamos al servicio pasando el ID del usuario
+    this.cartService.createOrder(itemsParaEnviar, userId).subscribe({
+      next: (res) => {
+        alert("¡Hormiguita feliz! Producto añadido con éxito.");
+      },
+      error: (err) => {
+        console.error("Error 400 detallado:", err.error);
+        alert("Error al añadir.");
+      }
+    });
+  }
 }

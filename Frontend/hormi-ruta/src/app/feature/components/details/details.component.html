@@ -86,7 +86,8 @@
               <input type="number" [(ngModel)]="cantidad" class="w-12 text-center border-none focus:ring-0 font-bold text-slate-800">
               <button (click)="sumar()" class="w-12 h-12 hover:bg-orange-50 text-xl font-bold">+</button>
             </div>
-            <button class="flex-1 bg-[#F4A261] text-white font-bold py-4 rounded-2xl hover:bg-[#e78e46] transition-all shadow-lg active:scale-95">
+            <button (click)="agregarAlCarrito()" 
+                    class="flex-1 bg-[#F4A261] text-white font-bold py-4 rounded-2xl hover:bg-[#e78e46] transition-all shadow-lg active:scale-95">
               Añadir al carrito
             </button>
           </div>
