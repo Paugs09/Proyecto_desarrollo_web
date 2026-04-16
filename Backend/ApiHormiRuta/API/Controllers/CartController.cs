@@ -20,14 +20,14 @@ namespace API.Controllers
             return Ok();
         }
 
-        [HttpGet("order-items")]
+        [HttpGet("order-info")]
         public async Task<IActionResult> ListOrderItems()
         {
             var userId = HttpContext.Items["UserId"]?.ToString();
             _ = Guid.TryParse(userId, out Guid parsedUserId);
 
-            var orderItems = await _cartService.ListOrderItems(parsedUserId);
-            return Ok(orderItems);
+            var orderDto = await _cartService.GetOrderInfo(parsedUserId);
+            return Ok(orderDto);
         }
     }
 }
