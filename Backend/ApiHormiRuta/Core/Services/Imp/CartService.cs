@@ -3,6 +3,7 @@ using Core.Entities;
 using Core.Infraestructure;
 using Core.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 
 namespace Core.Services.Imp
 {
@@ -28,7 +29,7 @@ namespace Core.Services.Imp
             }
         }
 
-        public async Task<IEnumerable<OrderItemDto>> ListOrderItems(Guid userId)
+        public async Task<OrderDto> GetOrderInfo(Guid userId)
         {
             var order = await _genericOrderRepository.FirstOrDefaultAsyncWithIncludes(x=> x.UserId == userId, 
                 query => query.Include(o => o.OrderItems)
@@ -36,13 +37,21 @@ namespace Core.Services.Imp
                                     .ThenInclude(x=> x.Product)
                                         .ThenInclude(x=> x.Category)) ?? throw new Exception("Orden no encontrada");
 
-            return order.OrderItems.Select(x => new OrderItemDto
+            var orderDto = new OrderDto
             {
-                ProductName = x.ProductVariant.Product.Name,
-                Category = x.ProductVariant.Product.Category.Name,
-                ImageUrl = x.ProductVariant.ProductImages.FirstOrDefault(pi => pi.IsPrimary)?.ImageUrl ?? string.Empty,
-                UnitPrice = x.UnitPrice
-            });
+                TotalAmount = order.TotalAmount,
+                OrderItems = order.OrderItems.Select(x => new OrderItemDto
+                {
+                    ProductName = x.ProductVariant.Product.Name,
+                    Category = x.ProductVariant.Product.Category.Name,
+                    ImageUrl = x.ProductVariant.ProductImages.FirstOrDefault(pi => pi.IsPrimary)?.ImageUrl ?? string.Empty,
+                    Quantify = x.Quantity,
+                    UnitPrice = x.UnitPrice,
+                    TotalAmountPerUnit = x.Quantity * x.UnitPrice
+                })
+            };
+
+            return orderDto;
         } 
     }
 }
