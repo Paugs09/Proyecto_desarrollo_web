@@ -27,6 +27,15 @@ namespace API.Controllers
             return Ok(await _productService.GetDetailProduct(id));
         }
 
+        [HttpGet("wish-list")]
+        public async Task<IActionResult> GetAllProductOfWishList()
+        {
+            var userId = HttpContext.Items["UserId"]?.ToString();
+            _ = Guid.TryParse(userId, out Guid parsedUserId);
+
+            return Ok(await _productService.GetAllProductsOfWishList(parsedUserId));
+        }
+
         [HttpPost("wish-list")]
         public async Task<IActionResult> AddWishList(CreateWishListDto wishListDto)
         {

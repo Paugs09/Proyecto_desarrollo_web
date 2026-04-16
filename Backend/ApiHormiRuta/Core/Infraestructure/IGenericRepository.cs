@@ -13,7 +13,7 @@ namespace Core.Infraestructure
         Task AddAsync(T entity);
         Task AddRangeAsync(List<T> entities);
         void Update(T entity);
-        Task DeleteAsync(object id);
+        Task DeleteByIdAsync(object id);
         Task<bool> SaveAsync();
     }
 }
