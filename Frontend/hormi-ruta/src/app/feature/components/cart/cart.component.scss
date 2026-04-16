@@ -1,0 +1,17 @@
+:host {
+  display: block;
+}
+
+.overflow-x-auto::-webkit-scrollbar {
+  height: 4px;
+}
+.overflow-x-auto::-webkit-scrollbar-track {
+  background: transparent;
+}
+.overflow-x-auto::-webkit-scrollbar-thumb {
+  background: #f59e0b44;
+  border-radius: 99px;
+}
+input[type='checkbox'] {
+  accent-color: #f59e0b;
+}
