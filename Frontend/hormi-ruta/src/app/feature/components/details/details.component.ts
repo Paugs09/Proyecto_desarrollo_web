@@ -105,6 +105,13 @@ export class DetailsComponent implements OnInit {
       alert("Por favor selecciona una opción (talla/color)");
       return;
     }
+    //verifica en consola datos
+console.log("Datos de la variante:", this.varianteSeleccionada);
+    // --- NUEVA VALIDACIÓN DE STOCK ---
+    if (this.cantidad > this.varianteSeleccionada.stock) {
+      alert(`¡Uy! Solo tenemos ${this.varianteSeleccionada.stock} unidades disponibles de esta opción.`);
+      return; // corta el proceso para que NO envíe nada al servidor
+    }
 
     const userDataJson = sessionStorage.getItem('user_data');
     const userData = userDataJson ? JSON.parse(userDataJson) : null;
