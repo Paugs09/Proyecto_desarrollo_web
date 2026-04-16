@@ -1,71 +1,115 @@
-<div class="bg-[#FBF5EC] min-h-screen px-4 py-8 md:px-12 flex justify-center items-center">
-  
+
+<div *ngIf="producto" class="bg-[#FBF5EC] min-h-screen px-4 py-8 md:px-12 flex justify-center items-center">
   <div class="max-w-6xl w-full bg-[#FDF8F1] rounded-3xl shadow-sm p-6 lg:p-10 border border-orange-100">
     
-    <h1 class="text-4xl font-bold text-slate-800 mb-8">{{ producto.nombre }}</h1>
+    <h1 class="text-4xl font-bold text-slate-800 mb-8">{{ producto?.productName }}</h1>
 
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
       
-      <div class="lg:col-span-7 flex flex-col md:flex-row gap-4">
+      <div class="lg:col-span-7 flex flex-col md:flex-row gap-4 items-start">
         
-        <div class="flex md:flex-col gap-3 order-2 md:order-1">
-          <div *ngFor="let img of producto.imagenes; let i = index" 
-               (click)="cambiarImagen(i)"
-               class="w-20 h-20 rounded-xl border-2 cursor-pointer overflow-hidden transition-all"
-               [ngClass]="i === imagenPrincipalIdx ? 'border-[#F4A261] scale-105' : 'border-transparent bg-gray-200 opacity-70 hover:opacity-100'">
-            <img [src]="img" class="w-full h-full object-cover">
-          </div>
+        <div class="grid grid-cols-4 md:grid-cols-1 gap-3 order-2 md:order-1 w-full md:w-24 max-h-[600px] overflow-y-auto pr-2 custom-scrollbar">
+          <ng-container *ngFor="let variant of producto?.variants">
+            <div *ngFor="let img of variant.images" 
+                 (click)="cambiarImagen(img.imageUrl)"
+                 class="aspect-[2/3] w-full rounded-lg border-2 cursor-pointer overflow-hidden transition-all flex bg-gray-100"
+                 [ngClass]="img.imageUrl === imagenPrincipalUrl ? 'border-[#F4A261] scale-105 shadow-md' : 'border-transparent opacity-70 hover:opacity-100'">
+              
+              <img [src]="(img.imageUrl || '').startsWith('http') 
+                          ? img.imageUrl 
+                          : 'https://aifocklirqkrvpmlgnjr.supabase.co/storage/v1/object/public/hormiguane-images/' + img.imageUrl" 
+                   class="w-full h-full object-cover">
+            </div>
+          </ng-container>
         </div>
 
-        <div class="flex-1 bg-gray-200 rounded-2xl aspect-square overflow-hidden shadow-inner order-1 md:order-2 border border-gray-100">
-          <img [src]="producto.imagenes[imagenPrincipalIdx]" class="w-full h-full object-cover transition-all duration-500">
+        <div class="flex-1 bg-gray-100 rounded-2xl overflow-hidden shadow-inner order-1 md:order-2 border border-gray-100 flex justify-center items-center aspect-[2/3]">
+          <img [src]="(imagenPrincipalUrl || '').startsWith('http') 
+                      ? imagenPrincipalUrl 
+                      : 'https://aifocklirqkrvpmlgnjr.supabase.co/storage/v1/object/public/hormiguane-images/' + imagenPrincipalUrl" 
+               class="w-full h-full object-cover transition-all duration-500">
         </div>
       </div>
 
       <div class="lg:col-span-5 flex flex-col">
-        
         <div class="mb-6">
           <h2 class="text-2xl font-semibold text-slate-800 mb-3">Descripción</h2>
-          <p class="text-slate-600 leading-relaxed">{{ producto.descripcion }}</p>
+          <p class="text-slate-600 leading-relaxed">{{ producto?.longDescription }}</p>
         </div>
 
-        <div class="flex items-center justify-between mb-10">
-          <span class="text-3xl font-bold text-slate-900">{{ producto.precio | currency:'USD':'symbol':'1.0-0' }}</span>
-          <div class="flex text-yellow-500 text-xl italic">
-            ★★★★<span class="text-gray-300">☆</span>
+        <div class="grid grid-cols-2 gap-4 mb-8">
+          <div class="bg-white/50 p-3 rounded-xl border border-orange-50">
+            <p class="text-[10px] uppercase text-slate-400 font-bold">Material</p>
+            <p class="text-sm text-slate-700">{{ producto?.material }}</p>
+          </div>
+          <div class="bg-white/50 p-3 rounded-xl border border-orange-50">
+            <p class="text-[10px] uppercase text-slate-400 font-bold">Origen</p>
+            <p class="text-sm text-slate-700">{{ producto?.municipality }}</p>
+          </div>
+          <div *ngIf="producto?.dimensions" class="bg-white/50 p-3 rounded-xl border border-orange-50">
+            <p class="text-[10px] uppercase text-slate-400 font-bold">Dimensiones</p>
+            <p class="text-sm text-slate-700">{{ producto?.dimensions }}</p>
+          </div>
+          <div *ngIf="producto?.notes" class="bg-white/50 p-3 rounded-xl border border-orange-50">
+            <p class="text-[10px] uppercase text-slate-400 font-bold">Notas</p>
+            <p class="text-sm text-slate-700">{{ producto?.notes }}</p>
           </div>
         </div>
 
-        <div class="bg-white p-6 rounded-3xl shadow-md border border-orange-50">
-          
-          <label class="block text-sm font-medium text-slate-500 mb-3">{{ producto.tipoEleccion }}</label>
-          <div class="flex flex-wrap gap-2 mb-8">
-            <button *ngFor="let opt of producto.opciones"
-                    (click)="seleccionarOpcion(opt)"
-                    class="px-5 py-2 rounded-full border text-sm transition-all"
-                    [ngClass]="opcionSeleccionada === opt ? 'bg-[#F4A261] text-white border-[#F4A261]' : 'bg-[#FDF8F1] text-slate-700 border-gray-100 hover:border-orange-200'">
-              {{ opt }}
-            </button>
-          </div>
+        <div class="flex items-center mb-8">
+          <span class="text-4xl font-extrabold text-slate-900">
+            {{ varianteSeleccionada?.specificPrice | currency:'USD':'symbol':'1.0-0' }}
+          </span>
+          <span class="ml-2 text-slate-400 text-sm">COP</span>
+        </div>
 
-          <label class="block text-sm font-medium text-slate-500 mb-2">Cantidad</label>
-          <div class="flex items-center w-36 border border-gray-100 rounded-xl overflow-hidden mb-8 bg-gray-50">
-            <button (click)="restar()" class="w-12 h-10 hover:bg-orange-100 transition-colors font-bold text-slate-600">-</button>
-            <input type="number" [(ngModel)]="cantidad" class="w-12 text-center bg-transparent border-none focus:ring-0 font-bold text-slate-800">
-            <button (click)="sumar()" class="w-12 h-10 hover:bg-orange-100 transition-colors font-bold text-slate-600">+</button>
+        <div *ngIf="(producto?.variants?.length || 0) > 1" class="bg-white p-6 rounded-3xl shadow-sm border border-orange-50 space-y-6 mb-8">
+          <div *ngFor="let nombreAttr of nombresAtributos">
+            <label class="block text-[10px] font-bold text-slate-400 mb-2 uppercase tracking-widest">{{ nombreAttr }}</label>
+            <div class="flex flex-wrap gap-2">
+              <button *ngFor="let valor of getValoresAtributo(nombreAttr)"
+                      (click)="actualizarSeleccion(nombreAttr, valor)"
+                      class="px-4 py-2 rounded-xl border-2 text-sm transition-all"
+                      [ngClass]="seleccionActual[nombreAttr] === valor 
+                                 ? 'bg-[#F4A261] text-white border-[#F4A261] shadow-md' 
+                                 : 'bg-white text-slate-600 border-gray-100 hover:border-orange-200'">
+                {{ valor }}
+              </button>
+            </div>
           </div>
+        </div>
 
-          <div class="space-y-3">
-            <button class="w-full bg-[#F4A261] text-white font-bold py-4 rounded-2xl hover:bg-[#e78e46] transition-all shadow-lg shadow-orange-100 active:scale-95">
+        <div class="space-y-4">
+          <div class="flex items-center gap-4">
+            <div class="flex items-center border-2 border-orange-100 rounded-2xl overflow-hidden bg-white">
+              <button (click)="restar()" class="w-12 h-12 hover:bg-orange-50 text-xl font-bold">-</button>
+              <input type="number" [(ngModel)]="cantidad" class="w-12 text-center border-none focus:ring-0 font-bold text-slate-800">
+              <button (click)="sumar()" class="w-12 h-12 hover:bg-orange-50 text-xl font-bold">+</button>
+            </div>
+            <button (click)="agregarAlCarrito()" 
+                    class="flex-1 bg-[#F4A261] text-white font-bold py-4 rounded-2xl hover:bg-[#e78e46] transition-all shadow-lg active:scale-95">
               Añadir al carrito
             </button>
-            <button class="w-full bg-[#FBC396] text-[#8B4513] font-bold py-4 rounded-2xl hover:bg-[#f9b278] transition-all active:scale-95">
-              Comprar ahora
-            </button>
           </div>
+          <button class="w-full bg-[#FBC396] text-[#8B4513] font-bold py-4 rounded-2xl hover:bg-[#f9b278] transition-all">
+            Comprar ahora
+          </button>
         </div>
 
-      </div>
-    </div>
+      </div> </div> </div> </div>
+      <div *ngIf="!producto" class="flex flex-col justify-center items-center min-h-screen bg-[#FBF5EC]">
+  
+  <div class="relative flex flex-col items-center">
+    
+    <img [src]="'assets/hormiga-feliz.gif'" 
+         alt=" " 
+         class="w-32 h-auto object-contain animate-dance relative z-10">
+
+    <div class="w-16 h-2 bg-black/10 rounded-full blur-sm mt-[-5px] animate-shadow"></div>
   </div>
+
+  <p class="text-[#8B4513] font-bold text-lg mt-6 tracking-widest animate-pulse uppercase">
+    Cargando producto...
+  </p>
+  
 </div>
