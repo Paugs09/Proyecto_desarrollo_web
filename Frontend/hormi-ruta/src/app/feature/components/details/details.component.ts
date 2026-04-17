@@ -21,6 +21,9 @@ export class DetailsComponent implements OnInit {
   varianteSeleccionada?: ProductVariant;
   seleccionActual: { [key: string]: string } = {};
 
+  // Propiedad para el control visual del corazón
+  esFavorito: boolean = false;
+
   constructor(
     private route: ActivatedRoute,
     private productService: ProductService,
@@ -84,6 +87,29 @@ export class DetailsComponent implements OnInit {
   cambiarImagen(url: string) { this.imagenPrincipalUrl = url; }
   sumar() { this.cantidad++; }
   restar() { if (this.cantidad > 1) this.cantidad--; }
+
+
+
+marcarFavorito() {
+    if (!this.varianteSeleccionada) return;
+
+  // Si es true, lo vuelve false. Si es false, lo vuelve true.
+  const nuevoEstado = !this.esFavorito; 
+
+  this.productService.toggleFavorite(this.varianteSeleccionada.id, nuevoEstado).subscribe({
+    next: (res) => {
+      // Solo si el servidor responde OK, actualizamos la vista
+      this.esFavorito = nuevoEstado;
+      console.log("Estado de favoritos cambiado a:", nuevoEstado);
+    },
+    error: (err) => {
+      alert("Hubo un error al actualizar tus favoritos.");
+    }
+  });
+  }
+
+
+
 
   // --- LÓGICA DE DECODIFICACIÓN Y CARRITO ---
 
