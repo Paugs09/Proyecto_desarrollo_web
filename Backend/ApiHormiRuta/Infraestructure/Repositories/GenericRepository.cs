@@ -73,7 +73,7 @@ namespace Infraestructure.Repositories
             _context.Entry(entity).State = EntityState.Modified;
         }
 
-        public async Task DeleteAsync(object id)
+        public async Task DeleteByIdAsync(object id)
         {
             T? entity = await _dbSet.FindAsync(id);
             if (entity != null)

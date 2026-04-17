@@ -8,7 +8,6 @@ using Infraestructure.Persistence;
 using Infraestructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi;
-using Npgsql;
 using Scalar.AspNetCore;
 using Supabase;
 using System.Text.Json.Serialization;
@@ -32,7 +31,7 @@ services.AddControllers(options =>
     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
 });
 
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+//Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi(options =>
 {
     options.AddDocumentTransformer((document, context, cancellationToken) =>
@@ -57,6 +56,32 @@ builder.Services.AddOpenApi(options =>
         return Task.CompletedTask;
     });
 });
+
+//builder.Services.AddOpenApi(options =>
+//{
+//    options.AddDocumentTransformer((document, context, cancellationToken) =>
+//    {
+//        document.Components ??= new OpenApiComponents();
+//        document.Components.SecuritySchemes ??= new Dictionary<string, IOpenApiSecurityScheme>();
+
+//        // Cambiamos de "Http Bearer" a "ApiKey" ubicado en "Cookie"
+//        document.Components.SecuritySchemes["CookieAuth"] = new OpenApiSecurityScheme
+//        {
+//            Type = SecuritySchemeType.ApiKey,
+//            In = ParameterLocation.Cookie,
+//            Name = "sb_access_token", // El nombre de la cookie que definimos
+//            Description = "La autenticación se maneja automáticamente vía cookies HttpOnly"
+//        };
+
+//        document.Security ??= [];
+//        document.Security.Add(new OpenApiSecurityRequirement
+//        {
+//            [new OpenApiSecuritySchemeReference("CookieAuth")] = []
+//        });
+
+//        return Task.CompletedTask;
+//    });
+//});
 
 configuration.SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json");
 
@@ -127,6 +152,35 @@ if (app.Environment.IsDevelopment() || app.Environment.EnvironmentName == "Local
 
 app.UseCors(CORS_POLICY_NAME);
 app.UseHttpsRedirection();
+app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 app.Run();
+
+
+
+// Se agrega politica de origen cruzado
+//services.AddCors(options => options.AddPolicy("AngularPolicy", builder =>
+//{
+//    builder.WithOrigins("https://localhost:4200");
+//    builder.AllowAnyMethod();
+//    builder.AllowAnyHeader();
+//    builder.AllowCredentials();
+//    builder.WithExposedHeaders("Content-Disposition");
+//}));
+
+//var app = builder.Build();
+
+//// Configure the HTTP request pipeline.
+//if (app.Environment.IsDevelopment() || app.Environment.EnvironmentName == "Local")
+//{
+//    app.MapOpenApi();
+//    app.MapScalarApiReference();
+//}
+
+//app.UseCors("AngularPolicy");
+//app.UseHttpsRedirection();
+//app.UseAuthentication();
+//app.UseAuthorization();
+//app.MapControllers();
+//app.Run();

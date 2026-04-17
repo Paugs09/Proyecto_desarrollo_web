@@ -48,3 +48,46 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
     })
   );
 };
+
+// export const authInterceptor: HttpInterceptorFn = (req, next) => {
+//   const platformId = inject(PLATFORM_ID);
+//   const injector = inject(Injector);
+
+//   // 1. Clonar la petición base para incluir las credenciales (cookies)
+//   // Esto permite que el navegador envíe la cookie HttpOnly automáticamente.
+//   let authReq = req.clone({
+//     withCredentials: true
+//   });
+
+//   // 2. Si estamos en el servidor (SSR), podrías necesitar lógica adicional 
+//   // para propagar cookies, pero para el cliente estándar basta con withCredentials.
+//   if (!isPlatformBrowser(platformId)) {
+//     return next(authReq);
+//   }
+
+//   return next(authReq).pipe(
+//     catchError((error) => {
+//       //Manejo de error 401 (Token expirado en la cookie)
+//       if (error.status === 401 && !req.url.includes('/login') && !req.url.includes('/refresh')) {
+//         const authService = injector.get(AuthService);
+//         console.warn('Sesión expirada. Intentando refrescar...');
+
+//         return authService.refreshToken().pipe(
+//           switchMap(() => {
+//             // No necesitamos el token de la respuesta 'res' porque 
+//             // el refresh también vendrá con una nueva cookie HttpOnly desde el backend.
+//             const retryReq = req.clone({
+//               withCredentials: true
+//             });
+//             return next(retryReq);
+//           }),
+//           catchError((refreshError) => {
+//             authService.logout();
+//             return throwError(() => refreshError);
+//           })
+//         );
+//       }
+//       return throwError(() => error);
+//     })
+//   );
+// };

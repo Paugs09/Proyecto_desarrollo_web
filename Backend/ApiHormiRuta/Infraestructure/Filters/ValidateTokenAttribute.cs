@@ -61,6 +61,12 @@ namespace Infraestructure.Filters
 
         private static string? ExtractToken(HttpRequest request)
         {
+            // Intentar obtenerlo de la cookie segura
+            if (request.Cookies.TryGetValue("sb_access_token", out var cookieToken))
+            {
+                return cookieToken;
+            }
+
             var authHeader = request.Headers["Authorization"].ToString();
             return string.IsNullOrEmpty(authHeader)
                 ? null
@@ -69,5 +75,4 @@ namespace Infraestructure.Filters
                     : null;
         }
     }
-
 }

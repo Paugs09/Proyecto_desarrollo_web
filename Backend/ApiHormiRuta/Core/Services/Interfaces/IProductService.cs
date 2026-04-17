@@ -7,6 +7,7 @@ namespace Core.Services.Interfaces
     public interface IProductService
     {
         Task<IEnumerable<ProductDto>?> GetAllProductsAsync(ProductQueryFilter queryFilter);
+        Task<IEnumerable<ProductDto>?> GetAllProductsOfWishList(Guid userId);
         Task AddProductToWishList(CreateWishListDto createDto, Guid userId);
         Task<DetailProductDto> GetDetailProduct(long id);
         Task CreateProduct(CreateProductDto createProductDto);
