@@ -71,7 +71,7 @@ export class DetailsComponent implements OnInit {
     });
   }
 
-  // --- LOGICA DE VARIANTES (ESTO ES LO QUE TE DABA ERROR) ---
+  // --- LOGICA DE VARIANTES  ---
 
   seleccionarVariante(variant: ProductVariant) {
     this.varianteSeleccionada = variant;
@@ -80,7 +80,6 @@ export class DetailsComponent implements OnInit {
     this.verificarSiEsFavorito();
   }
 
-  // ESTA ES LA FUNCIÓN QUE EL HTML NO ENCONTRABA
   getValoresAtributo(nombreAtributo: string): string[] {
     const valores = new Set<string>();
     this.producto?.variants.forEach(v => {
