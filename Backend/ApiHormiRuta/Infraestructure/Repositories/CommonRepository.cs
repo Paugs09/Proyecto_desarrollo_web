@@ -1,4 +1,5 @@
 ﻿using Core.Dto.Cart;
+using Core.Dto.Product;
 using Core.Infraestructure;
 using Infraestructure.Data;
 using Microsoft.EntityFrameworkCore;
@@ -26,11 +27,32 @@ namespace Infraestructure.Repositories
             }
         }
 
+        public async Task CallFunctionUpdateProduct(long productId, UpdateProductDto updateProductDto)
+        {
+            try
+            {
+                var jsonPayload = JsonSerializer.Serialize(updateProductDto);
+
+                var result = await _context.Database
+                    .SqlQueryRaw<long>(
+                        "SELECT public.update_product({0}, {1}::jsonb)",
+                        productId,
+                        jsonPayload
+                    )
+                    .ToListAsync();
+
+                var jsonResult = result.FirstOrDefault();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error en la base de datos: {ex.Message}", ex);
+            }
+        }
+
         public async Task CallFunctionDeleteProduct(long productId)
         {
             try
             {
-                // Al ser una función que no retorna datos (void), usamos ExecuteSqlRawAsync
                 await _context.Database.ExecuteSqlRawAsync(
                     "SELECT public.delete_product_complete({0})",
                     productId
@@ -38,7 +60,6 @@ namespace Infraestructure.Repositories
             }
             catch (Exception ex)
             {
-                // Por ejemplo: "No se puede eliminar: El producto tiene historial en órdenes..."
                 throw new Exception(ex.Message, ex);
             }
         }
@@ -47,11 +68,8 @@ namespace Infraestructure.Repositories
         {
             try
             {
-                // Importante: Que las propiedades coincidan con el jsonb_to_recordset de la función
                 var jsonPayload = JsonSerializer.Serialize(items);
 
-                // Usamos FromSqlRaw para funciones que devuelven valores.
-                // Como devuelve un JSONB, lo capturamos como string.
                 var result = await _context.Database
                     .SqlQueryRaw<string>(
                         "SELECT public.handle_cart_operations({0}::uuid, {1}::jsonb)::text",
@@ -61,11 +79,9 @@ namespace Infraestructure.Repositories
                     .ToListAsync();
 
                 var jsonResult = result.FirstOrDefault();
-                // Aquí jsonResult contiene: {"order_id": 123, "total_amount": 45000}
             }
             catch (Exception ex)
             { 
-                // caerá aquí con el mensaje personalizado de Postgres.
                 throw new Exception($"Error en la base de datos: {ex.Message}", ex);
             }
         }

@@ -1,5 +1,4 @@
-﻿using Core.Dto.Product.ProductImage;
-using Core.Dto.Product.ProductVariant;
+﻿using Core.Dto.Product.ProductVariant;
 
 namespace Core.Dto.Product
 {

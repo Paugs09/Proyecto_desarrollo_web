@@ -54,6 +54,14 @@ namespace API.Controllers
             return Created();
         }
 
+        [HttpPut("{productId}")]
+        [AdminOnly]
+        public async Task<IActionResult> UpdateProduct(long productId, [FromBody] UpdateProductDto dto)
+        {
+            await _productService.UpdateProduct(productId, dto);
+            return new ObjectResult(new { StatusCode = StatusCodes.Status204NoContent, Value = "Producto actualizado" });
+        }
+
         [HttpDelete("{id:long}")]
         [AdminOnly]
         public async Task<IActionResult> DeleteProduct(long id)
