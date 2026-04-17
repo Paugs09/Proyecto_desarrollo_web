@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs'; // Importante añadir esto
+import { Observable } from 'rxjs'; 
 import { ProductDetail } from '../interfaces/product.interface';
 
 @Injectable({ providedIn: 'root' })
@@ -10,12 +10,16 @@ export class ProductService {
 
   constructor(private http: HttpClient) {}
 
-  // Obtener detalle del producto
   getById(id: number): Observable<ProductDetail> {
     return this.http.get<ProductDetail>(`${this.apiUrl}/detail/${id}`);
   }
 
-  // Guardar o quitar de Favoritos
+  // Obtiene la lista de favoritos actual
+  getWishList(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/wish-list`);
+  }
+
+  // Envía la acción de favorito con el booleano
   toggleFavorite(variantId: number, isFav: boolean): Observable<any> {
     const body = {
       productVariantId: variantId,

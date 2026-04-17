@@ -17,11 +17,8 @@ export class DetailsComponent implements OnInit {
   producto?: ProductDetail;
   imagenPrincipalUrl: string = '';
   cantidad = 1;
-
   varianteSeleccionada?: ProductVariant;
   seleccionActual: { [key: string]: string } = {};
-
-  // Propiedad para el control visual del corazón
   esFavorito: boolean = false;
 
   constructor(
@@ -45,14 +42,45 @@ export class DetailsComponent implements OnInit {
     }
   }
 
-  seleccionarVariante(variant: ProductVariant) {
-    this.varianteSeleccionada = variant;
-    this.imagenPrincipalUrl = variant.images[0]?.imageUrl || '';
-    variant.values.forEach(v => {
-      this.seleccionActual[v.attributeName] = v.value;
+  // --- LOGICA DE FAVORITOS ---
+
+  verificarSiEsFavorito() {
+    if (!this.varianteSeleccionada) return;
+    this.productService.getWishList().subscribe({
+      next: (wishList: any[]) => {
+        this.esFavorito = wishList.some(item => 
+          String(item.productVariantId).trim() === String(this.varianteSeleccionada?.id).trim()
+        );
+      },
+      error: (err) => console.error('Error wishlist:', err)
     });
   }
 
+  marcarFavorito() {
+    if (!this.varianteSeleccionada) return;
+    const intento = !this.esFavorito;
+    this.productService.toggleFavorite(this.varianteSeleccionada.id, intento).subscribe({
+      next: () => { this.esFavorito = intento; },
+      error: (err) => {
+        if (err.error && typeof err.error === 'string' && err.error.includes("ya está en favoritos")) {
+          this.esFavorito = true;
+        } else {
+          alert("Error al guardar favorito");
+        }
+      }
+    });
+  }
+
+  // --- LOGICA DE VARIANTES (ESTO ES LO QUE TE DABA ERROR) ---
+
+  seleccionarVariante(variant: ProductVariant) {
+    this.varianteSeleccionada = variant;
+    this.imagenPrincipalUrl = variant.images[0]?.imageUrl || '';
+    variant.values.forEach(v => this.seleccionActual[v.attributeName] = v.value);
+    this.verificarSiEsFavorito();
+  }
+
+  // ESTA ES LA FUNCIÓN QUE EL HTML NO ENCONTRABA
   getValoresAtributo(nombreAtributo: string): string[] {
     const valores = new Set<string>();
     this.producto?.variants.forEach(v => {
@@ -68,15 +96,7 @@ export class DetailsComponent implements OnInit {
     const coincidencia = this.producto?.variants.find(v => 
       v.values.every(val => this.seleccionActual[val.attributeName] === val.value)
     );
-
-    if (coincidencia) {
-      this.seleccionarVariante(coincidencia);
-    } else {
-      const nuevaSugerencia = this.producto?.variants.find(v => 
-        v.values.some(val => val.attributeName === nombreAtributo && val.value === valor)
-      );
-      if (nuevaSugerencia) this.seleccionarVariante(nuevaSugerencia);
-    }
+    if (coincidencia) this.seleccionarVariante(coincidencia);
   }
 
   get nombresAtributos(): string[] {
@@ -84,97 +104,24 @@ export class DetailsComponent implements OnInit {
     return this.producto.variants[0].values.map(v => v.attributeName);
   }
 
+  // --- OTROS ---
   cambiarImagen(url: string) { this.imagenPrincipalUrl = url; }
   sumar() { this.cantidad++; }
   restar() { if (this.cantidad > 1) this.cantidad--; }
 
-
-
-marcarFavorito() {
-    if (!this.varianteSeleccionada) return;
-
-  // Si es true, lo vuelve false. Si es false, lo vuelve true.
-  const nuevoEstado = !this.esFavorito; 
-
-  this.productService.toggleFavorite(this.varianteSeleccionada.id, nuevoEstado).subscribe({
-    next: (res) => {
-      // Solo si el servidor responde OK, actualizamos la vista
-      this.esFavorito = nuevoEstado;
-      console.log("Estado de favoritos cambiado a:", nuevoEstado);
-    },
-    error: (err) => {
-      alert("Hubo un error al actualizar tus favoritos.");
-    }
-  });
-  }
-
-
-
-
-  // --- LÓGICA DE DECODIFICACIÓN Y CARRITO ---
-
-  private decodificarToken(token: string): any {
-    try {
-      const base64Url = token.split('.')[1];
-      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-      const jsonPayload = decodeURIComponent(atob(base64).split('').map(c => {
-        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-      }).join(''));
-      return JSON.parse(jsonPayload);
-    } catch (e) {
-      return null;
-    }
-  }
-
   agregarAlCarrito() {
-    if (!this.varianteSeleccionada) {
-      alert("Por favor selecciona una opción (talla/color)");
-      return;
-    }
-    //verifica en consola datos
-console.log("Datos de la variante:", this.varianteSeleccionada);
-    // --- NUEVA VALIDACIÓN DE STOCK ---
-    if (this.cantidad > this.varianteSeleccionada.stock) {
-      alert(`¡Uy! Solo tenemos ${this.varianteSeleccionada.stock} unidades disponibles de esta opción.`);
-      return; // corta el proceso para que NO envíe nada al servidor
-    }
-
+    if (!this.varianteSeleccionada) return;
     const userDataJson = sessionStorage.getItem('user_data');
     const userData = userDataJson ? JSON.parse(userDataJson) : null;
+    const userId = userData?.id || userData?.userId;
+    if (!userId) { alert("Inicia sesión"); return; }
 
-    if (!userData || !userData.accessToken) {
-      alert("Debes iniciar sesión para añadir productos al carrito.");
-      return;
-    }
-
-    // Obtenemos el ID del usuario
-    let userId = userData.id || userData.userId;
-    if (!userId) {
-      const tokenData = this.decodificarToken(userData.accessToken);
-      userId = tokenData?.nameid || tokenData?.sub || tokenData?.id;
-    }
-
-    if (!userId) {
-      alert("Error: No se pudo identificar al usuario.");
-      return;
-    }
-
-    const itemsParaEnviar = [{
+    this.cartService.createOrder([{
       productVariantId: this.varianteSeleccionada.id,
       quantity: this.cantidad
-    }];
-
-    console.log("Enviando pedido para:", userId, itemsParaEnviar);
-
-    // Llamamos al servicio pasando el ID del usuario
-    this.cartService.createOrder(itemsParaEnviar, userId).subscribe({
-      next: (res) => {
-        alert("¡Hormiguita feliz! Producto añadido con éxito.");
-      },
-      error: (err) => {
-        console.error("Error 400 detallado:", err.error);
-        alert("Error al añadir.");
-      }
+    }], userId).subscribe({
+      next: () => alert("¡Hormiguita feliz!"),
+      error: () => alert("Error al añadir")
     });
   }
 }
