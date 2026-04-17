@@ -11,6 +11,7 @@ namespace Core.Services.Interfaces
         Task AddProductToWishList(CreateWishListDto createDto, Guid userId);
         Task<DetailProductDto> GetDetailProduct(long id);
         Task CreateProduct(CreateProductDto createProductDto);
+        Task UpdateProduct(long productId, UpdateProductDto updateProductDto);
         Task DeleteProduct(long productId);
         Task<string> CreateProductImage(IFormFile formFile);
     }
