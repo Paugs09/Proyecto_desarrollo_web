@@ -2,36 +2,9 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { Subject, debounceTime, takeUntil } from 'rxjs';
-
-// export interface CartItem {
-//   id: number;
-//   name: string;
-//   category: string;
-//   price: number;
-//   quantity: number;
-//   image: string;
-//   selected: boolean;
-// }
-
-export interface CartItem {
-  id: number;
-  productVariantId: number; 
-  name: string;
-  category: string;
-  price: number;
-  quantity: number;
-  image: string;
-  selected: boolean;
-  isFavorite: boolean;
-}
-
-export interface OrderPayload {
-  items: { id: number; quantity: number; price: number }[];
-  subtotal: number;
-  discount: number;
-  total: number;
-}
+import { Subject, takeUntil } from 'rxjs';
+import { CartService } from '../../services/cart.service';
+import { OrderItemDto, OrderDto} from '../../interfaces/cart.interface';
 
 @Component({
   selector: 'app-cart',
@@ -44,24 +17,14 @@ export class CartComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
   private orderUpdate$ = new Subject<void>();
 
-  // --- endpoints (revisar) ---
-  private readonly CART_API = '/api/cart/order-items';
-  private readonly ORDER_API = '/api/cart/create-order';
-  private readonly WISHLIST_API = '/api/product/wish-list';
-
-  items: CartItem[] = [];
+  items: OrderItemDto[] = [];
+  totalCompra: number = 0;
   isLoading = true;
-  isSyncing = false;
 
-  constructor(private http: HttpClient) {}
+  constructor(private cartService: CartService) {}
 
   ngOnInit(): void {
     this.loadCart();
-
-    // Debounce: espera 600 ms tras el último cambio antes de enviar al back
-    this.orderUpdate$
-      .pipe(debounceTime(600), takeUntil(this.destroy$))
-      .subscribe(() => this.sendOrderToBack());
   }
 
   ngOnDestroy(): void {
@@ -69,164 +32,92 @@ export class CartComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  // ── Carga inicial 
+  // Carga inicial 
   loadCart(): void {
     this.isLoading = true;
-    this.http.get<any[]>(this.CART_API).subscribe({
-      next: (data) => {
-        this.items = data.map((i, index) => ({
-          id: index,
-          productVariantId: i.productVariantId,
-          name: i.productName,
-          category: i.category,
-          price: i.unitPrice,
-          quantity: i.quantity ?? 1,
-          image: i.imageUrl,
-          selected: true,
-          isFavorite: false,
-        }));
+    this.cartService.listOrderItems()
+    .pipe(takeUntil(this.destroy$))
+    .subscribe({
+      next: (data: OrderDto) => {
+        this.items = data.orderItems;
+        this.totalCompra = data.totalAmount;
         this.isLoading = false;
-        this.triggerSync();
       },
-      error: () => {
-        // Datos de ejemplo 
-        this.items = [
-          {
-            id: 1,
-            productVariantId: 101,
-            name: 'Dulce de Feijoa',
-            category: 'Dulces',
-            price: 25000,
-            quantity: 1,
-            image: 'assets/img/prod.png',
-            selected: true,
-            isFavorite: true,
-          },
-          {
-            id: 2,
-            productVariantId: 102,
-            name: 'Nombre de la bebida...',
-            category: 'Bebidas',
-            price: 15000,
-            quantity: 1,
-            image: '',
-            selected: true,
-            isFavorite: false,
-          },
-          {
-            id: 3,
-            productVariantId: 103,
-            name: 'Nombre de la artesanía de fique...',
-            category: 'Artesanías de fique',
-            price: 45000,
-            quantity: 1,
-            image: '',
-            selected: true,
-            isFavorite: false,
-          },
-        ];
+      error: (err) => {
+        console.error('Error cargando el carrito: ', err);
         this.isLoading = false;
-        this.triggerSync();
-      },
+      }
     });
   }
 
-  // ── Selección 
-  get allSelected(): boolean {
-    return this.items.length > 0 && this.items.every((i) => i.selected);
+  // ── Selección => Revisar y modificar cuando el back devuelva select
+  // get allSelected(): boolean {
+  //   return this.items.length > 0 && this.items.every((i) => i.selected);
+  // }
+
+  // toggleAll(checked: boolean): void {
+  //   this.items.forEach((i) => (i.selected = checked));
+  //   this.triggerSync();
+  // }
+
+  // toggleItem(item: CartItem): void {
+  //   item.selected = !item.selected;
+  //   this.triggerSync();
+  // }
+
+  // deleteSelected(): void {
+  //   this.items = this.items.filter((i) => !i.selected);
+  //   this.triggerSync();
+  // }
+
+
+
+  // REVISAR eliminar producto del carrito
+  // removeItem(item: OrderItemDto): void {
+  //   const payload = [{
+  //     productVariantId: item.productVariantId,
+  //     quantity: 0
+  //   }];
+
+    // Revisar en el servicio del carrito en front el userId
+  //   this.cartService.createOrder(payload, "1")
+  //     .pipe(takeUntil(this.destroy$))
+  //     .subscribe({
+  //       next: () => {
+  //         this.loadCart();
+  //       },
+  //       error: (err: unknown) => console.error('Error eliminando item:', err)
+  //     });
+  // }
+
+
+  
+  // Cantidad para probar front
+  increment(item: OrderItemDto): void {
+    item.quantify++;
   }
 
-  toggleAll(checked: boolean): void {
-    this.items.forEach((i) => (i.selected = checked));
-    this.triggerSync();
-  }
-
-  toggleItem(item: CartItem): void {
-    item.selected = !item.selected;
-    this.triggerSync();
-  }
-
-  deleteSelected(): void {
-    this.items = this.items.filter((i) => !i.selected);
-    this.triggerSync();
-  }
-
-  // ── Cantidad 
-  get selectedItems(): CartItem[] {
-    return this.items.filter((i) => i.selected);
-  }
-
-  get selectedCount(): number {
-    return this.selectedItems.reduce((s, i) => s + i.quantity, 0);
-  }
-
-  increment(item: CartItem): void {
-    item.quantity++;
-    this.triggerSync();
-  }
-
-  decrement(item: CartItem): void {
-    if (item.quantity > 1) {
-      item.quantity--;
-      this.triggerSync();
+  decrement(item: OrderItemDto): void {
+    if(item.quantify > 1){
+      item.quantify--;
     }
   }
 
-  removeItem(item: CartItem): void {
-    this.items = this.items.filter((i) => i.id !== item.id);
-    this.triggerSync();
+  // Cantidad de productos en el carrito
+  get totalItemsCount(): number {
+    return this.items.reduce((total, item) => total + item.quantify, 0);
   }
 
-  // ── Cálculos reactivos 
-  get subtotal(): number {
-    return this.selectedItems.reduce(
-      (sum, i) => sum + i.price * i.quantity,
-      0
-    );
-  }
-
-  get discount(): number {
-    // Esta es la lógica para descuento (opcional -- esperar aprobación de hormicompañeros): 10 % si hay 3 o más artículos seleccionados
-    return this.selectedCount >= 3 ? Math.round(this.subtotal * 0.1) : 0;
+  // Cálculos directos front
+  get subtotal(): number{
+    return this.items.reduce((sum, i) => sum + (i.unitPrice * i.quantify), 0);
   }
 
   get total(): number {
-    return this.subtotal - this.discount;
+    return this.subtotal;
   }
 
-  // ── Envío al back 
-  triggerSync(): void {
-    this.orderUpdate$.next();
-  }
-
-  sendOrderToBack(): void {
-    if (this.selectedItems.length === 0) return;
-
-    this.isSyncing = true;
-    const payload: OrderPayload = {
-      items: this.selectedItems.map((i) => ({
-        id: i.id,
-        quantity: i.quantity,
-        price: i.price,
-      })),
-      subtotal: this.subtotal,
-      discount: this.discount,
-      total: this.total,
-    };
-
-    this.http.post(this.ORDER_API, payload).subscribe({
-      next: () => (this.isSyncing = false),
-      error: () => (this.isSyncing = false),
-    });
-  }
-
-  checkout(): void {
-    // Forzar sincronización inmediata antes de redirigir
-    this.sendOrderToBack();
-    // Aquí añade navegación: this.router.navigate(['/checkout'])
-  }
-
-  // ── Utilidades 
+  // Utilidades 
   formatCurrency(value: number): string {
     return new Intl.NumberFormat('es-CO', {
       style: 'currency',
@@ -235,33 +126,25 @@ export class CartComponent implements OnInit, OnDestroy {
     }).format(value);
   }
 
-  trackById(_: number, item: CartItem): number {
-    return item.id;
+  trackById(index: number, item: OrderItemDto): string {
+    return item.productName + index;
   }
 
-  selectedProduct: CartItem | null = null;
-detailOpen = false;
+  // Modal de detalle lupa
+  selectedProduct: OrderItemDto | null = null;
+  detailOpen = false;
 
-openDetail(item: CartItem) {
-  this.selectedProduct = item;
-  this.detailOpen = true;
-}
+  openDetail(item: OrderItemDto) {
+    this.selectedProduct = item;
+    this.detailOpen = true;
+  }
 
-closeDetail() {
-  this.detailOpen = false;
-  this.selectedProduct = null;
-}
+  closeDetail() {
+    this.detailOpen = false;
+    this.selectedProduct = null;
+  }
 
-  toggleFavorite(item: CartItem): void {
-    item.isFavorite = !item.isFavorite;
- 
-    this.http.post(this.WISHLIST_API, {
-      productVariantId: item.productVariantId,
-      isFavorite: item.isFavorite,
-    }).subscribe({
-      error: () => {
-        item.isFavorite = !item.isFavorite;
-      },
-    });
+  checkout(): void {
+      console.log('Ir a pagar:', this.total);
   }
 }
