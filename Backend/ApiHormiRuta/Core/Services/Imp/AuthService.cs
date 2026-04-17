@@ -36,6 +36,7 @@ namespace Core.Services.Imp
             {
                 AccessToken = session?.AccessToken ?? throw new Exception("Credenciales inválidas"),
                 RefreshToken = session?.RefreshToken ?? throw new Exception("Credenciales inválidas"),
+                ExpiresIn = session?.ExpiresIn ?? throw new Exception("Credenciales inválidas"),
                 IsAdmin = isAdmin
             };
         }

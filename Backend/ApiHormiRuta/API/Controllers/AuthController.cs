@@ -31,6 +31,19 @@ namespace API.Controllers
             try
             {
                 var info = await _authService.LoginAsync(request.Email, request.Password);
+
+                var cookieOptions = new CookieOptions
+                {
+                    HttpOnly = true,   // Bloquea el acceso desde JavaScript (Protege vs XSS)
+                    Secure = false,
+                    SameSite = SameSiteMode.Lax,
+                    Expires = DateTime.UtcNow.AddSeconds(info.ExpiresIn),
+                    Path = "/"
+                };
+
+                // Guardas el AccessToken en la cookie
+                Response.Cookies.Append("sb_access_token", info.AccessToken, cookieOptions);
+
                 return Ok(info);
             }
             catch (GotrueException ex) { return Unauthorized(ex.Message); }

@@ -3,7 +3,6 @@ using Core.Entities;
 using Core.Infraestructure;
 using Core.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
 
 namespace Core.Services.Imp
 {
@@ -19,12 +18,10 @@ namespace Core.Services.Imp
         {
             try
             {
-                // Llamada atómica a la base de datos
                 await _commonRepository.CallFunctionAddOrder(items, userId);
             }
             catch (Postgrest.Exceptions.PostgrestException ex)
             {
-                // Aquí capturas los RAISE EXCEPTION (como el de "Stock insuficiente")
                 throw new Exception($"Error en el carrito: {ex.Message}");
             }
         }

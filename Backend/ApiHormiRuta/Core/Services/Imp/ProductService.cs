@@ -23,7 +23,7 @@ namespace Core.Services.Imp
 
         public async Task<IEnumerable<ProductDto>?> GetAllProductsAsync(ProductQueryFilter queryFilter)
         {
-            var products = await _genericProductRepository.GetAllAsync(query => query.Include(x=> x.ProductVariants).ThenInclude(pv => pv.ProductImages));
+            var products = await _genericProductRepository.GetAllAsync(query => query.Include(x => x.ProductVariants).ThenInclude(pv => pv.ProductImages));
 
             if (queryFilter.CategoryId.HasValue)
                 products = products.Where(x => x.CategoryId == queryFilter.CategoryId.Value);
@@ -41,17 +41,35 @@ namespace Core.Services.Imp
             });
         }
 
+        public async Task<IEnumerable<ProductDto>?> GetAllProductsOfWishList(Guid userId)
+        {
+            var wishList = await _genericWishListRepository.FindAsync(x => x.UserId == userId,
+                query => query.Include(x => x.ProductVariant.Product.Category)
+                              .Include(x => x.ProductVariant)
+                                 .ThenInclude(x => x.ProductImages));
+
+            return wishList.Select(x => new ProductDto
+            {
+                Id = x.ProductVariant.Id,
+                Name = x.ProductVariant.Product.Name,
+                Category = x.ProductVariant.Product.Category.Name,
+                BasePrice = x.ProductVariant.SpecificPrice,
+                ShortDescription = x.ProductVariant.Product.ShortDescription,
+                ImageUrl = x.ProductVariant.ProductImages.FirstOrDefault(i => i.IsPrimary)?.ImageUrl,
+            });
+        }
+
         public async Task AddProductToWishList(CreateWishListDto createDto, Guid userId)
         {
             var wishListItem = await _genericWishListRepository.FirstOrDefaultAsyncWithIncludes(x => x.UserId == userId && x.ProductVariantId == createDto.ProductVariantId);
 
             if (!createDto.IsFavorite && wishListItem != null)
             {
-                await _genericWishListRepository.DeleteAsync(wishListItem);
+                await _genericWishListRepository.DeleteByIdAsync(wishListItem.Id);
                 await _genericWishListRepository.SaveAsync();
                 return;
             }
-            else
+            else if (wishListItem == null)
             {
                 await _genericWishListRepository.AddAsync(new WishList
                 {
@@ -59,6 +77,10 @@ namespace Core.Services.Imp
                     ProductVariantId = createDto.ProductVariantId,
                 });
                 await _genericWishListRepository.SaveAsync();
+            }
+            else
+            {
+                throw new Exception("El producto ya está en favoritos");
             }
         }
 
