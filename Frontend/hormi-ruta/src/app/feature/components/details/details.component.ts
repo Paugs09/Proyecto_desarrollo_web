@@ -1,3 +1,4 @@
+
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -5,6 +6,7 @@ import { ActivatedRoute } from '@angular/router';
 import { ProductService } from '../../services/product.service'; 
 import { ProductDetail, ProductVariant } from '../../interfaces/product.interface';
 import { CartService } from '../../services/cart.service';
+import { first } from 'rxjs'; // Para optimizar la hidratación
 
 @Component({
   selector: 'app-detalles',
@@ -17,9 +19,9 @@ export class DetailsComponent implements OnInit {
   producto?: ProductDetail;
   imagenPrincipalUrl: string = '';
   cantidad = 1;
-
   varianteSeleccionada?: ProductVariant;
   seleccionActual: { [key: string]: string } = {};
+  esFavorito: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -30,7 +32,8 @@ export class DetailsComponent implements OnInit {
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     if (id) {
-      this.productService.getById(id).subscribe({
+      // Usa .pipe(first()) para que la suscripción se cierre rápido y ayude a la hidratación
+      this.productService.getById(id).pipe(first()).subscribe({
         next: (data) => {
           this.producto = data;
           if (this.producto && this.producto.variants.length > 0) {
@@ -42,12 +45,81 @@ export class DetailsComponent implements OnInit {
     }
   }
 
+  // --- LÓGICA DE FAVORITOS  ---
+
+  verificarSiEsFavorito() {
+  if (!this.producto) return;
+
+  // se crea una lista de todos los IDs que podrían representar a este producto
+  
+  const idsRelacionados = [
+    this.producto.id, 
+    ...this.producto.variants.map(v => v.id)
+  ];
+
+  this.productService.getWishList().pipe(first()).subscribe({
+    next: (wishList: any[]) => {
+      // Si alguno de los IDs de favoritos coincide con el ID del producto o de sus variantes
+      this.esFavorito = wishList.some(fav => idsRelacionados.includes(fav.id));
+      
+      console.log("IDs del producto y sus variantes:", idsRelacionados);
+      console.log("¿Alguno está en favoritos?:", this.esFavorito);
+    },
+    error: (err) => console.error('Error wishlist:', err)
+  });
+}
+
+  marcarFavorito() {
+    if (!this.varianteSeleccionada) return;
+
+    const estadoIntento = !this.esFavorito;
+    this.productService.toggleFavorite(this.varianteSeleccionada.id, estadoIntento).subscribe({
+      next: () => {
+        this.esFavorito = estadoIntento;
+      },
+      error: (err) => {
+        if (err.error && typeof err.error === 'string' && err.error.includes("ya está en favoritos")) {
+          this.esFavorito = true;
+        } else {
+          console.error("Error al actualizar favorito:", err);
+        }
+      }
+    });
+  }
+
+  // --- LÓGICA DE VARIANTES ---
+
   seleccionarVariante(variant: ProductVariant) {
     this.varianteSeleccionada = variant;
     this.imagenPrincipalUrl = variant.images[0]?.imageUrl || '';
-    variant.values.forEach(v => {
-      this.seleccionActual[v.attributeName] = v.value;
-    });
+    
+    // Actualizar botones
+    variant.values.forEach(v => this.seleccionActual[v.attributeName] = v.value);
+    
+    // Comprobar favoritos
+    this.verificarSiEsFavorito();
+  }
+
+  actualizarSeleccion(nombreAtributo: string, valor: string) {
+    this.seleccionActual[nombreAtributo] = valor;
+    
+    const coincidencia = this.producto?.variants.find(v => 
+      v.values.every(val => this.seleccionActual[val.attributeName] === val.value)
+    );
+
+    if (coincidencia) {
+      this.seleccionarVariante(coincidencia);
+    } else {
+      
+      const sugerencia = this.producto?.variants.find(v => 
+        v.values.some(val => val.attributeName === nombreAtributo && val.value === valor)
+      );
+      if (sugerencia) this.seleccionarVariante(sugerencia);
+    }
+  }
+
+  get nombresAtributos(): string[] {
+    return this.producto?.variants[0]?.values.map(v => v.attributeName) || [];
   }
 
   getValoresAtributo(nombreAtributo: string): string[] {
@@ -60,109 +132,32 @@ export class DetailsComponent implements OnInit {
     return Array.from(valores);
   }
 
-  actualizarSeleccion(nombreAtributo: string, valor: string) {
-    this.seleccionActual[nombreAtributo] = valor;
-    const coincidencia = this.producto?.variants.find(v => 
-      v.values.every(val => this.seleccionActual[val.attributeName] === val.value)
-    );
+  // CARRITO
 
-    if (coincidencia) {
-      this.seleccionarVariante(coincidencia);
-    } else {
-      const nuevaSugerencia = this.producto?.variants.find(v => 
-        v.values.some(val => val.attributeName === nombreAtributo && val.value === valor)
-      );
-      if (nuevaSugerencia) this.seleccionarVariante(nuevaSugerencia);
+  agregarAlCarrito() {
+    if (!this.varianteSeleccionada) 
+      {
+      alert("Por favor selecciona una opción (talla/color)");
+      return;
+      }
+    if (this.cantidad > (this.varianteSeleccionada.stock || 0)) {
+      alert(`Solo quedan ${this.varianteSeleccionada.stock} unidades.`);
+      return;
     }
-  }
 
-  get nombresAtributos(): string[] {
-    if (!this.producto?.variants[0]) return [];
-    return this.producto.variants[0].values.map(v => v.attributeName);
+    // Enviamos un ARRAY 
+    const body = [{
+      productVariantId: this.varianteSeleccionada.id,
+      quantity: this.cantidad
+    }];
+
+    this.cartService.createOrder(body).subscribe({
+      next: () => alert("¡Hormiguita feliz! Añadido al carrito."),
+      error: (err) => alert("Error al añadir al carrito.")
+    });
   }
 
   cambiarImagen(url: string) { this.imagenPrincipalUrl = url; }
   sumar() { this.cantidad++; }
   restar() { if (this.cantidad > 1) this.cantidad--; }
-
-  // --- LÓGICA DE DECODIFICACIÓN Y CARRITO ---
-
-  // private decodificarToken(token: string): any {
-  //   try {
-  //     const base64Url = token.split('.')[1];
-  //     const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-  //     const jsonPayload = decodeURIComponent(atob(base64).split('').map(c => {
-  //       return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-  //     }).join(''));
-  //     return JSON.parse(jsonPayload);
-  //   } catch (e) {
-  //     return null;
-  //   }
-  // }
-
-  agregarAlCarrito() {
-    if (!this.varianteSeleccionada) {
-      alert("Por favor selecciona una opción (talla/color)");
-      return;
-    }
-    //verifica en consola datos
-// console.log("Datos de la variante:", this.varianteSeleccionada);
-    // --- NUEVA VALIDACIÓN DE STOCK ---
-    if (this.cantidad > this.varianteSeleccionada.stock) {
-      alert(`¡Uy! Solo tenemos ${this.varianteSeleccionada.stock} unidades disponibles de esta opción.`);
-      return; // corta el proceso para que NO envíe nada al servidor
-    }
-
-    const userDataJson = sessionStorage.getItem('user_data');
-    const userData = userDataJson ? JSON.parse(userDataJson) : null;
-
-    // if (!userData || !userData.accessToken) {
-    //   alert("Debes iniciar sesión para añadir productos al carrito.");
-    //   return;
-    // 
-    
-    if (!userData.accessToken) {
-      alert("Debes iniciar sesión para añadir productos al carrito.");
-      return;
-    }
-
-    // Obtenemos el ID del usuario
-    // let userId = userData.id || userData.userId;
-    // if (!userId) {
-    //   const tokenData = this.decodificarToken(userData.accessToken);
-    //   userId = tokenData?.nameid || tokenData?.sub || tokenData?.id;
-    // }
-
-    // if (!userId) {
-    //   alert("Error: No se pudo identificar al usuario.");
-    //   return;
-    // }
-
-    const itemsParaEnviar = [{
-      productVariantId: this.varianteSeleccionada.id,
-      quantity: this.cantidad
-    }];
-
-    // console.log("Enviando pedido para:", userId, itemsParaEnviar);
-
-    // Llamamos al servicio pasando el ID del usuario
-    // this.cartService.createOrder(itemsParaEnviar, userId).subscribe({
-    //   next: (res) => {
-    //     alert("¡Hormiguita feliz! Producto añadido con éxito.");
-    //   },
-    //   error: (err) => {
-    //     console.error("Error 400 detallado:", err.error);
-    //     alert("Error al añadir.");
-    //   }
-    // });
-
-      // El back extrae el userId del token automáticamente
-    this.cartService.createOrder(itemsParaEnviar).subscribe({
-      next: () => alert('¡Hormiguita feliz! Producto añadido con éxito.'),
-      error: (err) => {
-        console.error('Error al añadir al carrito:', err.error);
-        alert('Error al añadir el producto. Intenta de nuevo.');
-      }
-    });
-  }
 }

@@ -1,0 +1,91 @@
+<div class="max-w-4xl mx-auto p-6 bg-white shadow-2xl rounded-2xl my-10 border border-gray-100">
+  <h2 class="text-3xl font-black text-gray-800 mb-8 flex items-center gap-2">
+    <span>📦</span> Panel de Administración
+  </h2>
+
+  <form [formGroup]="productForm" (ngSubmit)="onSubmit()" class="space-y-8">
+    
+    <div class="bg-gray-50 p-6 rounded-xl grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="md:col-span-2 text-blue-600 font-bold text-sm uppercase tracking-wider">Información Básica</div>
+      
+      <div>
+        <label class="block text-sm font-semibold text-gray-600 mb-1">Nombre del Producto</label>
+        <input formControlName="name" type="text" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-400 outline-none transition">
+      </div>
+
+      <div>
+        <label class="block text-sm font-semibold text-gray-600 mb-1">Categoría Principal</label>
+        <select formControlName="categoryId" class="w-full p-3 border rounded-lg bg-white">
+          <option *ngFor="let cat of categories" [value]="cat.id">{{cat.name}}</option>
+        </select>
+      </div>
+
+      <div class="md:col-span-2">
+        <label class="block text-sm font-semibold text-gray-600 mb-1">Descripción Breve</label>
+        <textarea formControlName="shortDescription" rows="2" class="w-full p-3 border rounded-lg outline-none focus:ring-2 focus:ring-blue-400"></textarea>
+      </div>
+    </div>
+
+    <div formArrayName="productVariants" class="space-y-6">
+      <div *ngFor="let variant of variants.controls; let i = index" [formGroupName]="i" class="relative p-6 border-2 border-blue-100 rounded-2xl bg-white shadow-sm hover:shadow-md transition">
+        
+        <button *ngIf="variants.length > 1" type="button" (click)="removeVariant(i)" class="absolute -top-3 -right-3 bg-red-500 text-white w-8 h-8 rounded-full shadow-lg flex items-center justify-center font-bold">×</button>
+        
+        <h3 class="font-bold text-blue-500 mb-4 flex items-center gap-2">
+          🔹 Variante / Opción #{{i+1}}
+        </h3>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+          <div class="flex flex-col">
+            <label class="text-xs font-bold text-gray-400 uppercase">SKU (Código Único)</label>
+            <div class="flex gap-1">
+              <input formControlName="sku" class="flex-1 p-2 border-b-2 border-gray-200 outline-none focus:border-blue-400" placeholder="EJ: CHO-001">
+              <button type="button" (click)="autoGenerateSKU(i)" class="bg-gray-200 px-2 rounded hover:bg-gray-300" title="Generar código">🪄</button>
+            </div>
+          </div>
+
+          <div>
+            <label class="text-xs font-bold text-gray-400 block uppercase">Precio ($)</label>
+            <input formControlName="specificPrice" type="number" class="w-full p-2 border-b-2 border-gray-200 outline-none focus:border-blue-400">
+          </div>
+
+          <div>
+            <label class="text-xs font-bold text-gray-400 block uppercase">Stock</label>
+            <input formControlName="stock" type="number" class="w-full p-2 border-b-2 border-gray-200 outline-none focus:border-blue-400">
+          </div>
+        </div> <div formArrayName="productImages" class="mb-6 p-4 bg-blue-50 rounded-xl border border-blue-100">
+          <label class="block text-sm font-bold text-blue-700 mb-3">📸 Paso 1: Subir Imagen</label>
+          <div *ngFor="let img of variant.get('productImages')?.value; let k = index" [formGroupName]="k" class="flex flex-col sm:flex-row items-center gap-4">
+            <input type="file" (change)="onFileSelected($event, i)" class="text-xs text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:bg-blue-600 file:text-white file:font-semibold hover:file:bg-blue-700 cursor-pointer">
+            <input formControlName="imageUrl" readonly class="flex-1 p-2 bg-gray-100 border rounded text-[10px] text-gray-500 italic" placeholder="La URL se generará automáticamente...">
+          </div>
+        </div>
+
+        <div class="space-y-3">
+          <div class="flex justify-between items-center">
+            <label class="text-sm font-bold text-gray-600">🛠️ Especificaciones (Talla, Sabor, Peso...)</label>
+            <button type="button" (click)="addAttribute(i)" class="text-xs text-blue-600 font-bold hover:underline">+ Añadir Atributo</button>
+          </div>
+          
+          <div formArrayName="attributeValues" class="grid grid-cols-1 gap-2">
+            <div *ngFor="let attr of getAttributes(i).controls; let j = index" [formGroupName]="j" class="flex gap-2 animate-in fade-in duration-300">
+              <select formControlName="attributeId" class="p-2 border rounded bg-white text-xs">
+                <option *ngFor="let a of availableAttributes" [value]="a.id">{{a.name}}</option>
+              </select>
+              <input formControlName="value" placeholder="Ej: 38, Fresa, 500g" class="flex-1 p-2 border rounded text-xs">
+              <button (click)="removeAttribute(i, j)" class="text-red-400 px-2 font-bold hover:text-red-600">×</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <button type="button" (click)="addVariant()" class="w-full py-3 bg-gray-100 border-2 border-dashed border-gray-300 text-gray-500 rounded-xl font-bold hover:bg-gray-200 transition">
+      ➕ Agregar otra combinación (Variante)
+    </button>
+
+    <button type="submit" [disabled]="productForm.invalid" class="w-full py-5 bg-green-600 text-white rounded-2xl text-xl font-black shadow-xl hover:bg-green-700 transition-all disabled:bg-gray-300 disabled:shadow-none transform hover:-translate-y-1">
+      💾 GUARDAR PRODUCTO EN BASE DE DATOS
+    </button>
+  </form>
+</div>
