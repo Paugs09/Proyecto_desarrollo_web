@@ -15,6 +15,7 @@ namespace Core.Services.Imp
     public class ProductService(IConfiguration config,
                                 IStorageService storageService,
                                 ICommonRepository commonRepository,
+                                IProductRepository productRepository,
                                 IGenericRepository<WishList> genericWishListRepository,
                                 IGenericRepository<Product> genericProductRepository,
                                 IGenericRepository<ProductImage> genericProductImageRepository) : IProductService
@@ -22,36 +23,38 @@ namespace Core.Services.Imp
         private readonly string _bucketName = config["SupabaseS3:BucketName"]!;
         private readonly ICommonRepository _commonRepository = commonRepository;
         private readonly IStorageService _storageService = storageService;
+        private readonly IProductRepository _productRepository = productRepository;
         private readonly IGenericRepository<WishList> _genericWishListRepository = genericWishListRepository;
         private readonly IGenericRepository<Product> _genericProductRepository = genericProductRepository;
         private readonly IGenericRepository<ProductImage> _genericProductImageRepository = genericProductImageRepository;
 
-        public async Task<IEnumerable<ProductDto>?> GetAllProductsAsync(ProductQueryFilter queryFilter)
+        public async Task<IQueryable<ProductDto>?> GetAllProductsAsync(ProductQueryFilter queryFilter)
         {
-            var products = await _genericProductRepository.GetAllAsync(query => query.Include(x => x.ProductVariants).ThenInclude(pv => pv.ProductImages));
+            var query = _genericProductRepository.GetQueryable().AsNoTracking();
 
             if (queryFilter.CategoryId.HasValue)
-                products = products.Where(x => x.CategoryId == queryFilter.CategoryId.Value);
+                query = query.Where(x => x.CategoryId == queryFilter.CategoryId);
 
-            if (!string.IsNullOrWhiteSpace(queryFilter.PorductName))
-                products = products.Where(x => x.Name.Contains(queryFilter.PorductName));
+            if (!string.IsNullOrWhiteSpace(queryFilter.ProductName))
+                query = query.Where(x => x.Name.Contains(queryFilter.ProductName));
 
-            return products.Select(x => new ProductDto
+            var products = query.Select(x => new ProductDto
             {
                 Id = x.Id,
                 Name = x.Name,
                 ShortDescription = x.ShortDescription,
-                BasePrice = x.ProductVariants.FirstOrDefault()?.SpecificPrice ?? 0,
-                ImageUrl = x.ProductVariants.FirstOrDefault()?.ProductImages.FirstOrDefault(i => i.IsPrimary)?.ImageUrl,
+                BasePrice = x.ProductVariants != null ? x.ProductVariants.First().SpecificPrice : 0,
+                ImageUrl = x.ProductVariants != null ? x.ProductVariants.First().ProductImages.First(i => i.IsPrimary).ImageUrl : null,
             });
+
+            return products;
         }
 
-        public async Task<IEnumerable<ProductDto>?> GetAllProductsOfWishList(Guid userId)
+        public async Task<IQueryable<ProductDto>?> GetAllProductsOfWishList(Guid userId)
         {
-            var wishList = await _genericWishListRepository.FindAsync(x => x.UserId == userId,
-                query => query.Include(x => x.ProductVariant.Product.Category)
-                              .Include(x => x.ProductVariant)
-                                 .ThenInclude(x => x.ProductImages));
+            var wishList = _genericWishListRepository.GetQueryable()
+                .AsNoTracking()
+                .Where(x => x.UserId == userId);
 
             return wishList.Select(x => new ProductDto
             {
@@ -60,7 +63,7 @@ namespace Core.Services.Imp
                 Category = x.ProductVariant.Product.Category.Name,
                 BasePrice = x.ProductVariant.SpecificPrice,
                 ShortDescription = x.ProductVariant.Product.ShortDescription,
-                ImageUrl = x.ProductVariant.ProductImages.FirstOrDefault(i => i.IsPrimary)?.ImageUrl,
+                ImageUrl = x.ProductVariant.ProductImages.First(i => i.IsPrimary).ImageUrl,
             });
         }
 
@@ -91,55 +94,46 @@ namespace Core.Services.Imp
 
         public async Task<DetailProductDto> GetDetailProduct(long id)
         {
-            var product = await _genericProductRepository.FirstOrDefaultAsyncWithIncludes(
-                x => x.Id == id,
-                query => query
-                    .Include(p => p.Category)
-                    .Include(p => p.Material)
-                    .Include(p => p.Municipality)
-                    .Include(p => p.ProductImages)
-                    .Include(p => p.ProductVariants)
-                        .ThenInclude(pv => pv.VariantValues)
-                            .ThenInclude(vv => vv.AttributeValue)
-                                .ThenInclude(vv => vv.Attribute)
-            ) ?? throw new Exception("Producto no encontrado");
-
-            var detailProduct = new DetailProductDto
-            {
-                Id = product.Id,
-                ProductName = product.Name,
-                ShortDescription = product.ShortDescription,
-                LongDescription = product.LongDescription,
-                Category = product.Category.Name,
-                CategoryId = product.CategoryId,
-                Material = product.Material != null ? product.Material.Name : null,
-                MaterialId = product.MaterialId,
-                Municipality = product.Municipality.Name,
-                MunicipalityId = product.MunicipalityId,
-                Notes = product.Notes,
-                Dimensions = product.Dimensions,
-                Variants = [.. product.ProductVariants.Select(x => new DetailProductVariantDto
+            var detailProduct = await _genericProductRepository.GetQueryable()
+                .AsNoTracking()
+                .Where(x => x.Id == id)
+                .Select(product => new DetailProductDto
                 {
-                    Id = x.Id,
-                    Sku = x.Sku,
-                    SpecificPrice = x.SpecificPrice,
-                    Stock = x.Stock,
-                    Images = [.. x.ProductImages.Select(i => new DetailProductImageDto
+                    Id = product.Id,
+                    ProductName = product.Name,
+                    ShortDescription = product.ShortDescription,
+                    LongDescription = product.LongDescription,
+                    Category = product.Category.Name,
+                    CategoryId = product.CategoryId,
+                    Material = product.Material.Name,
+                    MaterialId = product.MaterialId,
+                    Municipality = product.Municipality.Name,
+                    MunicipalityId = product.MunicipalityId,
+                    Notes = product.Notes,
+                    Dimensions = product.Dimensions,
+                    Variants = product.ProductVariants.Select(x => new DetailProductVariantDto
                     {
-                        Id = i.Id,
-                        ProductVariantId = i.ProductVariant.Id,
-                        ImageUrl = i.ImageUrl,
-                        IsPrimary = i.IsPrimary,
-                        DisplayOrder = i.DisplayOrder
-                    })],
-                    Values = [.. x.VariantValues.Select(vv => new DetailValueDto
-                    {
-                        AttributeId = vv.AttributeValue.AttributeId,
-                        AttributeName = vv.AttributeValue.Attribute.Name,
-                        Value = vv.AttributeValue.Value
-                    })]
-                })]
-            };
+                        Id = x.Id,
+                        Sku = x.Sku,
+                        SpecificPrice = x.SpecificPrice,
+                        Stock = x.Stock,
+                        Images = x.ProductImages.Select(i => new DetailProductImageDto
+                        {
+                            Id = i.Id,
+                            ProductVariantId = x.Id,
+                            ImageUrl = i.ImageUrl,
+                            IsPrimary = i.IsPrimary,
+                            DisplayOrder = i.DisplayOrder
+                        }).ToList(),
+                        Values = x.VariantValues.Select(vv => new DetailValueDto
+                        {
+                            AttributeId = vv.AttributeValue.AttributeId,
+                            AttributeName = vv.AttributeValue.Attribute.Name,
+                            Value = vv.AttributeValue.Value
+                        }).ToList()
+                    }).ToList()
+                })
+                .FirstOrDefaultAsync() ?? throw new Exception("Producto no encontrado");
 
             return detailProduct;
         }

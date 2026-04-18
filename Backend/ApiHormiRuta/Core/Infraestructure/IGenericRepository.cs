@@ -4,8 +4,7 @@ namespace Core.Infraestructure
 {
     public interface IGenericRepository<T> where T : class
     {
-        Task<IEnumerable<T>> GetAllAsync(Func<IQueryable<T>, IQueryable<T>>? includeFunc = null);
-        Task<T?> GetByIdAsync(object id);
+        IQueryable<T> GetQueryable(Func<IQueryable<T>, IQueryable<T>>? includeFunc = null);
         Task<T?> FirstOrDefaultAsyncWithIncludes(
             Expression<Func<T, bool>> predicate,
             Func<IQueryable<T>, IQueryable<T>>? includeFunc = null);

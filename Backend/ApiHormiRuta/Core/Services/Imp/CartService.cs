@@ -28,11 +28,9 @@ namespace Core.Services.Imp
 
         public async Task<OrderDto> GetOrderInfo(Guid userId)
         {
-            var order = await _genericOrderRepository.FirstOrDefaultAsyncWithIncludes(x=> x.UserId == userId, 
-                query => query.Include(o => o.OrderItems)
-                                .ThenInclude(x=> x.ProductVariant.ProductImages)
-                                    .ThenInclude(x=> x.Product)
-                                        .ThenInclude(x=> x.Category)) ?? throw new Exception("Orden no encontrada");
+            var order = await _genericOrderRepository.GetQueryable()
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.UserId == userId) ?? throw new Exception("Orden no encontrada");
 
             var orderDto = new OrderDto
             {
@@ -42,7 +40,7 @@ namespace Core.Services.Imp
                     ProductVariantId = x.ProductVariantId,
                     ProductName = x.ProductVariant.Product.Name,
                     Category = x.ProductVariant.Product.Category.Name,
-                    ImageUrl = x.ProductVariant.ProductImages.FirstOrDefault(pi => pi.IsPrimary)?.ImageUrl ?? string.Empty,
+                    ImageUrl = x.ProductVariant.ProductImages.First(pi => pi.IsPrimary).ImageUrl,
                     Quantify = x.Quantity,
                     UnitPrice = x.UnitPrice,
                     TotalAmountPerUnit = x.Quantity * x.UnitPrice
