@@ -11,10 +11,15 @@ export class CartService {
 
   constructor(private http: HttpClient) { }
    
-  createOrder(items: any[], userId: string): Observable<any> {
-    // Mandamos el array de items directamente y el ID por la URL 
-    // Revisar
-    return this.http.post(`${this.apiUrl}/create-order?userId=${userId}`, items);
+  // createOrder(items: any[], userId: string): Observable<any> {
+  //   Mandamos el array de items directamente y el ID por la URL 
+  //   Revisar
+  //   return this.http.post(`${this.apiUrl}/create-order?userId=${userId}`, items);
+  // }
+
+    createOrder(items: any[]): Observable<any> {
+    // El back extrae el userId del token automáticamente
+    return this.http.post(`${this.apiUrl}/create-order`, items);
   }
 
   listOrderItems(): Observable<OrderDto> {

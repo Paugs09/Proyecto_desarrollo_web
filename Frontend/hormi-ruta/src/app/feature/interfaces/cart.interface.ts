@@ -1,10 +1,12 @@
 export interface OrderItemDto {
+  productVariantId: number;
   productName: string;
   category: string;
   imageUrl: string;
   quantify: number;     
   unitPrice: number;
   totalAmountPerUnit: number;
+  select?:boolean //Se gestiona en el front
 }
 
 export interface OrderDto {

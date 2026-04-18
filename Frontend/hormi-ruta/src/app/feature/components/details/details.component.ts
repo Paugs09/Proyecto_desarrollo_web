@@ -87,18 +87,18 @@ export class DetailsComponent implements OnInit {
 
   // --- LÓGICA DE DECODIFICACIÓN Y CARRITO ---
 
-  private decodificarToken(token: string): any {
-    try {
-      const base64Url = token.split('.')[1];
-      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-      const jsonPayload = decodeURIComponent(atob(base64).split('').map(c => {
-        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-      }).join(''));
-      return JSON.parse(jsonPayload);
-    } catch (e) {
-      return null;
-    }
-  }
+  // private decodificarToken(token: string): any {
+  //   try {
+  //     const base64Url = token.split('.')[1];
+  //     const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+  //     const jsonPayload = decodeURIComponent(atob(base64).split('').map(c => {
+  //       return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+  //     }).join(''));
+  //     return JSON.parse(jsonPayload);
+  //   } catch (e) {
+  //     return null;
+  //   }
+  // }
 
   agregarAlCarrito() {
     if (!this.varianteSeleccionada) {
@@ -106,7 +106,7 @@ export class DetailsComponent implements OnInit {
       return;
     }
     //verifica en consola datos
-console.log("Datos de la variante:", this.varianteSeleccionada);
+// console.log("Datos de la variante:", this.varianteSeleccionada);
     // --- NUEVA VALIDACIÓN DE STOCK ---
     if (this.cantidad > this.varianteSeleccionada.stock) {
       alert(`¡Uy! Solo tenemos ${this.varianteSeleccionada.stock} unidades disponibles de esta opción.`);
@@ -116,38 +116,52 @@ console.log("Datos de la variante:", this.varianteSeleccionada);
     const userDataJson = sessionStorage.getItem('user_data');
     const userData = userDataJson ? JSON.parse(userDataJson) : null;
 
-    if (!userData || !userData.accessToken) {
+    // if (!userData || !userData.accessToken) {
+    //   alert("Debes iniciar sesión para añadir productos al carrito.");
+    //   return;
+    // 
+    
+    if (!userData.accessToken) {
       alert("Debes iniciar sesión para añadir productos al carrito.");
       return;
     }
 
     // Obtenemos el ID del usuario
-    let userId = userData.id || userData.userId;
-    if (!userId) {
-      const tokenData = this.decodificarToken(userData.accessToken);
-      userId = tokenData?.nameid || tokenData?.sub || tokenData?.id;
-    }
+    // let userId = userData.id || userData.userId;
+    // if (!userId) {
+    //   const tokenData = this.decodificarToken(userData.accessToken);
+    //   userId = tokenData?.nameid || tokenData?.sub || tokenData?.id;
+    // }
 
-    if (!userId) {
-      alert("Error: No se pudo identificar al usuario.");
-      return;
-    }
+    // if (!userId) {
+    //   alert("Error: No se pudo identificar al usuario.");
+    //   return;
+    // }
 
     const itemsParaEnviar = [{
       productVariantId: this.varianteSeleccionada.id,
       quantity: this.cantidad
     }];
 
-    console.log("Enviando pedido para:", userId, itemsParaEnviar);
+    // console.log("Enviando pedido para:", userId, itemsParaEnviar);
 
     // Llamamos al servicio pasando el ID del usuario
-    this.cartService.createOrder(itemsParaEnviar, userId).subscribe({
-      next: (res) => {
-        alert("¡Hormiguita feliz! Producto añadido con éxito.");
-      },
+    // this.cartService.createOrder(itemsParaEnviar, userId).subscribe({
+    //   next: (res) => {
+    //     alert("¡Hormiguita feliz! Producto añadido con éxito.");
+    //   },
+    //   error: (err) => {
+    //     console.error("Error 400 detallado:", err.error);
+    //     alert("Error al añadir.");
+    //   }
+    // });
+
+      // El back extrae el userId del token automáticamente
+    this.cartService.createOrder(itemsParaEnviar).subscribe({
+      next: () => alert('¡Hormiguita feliz! Producto añadido con éxito.'),
       error: (err) => {
-        console.error("Error 400 detallado:", err.error);
-        alert("Error al añadir.");
+        console.error('Error al añadir al carrito:', err.error);
+        alert('Error al añadir el producto. Intenta de nuevo.');
       }
     });
   }
