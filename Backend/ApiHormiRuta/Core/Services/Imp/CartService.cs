@@ -30,24 +30,24 @@ namespace Core.Services.Imp
         {
             var order = await _genericOrderRepository.GetQueryable()
                 .AsNoTracking()
-                .FirstOrDefaultAsync(x => x.UserId == userId) ?? throw new Exception("Orden no encontrada");
-
-            var orderDto = new OrderDto
-            {
-                TotalAmount = order.TotalAmount,
-                OrderItems = order.OrderItems.Select(x => new OrderItemDto
+                .Where(x=> x.UserId == userId)
+                .Select(order => new OrderDto
                 {
-                    ProductVariantId = x.ProductVariantId,
-                    ProductName = x.ProductVariant.Product.Name,
-                    Category = x.ProductVariant.Product.Category.Name,
-                    ImageUrl = x.ProductVariant.ProductImages.First(pi => pi.IsPrimary).ImageUrl,
-                    Quantify = x.Quantity,
-                    UnitPrice = x.UnitPrice,
-                    TotalAmountPerUnit = x.Quantity * x.UnitPrice
+                    TotalAmount = order.TotalAmount,
+                    OrderItems = order.OrderItems.Select(x => new OrderItemDto
+                    {
+                        ProductVariantId = x.ProductVariantId,
+                        ProductName = x.ProductVariant.Product.Name,
+                        Category = x.ProductVariant.Product.Category.Name,
+                        ImageUrl = x.ProductVariant.ProductImages.Where(x=> x.IsPrimary).Select(x=> x.ImageUrl).FirstOrDefault()!,
+                        Quantify = x.Quantity,
+                        UnitPrice = x.UnitPrice,
+                        TotalAmountPerUnit = x.Quantity * x.UnitPrice
+                    }).ToList()
                 })
-            };
+                .FirstOrDefaultAsync() ?? throw new Exception("Orden no encontrada");
 
-            return orderDto;
-        } 
+            return order;
+        }
     }
 }
