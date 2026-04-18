@@ -30,17 +30,30 @@ export class ProductService {
 
   //crear producto
   createProduct(productData: any): Observable<any> {
-  return this.http.post<any>(`${this.apiUrl}/api/product`, productData);
+ return this.http.post(`${this.apiUrl}`, productData);
 }
+//subir imagenes sirve:D
 uploadImage(file: File): Observable<string> {
   const formData = new FormData();
-  formData.append('file', file); 
-
   
-  return this.http.post(`${this.apiUrl}/upload-image`, formData, { 
+  formData.append('formFile', file, file.name); 
+
+  return this.http.post('https://localhost:44384/api/product/upload-image', formData, { 
     responseType: 'text' 
   });
 }
+getCategories(): Observable<any[]> {
+  return this.http.get<any[]>(`${this.apiUrl}/categories`);
+}
+getMunicipalities(): Observable<any[]> {
+  return this.http.get<any[]>(`${this.apiUrl}/municipalities`); 
+  // O la ruta que use tu back, ej: https://localhost:44384/api/municipality
+}
+
+getMaterials(): Observable<any[]> {
+  return this.http.get<any[]>(`${this.apiUrl}/materials`);
+}
+
 
 
 }

@@ -27,5 +27,11 @@ export const routes: Routes = [
   {path: 'cart', component: CartComponent},
 
 
+  { path: 'admin/crear-producto', component: ProductFormComponent },
+  { 
+    path: 'admin/crear-producto', 
+    component: ProductFormComponent, 
+    canActivate: [adminGuard] 
+  }
 
  ];
