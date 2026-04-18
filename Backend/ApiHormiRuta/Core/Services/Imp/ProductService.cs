@@ -15,6 +15,7 @@ namespace Core.Services.Imp
     public class ProductService(IConfiguration config,
                                 IStorageService storageService,
                                 ICommonRepository commonRepository,
+                                IProductRepository productRepository,
                                 IGenericRepository<WishList> genericWishListRepository,
                                 IGenericRepository<Product> genericProductRepository,
                                 IGenericRepository<ProductImage> genericProductImageRepository) : IProductService
@@ -22,6 +23,7 @@ namespace Core.Services.Imp
         private readonly string _bucketName = config["SupabaseS3:BucketName"]!;
         private readonly ICommonRepository _commonRepository = commonRepository;
         private readonly IStorageService _storageService = storageService;
+        private readonly IProductRepository _productRepository = productRepository;
         private readonly IGenericRepository<WishList> _genericWishListRepository = genericWishListRepository;
         private readonly IGenericRepository<Product> _genericProductRepository = genericProductRepository;
         private readonly IGenericRepository<ProductImage> _genericProductImageRepository = genericProductImageRepository;
@@ -33,8 +35,8 @@ namespace Core.Services.Imp
             if (queryFilter.CategoryId.HasValue)
                 products = products.Where(x => x.CategoryId == queryFilter.CategoryId.Value);
 
-            if (!string.IsNullOrWhiteSpace(queryFilter.PorductName))
-                products = products.Where(x => x.Name.Contains(queryFilter.PorductName));
+            if (!string.IsNullOrWhiteSpace(queryFilter.ProductName))
+                products = products.Where(x => x.Name.Contains(queryFilter.ProductName));
 
             return products.Select(x => new ProductDto
             {
