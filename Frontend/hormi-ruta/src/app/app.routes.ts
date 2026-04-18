@@ -8,6 +8,11 @@ import { ProductsComponent } from './feature/components/products/products.compon
 import { ProfileComponent } from './feature/components/profile/profile.component';
 import { CartComponent } from './feature/components/cart/cart.component';
 
+
+import { ProductFormComponent } from './feature/components/product-form/product-form.component';
+import { adminGuard } from './feature/guards/admin.guard';
+
+
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: 'home', component: HomeComponent},
@@ -18,5 +23,9 @@ export const routes: Routes = [
   { path: 'adventure-form', component: AdventureFormComponent },
   { path: 'adventure-form/:id', component: AdventureFormComponent },
   {path: 'products', component:ProductsComponent},
-  {path: 'cart', component: CartComponent}
+
+  {path: 'cart', component: CartComponent},
+
+
+
  ];

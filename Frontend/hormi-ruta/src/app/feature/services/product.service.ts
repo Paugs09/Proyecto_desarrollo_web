@@ -27,4 +27,20 @@ export class ProductService {
     };
     return this.http.post(`${this.apiUrl}/wish-list`, body);
   }
+
+  //crear producto
+  createProduct(productData: any): Observable<any> {
+  return this.http.post<any>(`${this.apiUrl}/api/product`, productData);
+}
+uploadImage(file: File): Observable<string> {
+  const formData = new FormData();
+  formData.append('file', file); 
+
+  
+  return this.http.post(`${this.apiUrl}/upload-image`, formData, { 
+    responseType: 'text' 
+  });
+}
+
+
 }
