@@ -18,8 +18,6 @@ var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
 var configuration = builder.Configuration;
 
-// Add services to the container.
-
 services.AddControllers(options =>
 {
     options.Filters.Add<ValidateTokenFilter>();
@@ -27,7 +25,6 @@ services.AddControllers(options =>
 })
 .AddJsonOptions(options =>
 {
-    // Esto permite que el JSON acepte "Medio" y lo convierta autom�ticamente a tu Enum
     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
 });
 
@@ -91,7 +88,7 @@ var supabaseConfig = configuration.GetSection("Supabase");
 
 services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(connectionString, npgsqlOptions => {
-        npgsqlOptions.EnableRetryOnFailure(3); // Importante para latencia en Colombia
+        npgsqlOptions.EnableRetryOnFailure(3);
     }));
 
 // Lista inyecci�n de dependencias

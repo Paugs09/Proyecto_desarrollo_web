@@ -39,6 +39,7 @@ namespace Core.Services.Imp
                 TotalAmount = order.TotalAmount,
                 OrderItems = order.OrderItems.Select(x => new OrderItemDto
                 {
+                    ProductVariantId = x.ProductVariantId,
                     ProductName = x.ProductVariant.Product.Name,
                     Category = x.ProductVariant.Product.Category.Name,
                     ImageUrl = x.ProductVariant.ProductImages.FirstOrDefault(pi => pi.IsPrimary)?.ImageUrl ?? string.Empty,

@@ -7,19 +7,24 @@ using Core.QueryFilter.Product;
 using Core.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using System.Text.Json;
 
 namespace Core.Services.Imp
 {
-    public class ProductService(IStorageService storageService,
+    public class ProductService(IConfiguration config,
+                                IStorageService storageService,
                                 ICommonRepository commonRepository,
                                 IGenericRepository<WishList> genericWishListRepository,
-                                IGenericRepository<Product> genericProductRepository) : IProductService
+                                IGenericRepository<Product> genericProductRepository,
+                                IGenericRepository<ProductImage> genericProductImageRepository) : IProductService
     {
+        private readonly string _bucketName = config["SupabaseS3:BucketName"]!;
         private readonly ICommonRepository _commonRepository = commonRepository;
         private readonly IStorageService _storageService = storageService;
         private readonly IGenericRepository<WishList> _genericWishListRepository = genericWishListRepository;
         private readonly IGenericRepository<Product> _genericProductRepository = genericProductRepository;
+        private readonly IGenericRepository<ProductImage> _genericProductImageRepository = genericProductImageRepository;
 
         public async Task<IEnumerable<ProductDto>?> GetAllProductsAsync(ProductQueryFilter queryFilter)
         {
@@ -106,8 +111,11 @@ namespace Core.Services.Imp
                 ShortDescription = product.ShortDescription,
                 LongDescription = product.LongDescription,
                 Category = product.Category.Name,
+                CategoryId = product.CategoryId,
                 Material = product.Material != null ? product.Material.Name : null,
+                MaterialId = product.MaterialId,
                 Municipality = product.Municipality.Name,
+                MunicipalityId = product.MunicipalityId,
                 Notes = product.Notes,
                 Dimensions = product.Dimensions,
                 Variants = [.. product.ProductVariants.Select(x => new DetailProductVariantDto
@@ -150,8 +158,26 @@ namespace Core.Services.Imp
             }
         }
 
+        public async Task UpdateProduct(long productId, UpdateProductDto updateProductDto)
+        {
+            try
+            {
+                await _storageService.DeleteMultipleImagesByUrlsAsync(updateProductDto.ImageUrlsToDelete);
+
+                await _commonRepository.CallFunctionUpdateProduct(productId, updateProductDto);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error al editar el producto", ex);
+            }
+        }
+
         public async Task DeleteProduct(long productId)
         {
+            var images = await _genericProductImageRepository.FindAsync(i => i.ProductId == productId);
+            var imageUrls = images.Where(x => x.ImageUrl.Contains(_bucketName)).Select(i => i.ImageUrl).ToList();
+
+            await _storageService.DeleteMultipleImagesByUrlsAsync(imageUrls);
             await _commonRepository.CallFunctionDeleteProduct(productId);
         }
 
