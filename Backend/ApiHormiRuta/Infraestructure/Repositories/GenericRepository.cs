@@ -16,20 +16,10 @@ namespace Infraestructure.Repositories
             _dbSet = _context.Set<T>();
         }
 
-        // Obtener todos con posibilidad de incluir tablas relacionadas
-        public async Task<IEnumerable<T>> GetAllAsync(Func<IQueryable<T>, IQueryable<T>>? includeFunc = null)
+        public IQueryable<T> GetQueryable(Func<IQueryable<T>, IQueryable<T>>? includeFunc = null)
         {
             IQueryable<T> query = _dbSet;
-            if (includeFunc != null)
-            {
-                query = includeFunc(query);
-            }
-            return await query.ToListAsync();
-        }
-
-        public async Task<T?> GetByIdAsync(object id)
-        {
-            return await _dbSet.FindAsync(id);
+            return includeFunc != null ? includeFunc(query) : query;
         }
 
         public async Task<T?> FirstOrDefaultAsyncWithIncludes(

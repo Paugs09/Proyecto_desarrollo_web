@@ -5,7 +5,7 @@ namespace Core.Services.Interfaces
 {
     public interface ICommonService
     {
-        Task<IEnumerable<GeneralInfo>> Common(string parameter);
-         Task<IEnumerable<CategoryPresentationDto>> GetPresentationCategoryList();
+        Task<IQueryable<GeneralInfo>?> Common(string parameter);
+         Task<IQueryable<CategoryPresentationDto>> GetPresentationCategoryList();
     }
 }

@@ -54,32 +54,6 @@ builder.Services.AddOpenApi(options =>
     });
 });
 
-//builder.Services.AddOpenApi(options =>
-//{
-//    options.AddDocumentTransformer((document, context, cancellationToken) =>
-//    {
-//        document.Components ??= new OpenApiComponents();
-//        document.Components.SecuritySchemes ??= new Dictionary<string, IOpenApiSecurityScheme>();
-
-//        // Cambiamos de "Http Bearer" a "ApiKey" ubicado en "Cookie"
-//        document.Components.SecuritySchemes["CookieAuth"] = new OpenApiSecurityScheme
-//        {
-//            Type = SecuritySchemeType.ApiKey,
-//            In = ParameterLocation.Cookie,
-//            Name = "sb_access_token", // El nombre de la cookie que definimos
-//            Description = "La autenticación se maneja automáticamente vía cookies HttpOnly"
-//        };
-
-//        document.Security ??= [];
-//        document.Security.Add(new OpenApiSecurityRequirement
-//        {
-//            [new OpenApiSecuritySchemeReference("CookieAuth")] = []
-//        });
-
-//        return Task.CompletedTask;
-//    });
-//});
-
 configuration.SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json");
 
 var connectionString = configuration.GetConnectionString("DefaultConnection");
@@ -87,9 +61,20 @@ var s3Config = configuration.GetSection("SupabaseS3");
 var supabaseConfig = configuration.GetSection("Supabase");
 
 services.AddDbContext<AppDbContext>(options =>
-    options.UseNpgsql(connectionString, npgsqlOptions => {
-        npgsqlOptions.EnableRetryOnFailure(3);
-    }));
+    options.UseNpgsql(
+        connectionString,
+        npgsqlOptions =>
+        {
+            // Timeout para evitar queries que se cuelguen indefinidamente
+            npgsqlOptions.CommandTimeout(30);
+
+            // Reintentos en caso de fallos transitorios
+            npgsqlOptions.EnableRetryOnFailure(
+                maxRetryCount: 2,
+                maxRetryDelay: TimeSpan.FromSeconds(5),
+                errorCodesToAdd: null);
+        }),
+    ServiceLifetime.Scoped); // Scoped
 
 // Lista inyecci�n de dependencias
 services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -106,11 +91,11 @@ builder.Services.AddSingleton<IAmazonS3>(sp =>
 var supabaseUrl = supabaseConfig["Url"] ?? string.Empty;
 var supabaseKey = supabaseConfig["Key"] ?? string.Empty;
 
-builder.Services.AddSingleton(provider =>
+builder.Services.AddScoped(provider =>
     new Client(supabaseUrl, supabaseKey, new SupabaseOptions
     {
         AutoRefreshToken = true,
-        AutoConnectRealtime = true
+        AutoConnectRealtime = false
     })
 );
 
@@ -126,6 +111,7 @@ services.AddScoped<ValidateTokenFilter>();
 
 //Repositories
 services.AddScoped<IUnitOfWork, UnitOfWork>();
+services.AddScoped<IProductRepository, ProductRepository>();
 services.AddScoped<ICommonRepository, CommonRepository>();
 services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
@@ -149,35 +135,6 @@ if (app.Environment.IsDevelopment() || app.Environment.EnvironmentName == "Local
 
 app.UseCors(CORS_POLICY_NAME);
 app.UseHttpsRedirection();
-app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 app.Run();
-
-
-
-// Se agrega politica de origen cruzado
-//services.AddCors(options => options.AddPolicy("AngularPolicy", builder =>
-//{
-//    builder.WithOrigins("https://localhost:4200");
-//    builder.AllowAnyMethod();
-//    builder.AllowAnyHeader();
-//    builder.AllowCredentials();
-//    builder.WithExposedHeaders("Content-Disposition");
-//}));
-
-//var app = builder.Build();
-
-//// Configure the HTTP request pipeline.
-//if (app.Environment.IsDevelopment() || app.Environment.EnvironmentName == "Local")
-//{
-//    app.MapOpenApi();
-//    app.MapScalarApiReference();
-//}
-
-//app.UseCors("AngularPolicy");
-//app.UseHttpsRedirection();
-//app.UseAuthentication();
-//app.UseAuthorization();
-//app.MapControllers();
-//app.Run();

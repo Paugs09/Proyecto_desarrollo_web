@@ -3,6 +3,6 @@
     public class ProductQueryFilter
     {
         public long? CategoryId {  get; set; }
-        public string? PorductName { get; set; }
+        public string? ProductName { get; set; }
     }
 }

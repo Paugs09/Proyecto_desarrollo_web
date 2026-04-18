@@ -2,6 +2,7 @@
 using Core.Entities;
 using Core.Infraestructure;
 using Core.Services.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace Core.Services.Imp
 {
@@ -17,9 +18,9 @@ namespace Core.Services.Imp
         private readonly IGenericRepository<Entities.Attribute> _genericAttributeRepository = genericAttributeRepository;
         private readonly IGenericRepository<Municipality> _genericMunicipalityRepository = genericMunicipalityRepository;
 
-        public async Task<IEnumerable<CategoryPresentationDto>> GetPresentationCategoryList()
+        public async Task<IQueryable<CategoryPresentationDto>> GetPresentationCategoryList()
         {
-            var categories = await _genericCategoryRepository.GetAllAsync();
+            var categories = _genericCategoryRepository.GetQueryable().AsNoTracking();
 
             return categories.Select(c => new CategoryPresentationDto
             {
@@ -30,11 +31,11 @@ namespace Core.Services.Imp
             });
         }
 
-        public async Task<IEnumerable<GeneralInfo>> Common(string parameter)
+        public async Task<IQueryable<GeneralInfo>?> Common(string parameter)
         {
             if (parameter == "municipality") 
             {
-                var municipalities = await _genericMunicipalityRepository.GetAllAsync();
+                var municipalities = _genericMunicipalityRepository.GetQueryable().AsNoTracking();
                 return municipalities.Select(m => new GeneralInfo
                 {
                     Id = m.Id,
@@ -44,7 +45,7 @@ namespace Core.Services.Imp
             }
             else if (parameter == "category")
             {
-                var categories = await _genericCategoryRepository.GetAllAsync();
+                var categories = _genericCategoryRepository.GetQueryable().AsNoTracking();
                 return categories.Select(c => new GeneralInfo
                 {
                     Id = c.Id,
@@ -54,7 +55,7 @@ namespace Core.Services.Imp
             }
             else if (parameter == "material")
             {
-                var materials = await _genericMaterialRepository.GetAllAsync();
+                var materials = _genericMaterialRepository.GetQueryable().AsNoTracking();
                 return materials.Select(m => new GeneralInfo
                 {
                     Id = m.Id,
@@ -64,7 +65,7 @@ namespace Core.Services.Imp
             }
             else if (parameter == "attribute")
             {
-                var attributes = await _genericAttributeRepository.GetAllAsync();
+                var attributes = _genericAttributeRepository.GetQueryable().AsNoTracking();
                 return attributes.Select(a => new GeneralInfo
                 {
                     Id = a.Id,
@@ -74,7 +75,7 @@ namespace Core.Services.Imp
             }
             else
             {
-                return [];
+                return null;
             }
         }
     }
