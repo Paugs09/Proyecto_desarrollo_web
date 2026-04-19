@@ -28,18 +28,33 @@ export class ProductService {
     return this.http.post(`${this.apiUrl}/wish-list`, body);
   }
 
-  //crear producto
+// METODOS PARA EL FORMULARIO 
   createProduct(productData: any): Observable<any> {
-  return this.http.post<any>(`${this.apiUrl}/api/product`, productData);
-}
-uploadImage(file: File): Observable<string> {
-  const formData = new FormData();
-  formData.append('file', file); 
+    return this.http.post(this.apiUrl, productData);
+  }
 
+  uploadImage(file: File): Observable<string> {
+    const formData = new FormData();
+    formData.append('formFile', file, file.name); 
+    return this.http.post(`${this.apiUrl}/upload-image`, formData, { 
+      responseType: 'text' 
+    });
+  }
+
+  getCategories(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/common/category-presentation`);
+  }
+
+  getMunicipalities(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/common/parameter/municipality`);
+  }
+
+  getMaterials(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/common/parameter/material`);
+  }
+  getAttributes(): Observable<any[]> {
   
-  return this.http.post(`${this.apiUrl}/upload-image`, formData, { 
-    responseType: 'text' 
-  });
+  return this.http.get<any[]>(`${this.apiUrl}/common/parameter/attribute`);
 }
 
   //Listar productos
@@ -48,7 +63,6 @@ uploadImage(file: File): Observable<string> {
     if (categoryId) params['categoryId'] = categoryId;
     if (productName) params['productName'] = productName;
 
-    return this.http.get<ProductDto[]>(this.apiUrl, { params });
-  }
+  return this.http.get<ProductDto[]>(this.apiUrl, { params }); }
 
 }
