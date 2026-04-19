@@ -15,6 +15,11 @@ namespace Infraestructure.Persistence
             return _transaction;
         }
 
+        public IExecutionStrategy CreateExecutionStrategy()
+        {
+            return _dbContext.Database.CreateExecutionStrategy();
+        }
+
         public async Task SaveChangesAsync()
         {
             await _dbContext.SaveChangesAsync();
