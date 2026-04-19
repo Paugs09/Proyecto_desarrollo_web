@@ -36,7 +36,7 @@ namespace Core.Services.Imp
                 query = query.Where(x => x.CategoryId == queryFilter.CategoryId);
 
             if (!string.IsNullOrWhiteSpace(queryFilter.ProductName))
-                query = query.Where(x => x.Name.Contains(queryFilter.ProductName));
+                query = query.Where(x => x.Name.ToLower().Contains(queryFilter.ProductName.ToLower()));
 
             var products = query.Select(x => new ProductDto
             {

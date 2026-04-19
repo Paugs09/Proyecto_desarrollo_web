@@ -7,7 +7,7 @@ import { OrderDto } from '../interfaces/cart.interface';
   providedIn: 'root'
 })
 export class CartService {
-  private apiUrl = 'https://localhost:44384/api/cart'; // Asegúrate si es Cart o cart
+  private apiUrl = 'https://localhost:44384/api/cart'; 
 
   constructor(private http: HttpClient) { }
 
