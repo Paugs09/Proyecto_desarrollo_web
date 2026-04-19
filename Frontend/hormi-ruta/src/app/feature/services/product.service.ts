@@ -6,7 +6,7 @@ import { ProductDetail } from '../interfaces/product.interface';
 @Injectable({ providedIn: 'root' })
 export class ProductService {
   
-  private apiUrl = 'https://localhost:44384/api/product'; 
+  private apiUrl = 'https://localhost:44384/api'; 
 
   constructor(private http: HttpClient) {}
 
@@ -28,32 +28,33 @@ export class ProductService {
     return this.http.post(`${this.apiUrl}/wish-list`, body);
   }
 
-  //crear producto
+// METODOS PARA EL FORMULARIO 
   createProduct(productData: any): Observable<any> {
- return this.http.post(`${this.apiUrl}`, productData);
-}
-//subir imagenes sirve:D
-uploadImage(file: File): Observable<string> {
-  const formData = new FormData();
+    return this.http.post(`${this.apiUrl}/product`, productData);
+  }
+
+  uploadImage(file: File): Observable<string> {
+    const formData = new FormData();
+    formData.append('formFile', file, file.name); 
+    return this.http.post(`${this.apiUrl}/product/upload-image`, formData, { 
+      responseType: 'text' 
+    });
+  }
+
+  getCategories(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/common/category-presentation`);
+  }
+
+  getMunicipalities(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/common/parameter/municipality`);
+  }
+
+  getMaterials(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/common/parameter/material`);
+  }
+  getAttributes(): Observable<any[]> {
   
-  formData.append('formFile', file, file.name); 
-
-  return this.http.post('https://localhost:44384/api/product/upload-image', formData, { 
-    responseType: 'text' 
-  });
+  return this.http.get<any[]>(`${this.apiUrl}/common/parameter/attribute`);
 }
-getCategories(): Observable<any[]> {
-  return this.http.get<any[]>(`${this.apiUrl}/categories`);
-}
-getMunicipalities(): Observable<any[]> {
-  return this.http.get<any[]>(`${this.apiUrl}/municipalities`); 
-  // O la ruta que use tu back, ej: https://localhost:44384/api/municipality
-}
-
-getMaterials(): Observable<any[]> {
-  return this.http.get<any[]>(`${this.apiUrl}/materials`);
-}
-
-
 
 }
