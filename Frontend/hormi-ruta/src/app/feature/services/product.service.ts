@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs'; 
-import { ProductDetail } from '../interfaces/product.interface';
+import { ProductDetail, ProductDto } from '../interfaces/product.interface';
 
 @Injectable({ providedIn: 'root' })
 export class ProductService {
@@ -42,5 +42,13 @@ uploadImage(file: File): Observable<string> {
   });
 }
 
+  //Listar productos
+  getAll(categoryId?: number, productName?: string): Observable<ProductDto[]> {
+    let params: any = {};
+    if (categoryId) params['categoryId'] = categoryId;
+    if (productName) params['productName'] = productName;
+
+    return this.http.get<ProductDto[]>(this.apiUrl, { params });
+  }
 
 }

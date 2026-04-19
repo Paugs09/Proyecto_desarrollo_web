@@ -9,8 +9,8 @@
   <p><i>¡Encuentra los mejores productos guanentinos!</i></p>
   <img src="assets/hormiga-feliz.gif" alt="hormiga" class="w-10 h-10 object-contain mx-3">
   <div class="home-search_bar">
-    <input type="text" placeholder="Hormigas culonas...">
-    <button>
+    <input type="text" placeholder="Buscar productos..." [(ngModel)]="homeSearchText" (keydown)="onSearchKeydown($event)">
+    <button (click)="searchProducts()">
       <i class="fas fa-search"></i>
     </button>
   </div>
@@ -19,10 +19,11 @@
 
 <!--Categorías-->
 <!-- Desktop -->
-<div class="hidden md:flex overflow-visible w-full items-center mt-8 mb-16">
+<div class="hidden md:flex overflow-visible w-full items-center mt-8">
   <a
     *ngFor="let category of categories"
-    [routerLink]="'/categoria/' + category.id"
+    [routerLink]="'/products'"
+    [queryParams]="{ categoryId: category.id }"
     class="relative transition ease-in-out duration-500 delay-150 transform
            cursor-pointer hover:-translate-y-6 hover:z-10
            flex-1 -ml-6 first:ml-0"
@@ -31,7 +32,7 @@
     <article
       class="w-full h-full overflow-hidden bg-cover bg-center relative
              transform duration-500 group"
-      [style.background-image]="'url(' + category.imageUrl + ')'">
+      [style.background-image]="'url(' + category?.imageUrl + ')'">
 
       <div class="relative w-full h-full flex flex-col justify-end">
         <div class="absolute inset-0 bg-gradient-to-t
@@ -68,13 +69,14 @@
             scrollbar-hide">
     <a
     *ngFor="let category of categories"
-    [routerLink]="'/categoria/' + category.id"
+    [routerLink]="'/products'"
+    [queryParams]="{ categoryId: category.id }"
     class="relative flex-shrink-0 w-[75vw] h-[100vw] rounded-2xl overflow-hidden
            snap-start cursor-pointer group">
 
     <img
-      [src]="category.imageUrl"
-      [alt]="category.name"
+      [src]="category?.imageUrl"
+      [alt]="category?.name"
       class="absolute inset-0 w-full h-full object-cover
              scale-105 group-active:scale-100 transition-transform duration-700">
     <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent">
@@ -92,22 +94,27 @@
 
   </a>
 </div>
+<div class="container-top text-center">
+ <button class="bg-[#F4A261] hover:bg-[#e8935a] mt-4 text-lg text-white font-bold px-6 py-3 rounded-full 
+            transition-all duration-200 transform hover:-translate-y-1 hover:shadow-lg 
+            active:scale-95 active:brightness-90" routerLink="/products">Ver todos los productos</button>
+</div>
 
 
 <!--Top 3 de productos-->
-<div class="container-top text-center mt-16">
+<!-- <div class="container-top text-center mt-16">
   <h2 class="text-center text-2xl font-semibold italic text-gray-700 mb-8">Los más vendidos</h2>
   <br>
-  <section class="products-content">
+  <section class="products-content"> -->
     <!-- Desktop -->
-    <div class="products-grid">
+    <!-- <div class="products-grid">
       @for (item of products; track item) {
         <app-product-card></app-product-card>
       }
-    </div>
+    </div> -->
 
     <!-- Mobile-->
-    <div class="products-carousel">
+    <!-- <div class="products-carousel">
       <div class="products-carousel__track">
         @for (item of products; track item; let i = $index) {
           <div class="products-carousel__slide"
@@ -115,10 +122,10 @@
             <app-product-card></app-product-card>
           </div>
         }
-      </div>
+      </div> -->
 
       <!-- Dots -->
-      <div class="products-carousel__dots">
+      <!-- <div class="products-carousel__dots">
         @for (item of products; track item; let i = $index) {
           <button
             class="products-carousel__dot"
@@ -127,13 +134,13 @@
           </button>
         }
       </div>
-    </div>
+    </div> -->
 
-  </section>
+  <!-- </section>
   <button class="bg-[#F4A261] hover:bg-[#e8935a] mt-10 text-lg text-white font-bold px-6 py-3 rounded-full 
             transition-all duration-200 transform hover:-translate-y-1 hover:shadow-lg 
             active:scale-95 active:brightness-90" routerLink="/products">Ver todo</button>
-</div>
+</div> -->
 
 
 <!-- Seccion botones login/registro -->

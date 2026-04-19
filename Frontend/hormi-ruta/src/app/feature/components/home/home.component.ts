@@ -4,7 +4,7 @@ import { NgFor } from '@angular/common';
 import { CarouselComponent } from '../carousel/carousel.component';
 import { ICarouselItem } from '../carousel/Icarousel-item.metadata';
 import { CardsComponent, IPlaceCard } from '../cards/cards.component';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive  } from '@angular/router';
 import { ProductCardComponent } from '../product-card/product-card.component';
 import { CategoryService } from '../../services/category.service';
 import { Category } from '../../interfaces/category.interface';
@@ -13,7 +13,7 @@ import { AuthService } from '../../services/auth.service';
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CarouselComponent, FormsModule, NgFor, CardsComponent, RouterLink, ProductCardComponent],
+  imports: [CarouselComponent, FormsModule, NgFor, CardsComponent, RouterLink, RouterLinkActive, ProductCardComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
@@ -21,21 +21,37 @@ export class HomeComponent {
 
   private readonly authService = inject(AuthService);
   categories: Category[] = [];
+  homeSearchText = '';  
 
   //Control del carrusel de productos
   currentSlide = 0;
-  products = [1, 2, 3];
+  // products = [1, 2, 3];
 
   goToSlide(index: number) {
     this.currentSlide = index;
   }
 
-  constructor(private categoryService: CategoryService) { }
+  constructor(private categoryService: CategoryService, private router: Router) { }
 
   ngOnInit() {
     console.log('Usuario actual:', this.authService.isAdmin());
     this.getCategories();
   }
+
+  //Buscar productos en el buscador
+    searchProducts() {
+    if (this.homeSearchText.trim()) {
+      this.router.navigate(['/products'], {
+        queryParams: { productName: this.homeSearchText.trim() }
+      });
+    }
+  }
+
+  // Permitir buscar con Enter
+  onSearchKeydown(event: KeyboardEvent) {
+    if (event.key === 'Enter') this.searchProducts();
+  }
+
 
   private getCategories() {
     this.categoryService.getCategories().subscribe({

@@ -32,3 +32,13 @@ export interface VariantValue {
   attributeName: string;
   value: string;
 }
+
+//Para el listado de productos
+export interface ProductDto {
+  id: number;
+  name: string;
+  shortDescription: string;
+  basePrice: number;
+  imageUrl: string;
+  category?: string;
+}
