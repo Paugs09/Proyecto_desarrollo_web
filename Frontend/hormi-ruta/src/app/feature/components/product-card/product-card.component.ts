@@ -1,20 +1,21 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { CommonModule, DecimalPipe } from '@angular/common';
+import { ProductDto } from '../../interfaces/product.interface';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-product-card',
-  imports: [],
+  imports: [CommonModule, DecimalPipe],
   templateUrl: './product-card.component.html',
   styleUrl: './product-card.component.scss'
 })
 
-/** //Define qué datos necesita un producto
-export interface Product {
-  nombre: string;
-  precio: number;
-  imagen: string;
-  categoria: string; 
-  //los q pnga en SupaBase Jefferson
-}*/
 export class ProductCardComponent {
-//@Input() infoProducto!: Product;
+  @Input() product!: ProductDto;
+
+  constructor(private router: Router) {}
+
+  goToDetail() {
+    this.router.navigate(['/details', this.product.id]);
+  }
 }

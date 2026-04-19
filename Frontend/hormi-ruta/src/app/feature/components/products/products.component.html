@@ -1,49 +1,169 @@
-<section class="products-banner">
-  <div class="banner-content">
-    <h1>Productos</h1>
-  </div>
+<section class="products-banner w-full h-60 flex items-center justify-center mb-10">
+  <h1 class="text-white text-5xl font-bold uppercase tracking-widest">Productos</h1>
 </section>
 
-<div class="mobile-filter-wrapper">
-  <button class="mobile-filter-btn" (click)="toggleMenu()">
-    Filtrar por Categoría
+<!-- Botón para el filtro por categorías -->
+<div class="md:hidden px-4 mb-4">
+  <button
+    (click)="toggleMenu()"
+    class="w-full flex items-center justify-center gap-2 py-2.5 px-4
+           border border-[#e8e0d4] rounded-lg text-sm text-gray-600
+           bg-white hover:bg-[#faf8f5] transition">
+    <span class="text-base">&#9776;</span> Filtrar por Categoría
   </button>
 </div>
 
-<div class="main-container">
-  <aside class="sidebar" [class.active]="isMenuOpen">
-    <div class="sidebar-header">
-        <button class="close-menu-btn" (click)="toggleMenu()">×</button>
-        <h3>ㅤ</h3>
-        <h3><strong>Categorías</strong></h3>
-      <h3>ㅤ</h3>
-      
+<div class="flex max-w-[1200px] mx-auto mb-16 px-4 gap-0 items-start">
+
+  <!-- sidebar -->
+  <aside class="fixed md:static top-0 left-0 h-screen md:h-auto z-[200]
+                w-64 bg-white border-r border-[#f0ece4]
+                flex flex-col
+                -translate-x-full md:translate-x-0
+                transition-transform duration-300
+                shadow-lg md:shadow-none
+                md:flex-shrink-0"
+         [class.-translate-x-full]="!isMenuOpen"
+         [class.translate-x-0]="isMenuOpen || true"
+         [ngClass]="{ '-translate-x-full': !isMenuOpen, 'translate-x-0': isMenuOpen }">
+
+    <div class="flex items-center justify-between px-5 py-4 border-b border-[#f0ece4]">
+      <h3 class="text-[0.7rem] font-bold tracking-widest uppercase text-gray-400">Categorías</h3>
+      <button (click)="toggleMenu()"
+              class="md:hidden text-gray-400 hover:text-gray-600 text-2xl leading-none">×</button>
     </div>
-    <ul>
-      <li><a href="#">Artesanías Guanentinas</a></li>
-      <li><a href="#">Dulces y Sabores</a></li>
-      <li><a href="#">Bebidas y Bar</a></li>
-      <li><a href="#">Línea Fique y Café</a></li>
-      <li><a href="#">Naturaleza y Salud</a></li>
+
+    <!-- Lista categorías -->
+    <ul class="flex-1 overflow-y-auto py-2 m-0 list-none">
+
+      <!-- Todas -->
+      <li (click)="selectCategory(undefined); toggleMenu()"
+          class="flex items-center gap-3 px-5 py-2.5 cursor-pointer
+                 border-l-[3px] transition-all duration-150"
+          [ngClass]="selectedCategoryId === undefined
+            ? 'border-[#c47f2a] bg-[#fdf6ec]'
+            : 'border-transparent hover:bg-[#faf8f5] hover:border-[#dcc49a]'">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+             stroke-width="1.5" stroke="currentColor" class="w-5 h-5 flex-shrink-0 text-gray-500">
+          <path stroke-linecap="round" stroke-linejoin="round"
+                d="M9.568 3H5.25A2.25 2.25 0 0 0 3 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 0 0 5.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 0 0 9.568 3Z" />
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 6h.008v.008H6V6Z" />
+        </svg>
+        <span class="text-sm transition-colors duration-150"
+              [ngClass]="selectedCategoryId === undefined ? 'text-[#c47f2a] font-semibold' : 'text-gray-600'">
+          Todas
+        </span>
+      </li>
+
+      <!-- Categorías dinámicas -->
+      @for (cat of categories; track cat.id) {
+        <li (click)="selectCategory(cat.id); toggleMenu()"
+            class="flex items-center gap-3 px-5 py-2.5 cursor-pointer
+                   border-l-[3px] transition-all duration-150"
+            [ngClass]="selectedCategoryId === cat.id
+              ? 'border-[#c47f2a] bg-[#fdf6ec]'
+              : 'border-transparent hover:bg-[#faf8f5] hover:border-[#dcc49a]'">
+          @if (cat.imageUrl) {
+            <img [src]="cat.imageUrl" [alt]="cat.name"
+                 class="w-7 h-7 rounded-full object-cover flex-shrink-0">
+          } @else {
+            <span class="text-lg w-7 text-center flex-shrink-0">📦</span>
+          }
+          <span class="text-sm transition-colors duration-150"
+                [ngClass]="selectedCategoryId === cat.id ? 'text-[#c47f2a] font-semibold' : 'text-gray-600'">
+            {{ cat.name }}
+          </span>
+        </li>
+      }
     </ul>
-    <div class="sidebar-promo">
-      <img src="assets/img/prducts.png" alt="Promo">
+
+    <div class="mt-auto px-5 py-3 border-t border-[#f0ece4] text-center text-xs text-gray-400">
+      {{ products.length }} producto{{ products.length !== 1 ? 's' : '' }} encontrado{{ products.length !== 1 ? 's' : '' }}
     </div>
   </aside>
 
-  <section class="products-content">
-    <div class="search-bar">
-      <input type="text" placeholder="Buscar productos...">
+  <!-- Contenido -->
+  <section class="flex-1 min-w-0 p-4 md:p-6">
+
+    <!-- Buscador -->
+    <div class="home-search mb-6 text-center">
+      <img src="assets/hormiga-feliz.gif" alt="hormiga" class="w-10 h-10 object-contain mx-3">
+      <div class="home-search_bar flex items-center max-w-xl mx-auto
+                  border border-[#e8e0d4] rounded-full px-4 py-2 bg-white
+                  focus-within:border-[#c47f2a] focus-within:shadow-[0_0_0_3px_rgba(196,127,42,0.08)]
+                  transition-all duration-200">
+        <i class="fas fa-search text-gray-400 mr-3"></i>
+        <input
+          type="text"
+          placeholder="Buscar productos..."
+          [value]="searchText"
+          (input)="onSearchChange($any($event.target).value)"
+          class="flex-1 border-none outline-none text-sm bg-transparent text-gray-700 placeholder-gray-400">
+        @if (searchText) {
+          <button (click)="onSearchChange('')"
+                  class="ml-2 text-gray-400 hover:text-gray-600 text-lg leading-none bg-transparent border-none cursor-pointer">
+            ×
+          </button>
+        }
+      </div>
+            <p class="text-gray-500 italic text-ml mb-5">
+        <i>¡Encuentra los mejores productos guanentinos!</i>
+      </p>
     </div>
 
-    <div class="products-grid">
-      @for (item of [1,2,3,4,5,6,7,8]; track item) {
-        <app-product-card></app-product-card>
+    <!-- Filtros activos -->
+    @if (selectedCategoryId || searchText) {
+      <div class="flex items-center gap-2 flex-wrap mb-4">
+        <span class="text-xs text-gray-400">Filtros activos:</span>
+        @if (selectedCategoryId) {
+          <span (click)="selectCategory(undefined)"
+                class="bg-[#fdf6ec] text-[#c47f2a] border border-[#e8c98a]
+                       rounded-full px-3 py-0.5 text-xs cursor-pointer
+                       hover:bg-[#f7e4c4] transition">
+            {{ activeCategoryName }} ×
+          </span>
+        }
+        @if (searchText) {
+          <span (click)="onSearchChange('')"
+                class="bg-[#fdf6ec] text-[#c47f2a] border border-[#e8c98a]
+                       rounded-full px-3 py-0.5 text-xs cursor-pointer
+                       hover:bg-[#f7e4c4] transition">
+            "{{ searchText }}" ×
+          </span>
+        }
+      </div>
+    }
+
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-5">
+      @if (isLoading) {
+        @for (skeleton of [1,2,3,4,5,6]; track skeleton) {
+          <div class="product-skeleton"></div>
+        }
+      } @else if (products.length === 0) {
+        <div class="col-span-full flex flex-col items-center gap-3 py-20 text-gray-400">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-10">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15.182 16.318A4.486 4.486 0 0 0 12.016 15a4.486 4.486 0 0 0-3.198 1.318M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0ZM9.75 9.75c0 .414-.168.75-.375.75S9 10.164 9 9.75 9.168 9 9.375 9s.375.336.375.75Zm-.375 0h.008v.015h-.008V9.75Zm5.625 0c0 .414-.168.75-.375.75s-.375-.336-.375-.75.168-.75.375-.75.375.336.375.75Zm-.375 0h.008v.015h-.008V9.75Z" />
+          </svg>
+
+          <p class="text-base">No se encontraron productos.</p>
+          <button (click)="selectCategory(undefined); onSearchChange('')"
+                  class="mt-1 px-6 py-2 bg-[#c47f2a] hover:bg-[#a86820]
+                         text-white text-sm rounded-md transition cursor-pointer border-none">
+            Limpiar filtros
+          </button>
+        </div>
+      } @else {
+        @for (product of products; track product.id) {
+          <app-product-card [product]="product"></app-product-card>
+        }
       }
     </div>
+
   </section>
 </div>
 
+<!-- Overlay celular -->
 @if (isMenuOpen) {
-  <div class="sidebar-overlay" (click)="toggleMenu()"></div>
+  <div class="fixed inset-0 bg-black/30 z-[199] md:hidden"
+       (click)="toggleMenu()"></div>
 }
