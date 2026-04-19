@@ -168,10 +168,13 @@ namespace Core.Services.Imp
 
         public async Task DeleteProduct(long productId)
         {
-            var images = await _genericProductImageRepository.FindAsync(i => i.ProductId == productId);
-            var imageUrls = images.Where(x => x.ImageUrl.Contains(_bucketName)).Select(i => i.ImageUrl).ToList();
+            var imagesUrls = await _genericProductImageRepository.GetQueryable()
+                .AsNoTracking()
+                .Where(i => i.ProductId == productId && i.ImageUrl.Contains(_bucketName))
+                .Select(i => i.ImageUrl)
+                .ToListAsync();
 
-            await _storageService.DeleteMultipleImagesByUrlsAsync(imageUrls);
+            await _storageService.DeleteMultipleImagesByUrlsAsync(imagesUrls);
             await _commonRepository.CallFunctionDeleteProduct(productId);
         }
 

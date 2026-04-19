@@ -1,5 +1,6 @@
 ﻿using Core.Infraestructure;
 using Infraestructure.Data;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Infraestructure.Persistence
@@ -13,6 +14,11 @@ namespace Infraestructure.Persistence
         {
             _transaction = await _dbContext.Database.BeginTransactionAsync();
             return _transaction;
+        }
+
+        public IExecutionStrategy CreateExecutionStrategy()
+        {
+            return _dbContext.Database.CreateExecutionStrategy();
         }
 
         public async Task SaveChangesAsync()

@@ -20,6 +20,16 @@ namespace API.Controllers
             return Ok();
         }
 
+        [HttpPut("finish-order/{id}")]
+        public async Task<IActionResult> FinishOrder(long id)
+        {
+            var userId = HttpContext.Items["UserId"]?.ToString();
+            _ = Guid.TryParse(userId, out Guid parsedUserId);
+
+            await _cartService.FinishOrder(parsedUserId, id);
+            return Ok();
+        }
+
         [HttpGet("order-info")]
         public async Task<IActionResult> ListOrderItems()
         {

@@ -37,16 +37,6 @@ namespace Infraestructure.Repositories
             return await query.FirstOrDefaultAsync(predicate);
         }
 
-        public async Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate, Func<IQueryable<T>, IQueryable<T>>? includeFunc = null)
-        {
-            IQueryable<T> query = _dbSet;
-            if (includeFunc != null)
-            {
-                query = includeFunc(query);
-            }
-            return await query.Where(predicate).ToListAsync();
-        }
-
         public async Task AddAsync(T entity)
         {
             await _dbSet.AddAsync(entity);
