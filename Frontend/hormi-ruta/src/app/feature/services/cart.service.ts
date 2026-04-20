@@ -7,17 +7,19 @@ import { OrderDto } from '../interfaces/cart.interface';
   providedIn: 'root'
 })
 export class CartService {
-  private apiUrl = 'https://localhost:44384/api/cart'; 
+  private apiUrl = 'https://localhost:44384/api/cart';
 
   constructor(private http: HttpClient) { }
 
   createOrder(items: any[]): Observable<any> {
-
     return this.http.post(`${this.apiUrl}/create-order`, items);
+  }
+
+  finishOrder(orderId: number): Observable<any> {
+    return this.http.put(`${this.apiUrl}/finish-order/${orderId}`, null);
   }
 
   listOrderItems(): Observable<OrderDto> {
     return this.http.get<OrderDto>(`${this.apiUrl}/order-info`);
   }
-
 }

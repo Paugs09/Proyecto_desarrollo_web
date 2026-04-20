@@ -5,6 +5,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { Subject, takeUntil } from 'rxjs';
 import { CartService } from '../../services/cart.service';
 import { OrderItemDto, OrderDto } from '../../interfaces/cart.interface';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-cart',
@@ -18,6 +19,7 @@ export class CartComponent implements OnInit, OnDestroy {
 
   items: OrderItemDto[] = [];
   selectedIds = new Set<number>();
+  orderId: number = 0;
   totalCompra: number = 0;
   isLoading = true;
 
@@ -25,7 +27,8 @@ export class CartComponent implements OnInit, OnDestroy {
   selectedProduct: OrderItemDto | null = null;
   detailOpen = false;
 
-  constructor(private cartService: CartService) {}
+  constructor(private cartService: CartService,
+              private router: Router) { }
 
   ngOnInit(): void {
     this.loadCart();
@@ -58,6 +61,7 @@ export class CartComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (data: OrderDto) => {
+          this.orderId = data.orderId;
           this.items = data.orderItems;
           this.totalCompra = data.totalAmount;
           this.selectedIds = new Set(this.items.map(i => i.productVariantId));
@@ -214,6 +218,15 @@ export class CartComponent implements OnInit, OnDestroy {
 
   checkout(): void {
     if (!this.hasSelection) return;
-    console.log('Ir a pagar:', this.selectedItems, 'Total:', this.total);
+
+    this.cartService.finishOrder(this.orderId).subscribe({
+      next: (value) => {
+        alert("Se procesó el pedido correctamente");
+        this.router.navigate(['/home']);
+      },
+      error :(err) => {
+
+      }
+    });
   }
 }

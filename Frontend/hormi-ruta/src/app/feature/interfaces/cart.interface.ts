@@ -10,6 +10,7 @@ export interface OrderItemDto {
 }
 
 export interface OrderDto {
+  orderId: number;
   totalAmount: number;
   orderItems: OrderItemDto[];
 }
