@@ -6,6 +6,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { CartService } from '../../services/cart.service';
 import { OrderItemDto, OrderDto } from '../../interfaces/cart.interface';
 import { Router } from '@angular/router';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-cart',
@@ -147,45 +148,95 @@ export class CartComponent implements OnInit, OnDestroy {
   }
 
   removeItem(item: OrderItemDto): void {
-    if (!confirm(`¿Quitar "${item.productName}" del HormiCarrito?`)) return;
+  Swal.fire({
+    title: '<span class="block text-center w-full">¿Quitar del HormiCarrito?</span>',
+    html: `<p class="text-center">¿Estás seguro de que quieres eliminar <b>"${item.productName}"</b>?</p>`,
+    imageUrl: 'assets/Hormiga-eliminar.png',
+    imageWidth: 150,
+    width: 450,
+    background: '#ffffff',
+    showCancelButton: true,
+    confirmButtonColor: '#ec7272',
+    cancelButtonColor: '#4cb8a8',
+    confirmButtonText: 'Sí, quitar',
+    cancelButtonText: 'Cancelar',
+    reverseButtons: true,
+    customClass: {
+      popup: 'rounded-[3rem] border-8 border-white shadow-2xl',
+      confirmButton: 'rounded-full px-8 py-3 font-bold uppercase',
+      cancelButton: 'rounded-full px-8 py-3 font-bold uppercase',
+      actions: 'justify-center gap-4'
+    },
+    backdrop: `rgba(45, 45, 45, 0.4)` 
+  }).then((result) => {
+    if (result.isConfirmed) {
+      this.items = this.items.filter(i => i.productVariantId !== item.productVariantId);
+      const updated = new Set(this.selectedIds);
+      updated.delete(item.productVariantId);
+      this.selectedIds = updated;
 
-    this.items = this.items.filter(i => i.productVariantId !== item.productVariantId);
-    const updated = new Set(this.selectedIds);
-    updated.delete(item.productVariantId);
-    this.selectedIds = updated;
+      const payload = [{ productVariantId: item.productVariantId, quantity: 0 }];
 
-    const payload = [{ productVariantId: item.productVariantId, quantity: 0 }];
-
-    this.cartService.createOrder(payload)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: () => this.loadCart(),
-        error: (err) => {
-          console.error('Error al eliminar el producto:', err);
-          this.loadCart();
-          alert('No se pudo eliminar el producto. Intenta de nuevo.');
-        }
-      });
-  }
+      this.cartService.createOrder(payload)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe({
+          next: () => this.loadCart(),
+          error: (err) => {
+            console.error('Error al eliminar el producto:', err);
+            this.loadCart();
+            Swal.fire({
+              title: '<span class="block text-center">¡Ups!</span>',
+              text: 'No se pudo eliminar el producto. Intenta de nuevo.',
+              imageUrl: 'assets/Hormiga-triste.png',
+              imageWidth: 100,
+              confirmButtonColor: '#ec7272',
+              background: '#ffffff',
+              customClass: { popup: 'rounded-[2rem] text-center' }
+            });
+          }
+        });
+    }
+  });
+}
 
   removeSelected(): void {
     if (!this.hasSelection) return;
-    if (!confirm(`¿Quitar ${this.selectedIds.size} producto(s) del carrito?`)) return;
+    Swal.fire({
+      title: '<span class="block text-center w-full">¡Limpieza de Carrito!</span>',
+      html: `<p class="text-center">Vas a quitar <b>${this.selectedIds.size}</b> producto(s) del carrito.</p>`,
+      imageUrl: 'assets/Hormiga-limpiar.png',
+      imageWidth: 150,
+      width: 450,
+      background: '#ffffff',
+      showCancelButton: true,
+      confirmButtonColor: '#ec7272',
+      cancelButtonColor: '#4cb8a8',
+      confirmButtonText: 'Sí, quitar todos',
+      cancelButtonText: 'Cancelar',
+      reverseButtons: true,
+      customClass: {
+        popup: 'rounded-[3rem] border-8 border-white shadow-2xl',
+        confirmButton: 'rounded-full px-8 py-3 font-bold uppercase',
+        cancelButton: 'rounded-full px-8 py-3 font-bold uppercase',
+        actions: 'justify-center gap-4'
+      },
+      backdrop: `rgba(45, 45, 45, 0.4)` 
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const toRemove = [...this.selectedIds];
+        this.items = this.items.filter(i => !this.selectedIds.has(i.productVariantId));
+        this.selectedIds = new Set();
 
-    const toRemove = [...this.selectedIds];
+        toRemove.forEach(variantId =>
+          this.cartService.createOrder([{ productVariantId: variantId, quantity: 0 }])
+            .pipe(takeUntil(this.destroy$))
+            .subscribe({
+              error: (err) => console.error(`Error al eliminar variante ${variantId}:`, err)
+            })
+        );
 
-    this.items = this.items.filter(i => !this.selectedIds.has(i.productVariantId));
-    this.selectedIds = new Set();
-
-    toRemove.forEach(variantId =>
-      this.cartService.createOrder([{ productVariantId: variantId, quantity: 0 }])
-        .pipe(takeUntil(this.destroy$))
-        .subscribe({
-          error: (err) => console.error(`Error al eliminar variante ${variantId}:`, err)
-        })
-    );
-
-    setTimeout(() => this.loadCart(), 500);
+        setTimeout(() => this.loadCart(), 500);      }
+    });
   }
 
   // Cálculos (solo sobre seleccionados)
@@ -221,11 +272,39 @@ export class CartComponent implements OnInit, OnDestroy {
 
     this.cartService.finishOrder(this.orderId).subscribe({
       next: (value) => {
-        alert("Se procesó el pedido correctamente");
+      Swal.fire({
+        title: '<span class="block text-center w-full">¡Pedido Procesado!</span>',
+        html: '<p class="text-center">Tu pedido se ha realizado correctamente.</p>',
+        imageUrl: 'assets/Hormiga-carrito.png',
+        imageWidth: 150,
+        background: '#ffffff',
+        confirmButtonColor: '#3aa394', 
+        confirmButtonText: 'VOLVER AL INICIO',
+        allowOutsideClick: false, 
+        customClass: {
+          popup: 'rounded-[3rem] border-8 border-white shadow-2xl',
+          confirmButton: 'rounded-full px-10 py-3 font-black uppercase tracking-widest'
+        },
+      backdrop: `rgba(45, 45, 45, 0.4)` 
+      }).then(() => {
         this.router.navigate(['/home']);
-      },
+      });
+    },
       error :(err) => {
-
+        Swal.fire({
+        title: '<span class="block text-center w-full">Hubo un problema</span>',
+        html: '<p class="text-center">No pudimos finalizar tu pedido. Por favor, intenta de nuevo.</p>',
+        imageUrl: 'assets/Hormiga-triste.png',
+        imageWidth: 120,
+        background: '#ffffff',
+        confirmButtonColor: '#F4A261',
+        confirmButtonText: 'REINTENTAR',
+        customClass: {
+          popup: 'rounded-[3rem] border-8 border-white shadow-2xl',
+          confirmButton: 'rounded-full px-10 py-3 font-black uppercase'
+        }
+      });
+      console.error('Error en checkout:', err);
       }
     });
   }

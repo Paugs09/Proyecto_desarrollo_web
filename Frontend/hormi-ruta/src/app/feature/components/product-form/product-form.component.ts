@@ -2,6 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ProductService } from '../../services/product.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-product-form',
@@ -160,8 +161,29 @@ export class ProductFormComponent implements OnInit {
         next: (url) => {
           const images = this.variants.at(variantIndex).get('productImages') as FormArray;
           images.at(0).patchValue({ imageUrl: url });
+          Swal.fire({
+            toast: true,
+            position: 'top-end',
+            icon: 'success',
+            title: 'Imagen cargada',
+            showConfirmButton: false,
+            timer: 2000,
+            background: '#ffffff',
+            customClass: { popup: 'rounded-2xl border-2 border-[#3aa394]' }
+          });
         },
-        error: () => alert('Error al subir imagen. Revisa la conexión.')
+        // error: () => alert('Error al subir imagen. Revisa la conexión.')
+        error: () => {
+          Swal.fire({
+            title: '<span class="block text-center">¡Ups!</span>',
+            html: '<p class="text-center">Error al subir la imagen. Revisa tu conexión.</p>',
+            imageUrl: 'assets/Hormiga-triste.png',
+            imageWidth: 100,
+            confirmButtonColor: '#ec7272',
+            background: '#ffffff',
+            customClass: { popup: 'rounded-[3rem] border-8 border-white shadow-2xl' }
+          });
+        }
       });
     }
   }
@@ -197,16 +219,42 @@ export class ProductFormComponent implements OnInit {
 
       this.productService.createProduct(productDto).subscribe({
         next: () => {
-          alert('Hormiguita feliz ¡Producto guardado exitosamente!');
+          // alert('Hormiguita feliz ¡Producto guardado exitosamente!');
+          Swal.fire({
+            title: '<span class="block text-center">¡Hormiguita feliz!</span>',
+            html: '<p class="text-center">El producto ha sido guardado exitosamente.</p>',
+            imageUrl: 'assets/hormiga-feliz.gif',
+            imageWidth: 150,
+            confirmButtonColor: '#3aa394',
+            background: '#ffffff',
+            customClass: { popup: 'rounded-[3rem] border-8 border-white shadow-2xl' }
+          });
           this.resetForm();
         },
         error: (err) => {
           console.error('Error detallado:', err);
-          alert(' Error 400/500. Revisa que los IDs existan en el Back.');
+          // alert(' Error 400/500. Revisa que los IDs existan en el Back.');
+          Swal.fire({
+            title: '<span class="block text-center">Error de registro</span>',
+            html: '<p class="text-center">Error 400/500. Revisa que los IDs existan en el Backend.</p>',
+            imageUrl: 'assets/Hormiga-triste.png',
+            imageWidth: 120,
+            confirmButtonColor: '#ec7272',
+            background: '#ffffff',
+            customClass: { popup: 'rounded-[3rem] border-8 border-white shadow-2xl' }
+          });
         }
       });
     } else {
-      alert(' Por favor completa los campos marcados con asterisco (*).');
+      // alert(' Por favor completa los campos marcados con asterisco (*).');
+      Swal.fire({
+        title: '<span class="block text-center">Formulario incompleto</span>',
+        html: '<p class="text-center">Por favor completa los campos obligatorios (*).</p>',
+        icon: 'warning',
+        confirmButtonColor: '#F4A261',
+        background: '#ffffff',
+        customClass: { popup: 'rounded-[2rem] text-center' }
+      });
     }
   }
 
