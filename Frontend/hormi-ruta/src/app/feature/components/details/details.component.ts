@@ -195,8 +195,8 @@ export class DetailsComponent implements OnInit {
           title: '<span class="block text-center w-full">¡Añadido con éxito!</span>',
           imageUrl: 'assets/hormiga-feliz.gif',
           imageWidth: 50,
-          background: '#F4A261',
-          color: '#ffffff',
+          background: '#ffffff',
+          color: '#333',
           customClass: {
             popup: 'rounded-3xl shadow-lg border-2 border-white'
           }
