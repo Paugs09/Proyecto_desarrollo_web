@@ -27,6 +27,13 @@ namespace API.Controllers
             return Ok(await _productService.GetDetailProduct(id));
         }
 
+        [HttpGet("best-sellers")]
+        [AllowAnonymous]
+        public async Task<IActionResult> BestSellers()
+        {
+            return Ok(await _productService.BestSellers());
+        }
+
         [HttpGet("wish-list")]
         public async Task<IActionResult> GetAllProductOfWishList()
         {
