@@ -36,6 +36,7 @@ export class DetailsComponent implements OnInit {
       // Usa .pipe(first()) para que la suscripción se cierre rápido y ayude a la hidratación
       this.productService.getById(id).pipe(first()).subscribe({
         next: (data) => {
+          console.log("Estructura recibida:", data);
           this.producto = data;
           if (this.producto && this.producto.variants.length > 0) {
             this.seleccionarVariante(this.producto.variants[0]);
@@ -120,8 +121,19 @@ export class DetailsComponent implements OnInit {
   }
 
   get nombresAtributos(): string[] {
-    return this.producto?.variants[0]?.values.map(v => v.attributeName) || [];
-  }
+  if (!this.producto?.variants) return [];
+  
+  const nombres = new Set<string>();
+  this.producto.variants.forEach(variant => {
+    // Usamos el encadenamiento opcional ?.values por si acaso
+    variant.values?.forEach(val => {
+      if (val.attributeName) {
+        nombres.add(val.attributeName);
+      }
+    });
+  });
+  return Array.from(nombres);
+}
 
   getValoresAtributo(nombreAtributo: string): string[] {
     const valores = new Set<string>();

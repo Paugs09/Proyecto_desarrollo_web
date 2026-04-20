@@ -71,7 +71,7 @@
           <span class="ml-2 text-slate-400 text-sm">COP</span>
         </div>
 
-        <div *ngIf="(producto?.variants?.length || 0) > 1" class="bg-white p-6 rounded-3xl shadow-sm border border-orange-50 space-y-6 mb-8">
+        <div *ngIf="producto?.variants && producto.variants.length > 0" class="bg-white p-6 rounded-3xl shadow-sm border border-orange-50 space-y-6 mb-8">
           <div *ngFor="let nombreAttr of nombresAtributos">
             <label class="block text-[10px] font-bold text-slate-400 mb-2 uppercase tracking-widest">{{ nombreAttr }}</label>
             <div class="flex flex-wrap gap-2">
