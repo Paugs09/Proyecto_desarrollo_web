@@ -7,6 +7,7 @@ import { ProductService } from '../../services/product.service';
 import { ProductDetail, ProductVariant } from '../../interfaces/product.interface';
 import { CartService } from '../../services/cart.service';
 import { first } from 'rxjs'; // Para optimizar la hidratación
+import Swal from 'sweetalert2'; //Para alertas personalizadas
 
 @Component({
   selector: 'app-detalles',
@@ -135,13 +136,43 @@ export class DetailsComponent implements OnInit {
   // CARRITO
 
   agregarAlCarrito() {
+    const commonConfig = {
+    background: '#ffffff',
+    color: '#1E293B',
+    customClass: {
+      popup: 'rounded-[6rem] border-8 border-white shadow-2xl',
+      confirmButton: 'rounded-full px-10 py-3 font-black uppercase tracking-widest transition-transform hover:scale-105',
+      title: 'font-black text-2xl'
+    },
+    buttonsStyling: true,
+    backdrop: `rgba(45, 45, 45, 0.4)` 
+  };
+
     if (!this.varianteSeleccionada) 
       {
-      alert("Por favor selecciona una opción (talla/color)");
+      // alert("Por favor selecciona una opción (talla/color)");
+      Swal.fire({
+        ...commonConfig,
+        title: '¡Hormiguita perdida!',
+        text: 'Por favor, selecciona una opción para continuar.',
+        imageUrl: 'assets/Hormiga-confundida.png',
+        imageWidth: 150,
+        confirmButtonText: '¡ENTENDIDO!',
+        confirmButtonColor: '#F4A261'
+      });
       return;
       }
     if (this.cantidad > (this.varianteSeleccionada.stock || 0)) {
-      alert(`Solo quedan ${this.varianteSeleccionada.stock} unidades.`);
+      // alert(`Solo quedan ${this.varianteSeleccionada.stock} unidades.`);
+      Swal.fire({
+        ...commonConfig,
+        title: '¡Vuelan muy rápido!',
+        text: `Solo quedan ${this.varianteSeleccionada.stock} unidades de este producto.`,
+        imageUrl: 'assets/Hormiga-stock.png',
+        imageWidth: 150,
+        confirmButtonText: 'REVISAR OTROS',
+        confirmButtonColor: '#ec7272',
+      });
       return;
     }
 
@@ -152,8 +183,36 @@ export class DetailsComponent implements OnInit {
     }];
 
     this.cartService.createOrder(body).subscribe({
-      next: () => alert("¡Hormiguita feliz! Añadido al carrito."),
-      error: (err) => alert("Error al añadir al carrito.")
+      // next: () => alert("¡Hormiguita feliz! Añadido al carrito."),
+      // error: (err) => alert("Error al añadir al carrito.")
+      next: () => {
+        Swal.fire({
+          toast: true,
+          position: 'top-end',
+          showConfirmButton: false,
+          timer: 3500,
+          timerProgressBar: true,
+          title: '<span class="block text-center w-full">¡Añadido con éxito!</span>',
+          imageUrl: 'assets/hormiga-feliz.gif',
+          imageWidth: 50,
+          background: '#F4A261',
+          color: '#ffffff',
+          customClass: {
+            popup: 'rounded-3xl shadow-lg border-2 border-white'
+          }
+        });
+      },
+      error: (err) => {
+        Swal.fire({
+          ...commonConfig,
+          title: '¡Algo salió mal!',
+          text: 'No pudimos conectar con el hormiguero.',
+          imageUrl: 'assets/Hormiga-triste.png',
+          imageWidth: 150,
+          confirmButtonText: 'REINTENTAR',
+          confirmButtonColor: '#ec7272'
+        });
+      }
     });
   }
 

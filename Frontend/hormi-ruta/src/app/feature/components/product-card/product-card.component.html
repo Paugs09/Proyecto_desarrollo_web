@@ -5,13 +5,11 @@
       [alt]="product.name">
 
     <div class="mobile-icons">
-      <button class="icon-btn detail-icon">+</button>
-      <button class="icon-btn cart-icon">🛒</button>
+      <button class="icon-btn detail-icon" (click)="goToDetail()">+</button>
     </div>
 
     <div class="desktop-actions">
       <button class="btn-details" (click)="goToDetail()">Detalles</button>
-      <button class="btn-add">Agregar</button>
     </div>
   </div>
 
