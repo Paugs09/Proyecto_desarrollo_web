@@ -16,15 +16,19 @@ namespace Core.Services.Imp
                                 IStorageService storageService,
                                 ICommonRepository commonRepository,
                                 IProductRepository productRepository,
-                                IGenericRepository<WishList> genericWishListRepository,
+                                IGenericRepository<Order> genericOrderRepository,
                                 IGenericRepository<Product> genericProductRepository,
+                                IGenericRepository<WishList> genericWishListRepository,
+                                IGenericRepository<OrderItem> genericOrderItemRepository,
                                 IGenericRepository<ProductImage> genericProductImageRepository) : IProductService
     {
         private readonly string _bucketName = config["SupabaseS3:BucketName"]!;
         private readonly ICommonRepository _commonRepository = commonRepository;
         private readonly IStorageService _storageService = storageService;
         private readonly IProductRepository _productRepository = productRepository;
+        public readonly IGenericRepository<Order> _genericOrderRepository = genericOrderRepository;
         private readonly IGenericRepository<WishList> _genericWishListRepository = genericWishListRepository;
+        private readonly IGenericRepository<OrderItem> _genericOrderItemRepository = genericOrderItemRepository;
         private readonly IGenericRepository<Product> _genericProductRepository = genericProductRepository;
         private readonly IGenericRepository<ProductImage> _genericProductImageRepository = genericProductImageRepository;
 
@@ -136,6 +140,23 @@ namespace Core.Services.Imp
                 .FirstOrDefaultAsync() ?? throw new Exception("Producto no encontrado");
 
             return detailProduct;
+        }
+
+        public async Task<IQueryable<BestSellerDto>> BestSellers()
+        {
+            return _genericOrderItemRepository.GetQueryable()
+                .AsNoTracking()
+                .Where(x => x.Order.PaymentStatus == "Pagado")
+                .GroupBy(x=> x.ProductVariantId)
+                .Select(x => new BestSellerDto
+                {
+                    ProductVariantId = x.Key,
+                    ProductName = x.First().ProductVariant.Product.Name,
+                    ImageUrl = x.First().ProductVariant.ProductImages.Where(x => x.IsPrimary).Select(x => x.ImageUrl).First(),
+                    TotalSales = x.Sum(x=> x.Quantity)
+                })
+                .OrderByDescending(x=> x.TotalSales)
+                .Take(5);
         }
 
         public async Task CreateProduct(CreateProductDto createProductDto)

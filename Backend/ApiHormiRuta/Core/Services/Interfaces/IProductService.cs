@@ -10,6 +10,7 @@ namespace Core.Services.Interfaces
         Task<IQueryable<ProductDto>?> GetAllProductsOfWishList(Guid userId);
         Task AddProductToWishList(CreateWishListDto createDto, Guid userId);
         Task<DetailProductDto> GetDetailProduct(long id);
+        Task<IQueryable<BestSellerDto>> BestSellers();
         Task CreateProduct(CreateProductDto createProductDto);
         Task UpdateProduct(long productId, UpdateProductDto updateProductDto);
         Task DeleteProduct(long productId);
