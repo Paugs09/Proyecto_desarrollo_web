@@ -25,7 +25,7 @@ export class ProfileComponent implements OnInit {
   get usuario() {
   const u = this.userSignal(); // Obtenemos el valor de la Signal
 
-  // Lógica de Rol según el JSON de Scalar (que trae role: "admin" y roleId: 1)
+  // Lógica de Rol
   let nombreRol = 'HormiSeguidor';
   if (u?.role === 'admin' || u?.roleId === 1) {
     nombreRol = 'Administrador';
@@ -35,13 +35,13 @@ export class ProfileComponent implements OnInit {
   }
 
   return {
-    // Mapeo exacto de los nombres de campos que se ven en tu imagen de Scalar
-    nombre: u?.firstName || 'Usuario',
-    apellido: u?.lastName || '',
+    
+   nombre: u?.firstName || 'Usuario', 
+    apellido: u?.lastName || '',       
     correo: u?.email || 'Sin correo',
     telefono: u?.phone || 'No registrado',
-    direccion: u?.shippingAddress || 'Sin dirección',
-    rol: nombreRol,
+    direccion: u?.shippingAddress || 'Sin dirección', 
+    rol: nombreRol
     //foto: u?.foto || u?.photo_url || ''
   };
 }
@@ -58,6 +58,12 @@ export class ProfileComponent implements OnInit {
   ngOnInit(): void {
     this.cargarFavoritos();
     console.log('Datos del usuario logueado:', this.userSignal());
+  
+    this.authService.getUserInfo().subscribe({
+    next: (data) => console.log('Datos cargados con éxito:', data),
+    error: (err) => console.error('No se pudo cargar la info del usuario', err)
+  });
+  
   }
 
   cargarFavoritos(): void {
@@ -118,7 +124,7 @@ export class ProfileComponent implements OnInit {
     if (productId) {
       // Inyecta el Router en el constructor o usa inject(Router)
       // this.router.navigate(['/details', productId]);
-      window.location.href = `/details/${productId}`; // O usa el router de Angular
+      window.location.href = `/details/${productId}`; 
     }
   }
 }
