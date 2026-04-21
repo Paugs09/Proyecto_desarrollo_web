@@ -1,4 +1,3 @@
-
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -6,8 +5,8 @@ import { ActivatedRoute } from '@angular/router';
 import { ProductService } from '../../services/product.service'; 
 import { ProductDetail, ProductVariant } from '../../interfaces/product.interface';
 import { CartService } from '../../services/cart.service';
-import { first } from 'rxjs'; // Para optimizar la hidratación
-import Swal from 'sweetalert2'; //Para alertas personalizadas
+import { first } from 'rxjs'; 
+import Swal from 'sweetalert2'; 
 
 @Component({
   selector: 'app-detalles',
@@ -33,85 +32,57 @@ export class DetailsComponent implements OnInit {
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     if (id) {
-      // Usa .pipe(first()) para que la suscripción se cierre rápido y ayude a la hidratación
       this.productService.getById(id).pipe(first()).subscribe({
         next: (data: any) => {
-          console.log("Estructura recibida:", data);
           this.producto = data;
-          // ASIGNACIÓN DIRECTA DEL BOOLEANO
-        this.esFavorito = data.isFavorite; 
+          // Sincronización inicial con el campo del backend
+          this.esFavorito = data.isFavorite; 
 
-        if (this.producto && this.producto.variants.length > 0) {
-          this.seleccionarVariante(this.producto.variants[0]);}
+          if (this.producto && this.producto.variants.length > 0) {
+            this.seleccionarVariante(this.producto.variants[0]);
+          }
         },
         error: (err) => console.error('Error cargando producto:', err)
       });
     }
   }
 
-  // --- LÓGICA DE FAVORITOS  ---
-
-  //verificarSiEsFavorito() {
-  //if (!this.producto) return;
-
-  // se crea una lista de todos los IDs que podrían representar a este producto
-  
-  //const idsRelacionados = [
-    //this.producto.id, 
-    //...this.producto.variants.map(v => v.id)
-  //];
-
-  //this.productService.getWishList().pipe(first()).subscribe({
-    //next: (wishList: any[]) => {
-      // Si alguno de los IDs de favoritos coincide con el ID del producto o de sus variantes
-      //this.esFavorito = wishList.some(fav => idsRelacionados.includes(fav.id));
-      
-      //console.log("IDs del producto y sus variantes:", idsRelacionados);
-      //console.log("¿Alguno está en favoritos?:", this.esFavorito);
-    //},
-    //error: (err) => console.error('Error wishlist:', err)});}
+  // --- LÓGICA DE FAVORITOS (Ajustada al POST del Back) ---
 
   marcarFavorito() {
-  if (!this.producto) return;
+    if (!this.producto) return;
 
-  const estadoIntento = !this.esFavorito;
-  
-  
-  this.productService.toggleFavorite(this.producto.id, estadoIntento).subscribe({
-    next: () => {
-      this.esFavorito = estadoIntento;
-    },
-    error: (err) => {
-      console.error("Error al actualizar favorito:", err);
-      
-    }
-  });
-}
+    const nuevoEstado = !this.esFavorito;
+    
+    // Cumplimos con el Body: { "productId": 1, "isFavorite": true }
+    this.productService.toggleFavorite(this.producto.id, nuevoEstado).subscribe({
+      next: () => {
+        this.esFavorito = nuevoEstado;
+        console.log(`Producto ${this.producto?.id} actualizado. Favorito: ${this.esFavorito}`);
+      },
+      error: (err) => {
+        console.error("Error al actualizar favorito:", err);
+        // Opcional: Revertir el estado visual si falla la red
+      }
+    });
+  }
 
   // --- LÓGICA DE VARIANTES ---
 
   seleccionarVariante(variant: ProductVariant) {
     this.varianteSeleccionada = variant;
     this.imagenPrincipalUrl = variant.images[0]?.imageUrl || '';
-    
-    // Actualizar botones
     variant.values.forEach(v => this.seleccionActual[v.attributeName] = v.value);
-    
-    // Comprobar favoritos
-    //this.verificarSiEsFavorito();
   }
 
   actualizarSeleccion(nombreAtributo: string, valor: string) {
     this.seleccionActual[nombreAtributo] = valor;
-    
     const coincidencia = this.producto?.variants.find(v => 
       v.values.every(val => this.seleccionActual[val.attributeName] === val.value)
     );
-
     if (coincidencia) {
       this.seleccionarVariante(coincidencia);
     } else {
-      
       const sugerencia = this.producto?.variants.find(v => 
         v.values.some(val => val.attributeName === nombreAtributo && val.value === valor)
       );
@@ -120,19 +91,15 @@ export class DetailsComponent implements OnInit {
   }
 
   get nombresAtributos(): string[] {
-  if (!this.producto?.variants) return [];
-  
-  const nombres = new Set<string>();
-  this.producto.variants.forEach(variant => {
-    // Usamos el encadenamiento opcional ?.values por si acaso
-    variant.values?.forEach(val => {
-      if (val.attributeName) {
-        nombres.add(val.attributeName);
-      }
+    if (!this.producto?.variants) return [];
+    const nombres = new Set<string>();
+    this.producto.variants.forEach(variant => {
+      variant.values?.forEach(val => {
+        if (val.attributeName) nombres.add(val.attributeName);
+      });
     });
-  });
-  return Array.from(nombres);
-}
+    return Array.from(nombres);
+  }
 
   getValoresAtributo(nombreAtributo: string): string[] {
     const valores = new Set<string>();
