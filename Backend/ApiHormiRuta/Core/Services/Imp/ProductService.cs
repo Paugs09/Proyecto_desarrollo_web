@@ -156,7 +156,7 @@ namespace Core.Services.Imp
                     TotalSales = x.Sum(x=> x.Quantity)
                 })
                 .OrderByDescending(x=> x.TotalSales)
-                .Take(5);
+                .Take(3);
         }
 
         public async Task CreateProduct(CreateProductDto createProductDto)
