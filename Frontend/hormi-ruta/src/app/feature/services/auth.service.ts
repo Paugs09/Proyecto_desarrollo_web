@@ -80,4 +80,13 @@ export class AuthService {
     this._user.set(null);
     this.logoutSubject.next();
   }
+
+  getUserInfo(): Observable<any> {
+  return this.http.get<any>(`${this.apiUrl}/user-info`).pipe(
+    tap(userData => {
+      sessionStorage.setItem('user_data', JSON.stringify(userData));
+      this._user.set(userData);
+    })
+  );
+}
 }

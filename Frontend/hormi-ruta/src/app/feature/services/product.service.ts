@@ -21,9 +21,9 @@ export class ProductService {
   }
 
   // Envía la acción de favorito con el booleano
-  toggleFavorite(variantId: number, isFav: boolean): Observable<any> {
+  toggleFavorite(productId: number, isFav: boolean): Observable<any> {
     const body = {
-      productVariantId: variantId,
+      productId: productId,
       isFavorite: isFav
     };
     return this.http.post(`${this.apiUrl}/product/wish-list`, body);
