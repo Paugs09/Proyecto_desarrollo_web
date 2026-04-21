@@ -11,6 +11,7 @@
         public long MunicipalityId { get; set; }
         public string Notes { get; set; } = string.Empty;
         public string Dimensions { get; set; } = string.Empty;
+        public bool Active { get; set; } = true;
         public DateTime CreatedAt { get; set; }
 
         public virtual Category Category { get; set; } = null!;
@@ -18,5 +19,6 @@
         public virtual Municipality Municipality { get; set; } = null!;
         public virtual ICollection<ProductVariant> ProductVariants { get; set; } = [];
         public virtual ICollection<ProductImage> ProductImages { get; set; } = [];
+        public virtual ICollection<WishList> WishLists { get; set; } = [];
     }
 }

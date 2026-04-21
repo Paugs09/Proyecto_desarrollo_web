@@ -8,6 +8,7 @@ namespace Core.Dto.Product
         public string ProductName { get; set; } = string.Empty;
         public string ShortDescription { get; set; } = string.Empty;
         public string? LongDescription { get; set; }
+        public bool? IsFavorite {  get; set; }
         public string Category { get; set; } = string.Empty;
         public long CategoryId { get; set; }
         public string? Material { get; set; }

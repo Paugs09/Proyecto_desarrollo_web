@@ -24,7 +24,8 @@ namespace API.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Detail(long id)
         {
-            return Ok(await _productService.GetDetailProduct(id));
+            var userId = HttpContext.Items["UserId"]?.ToString();
+            return Ok(await _productService.GetDetailProduct(id, userId != null ? Guid.Parse(userId) : null));
         }
 
         [HttpGet("best-sellers")]

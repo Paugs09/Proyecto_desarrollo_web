@@ -1,8 +1,6 @@
 ﻿using Amazon.S3;
 using Amazon.S3.Model;
 using Amazon.S3.Transfer;
-using Core.Entities;
-using Core.Infraestructure;
 using Core.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
@@ -10,11 +8,9 @@ using Microsoft.Extensions.Configuration;
 namespace Core.Services.Imp
 {
     public class StorageService(IAmazonS3 s3Client,
-                                IConfiguration config,
-                                IGenericRepository<ProductImage> genericProductImageRepository) : IStorageService
+                                IConfiguration config) : IStorageService
     {
         private readonly string _bucketName = config["SupabaseS3:BucketName"]!;
-        private readonly IGenericRepository<ProductImage> _genericProductImageRepository = genericProductImageRepository;
 
         public async Task<string> UploadImageAsync(IFormFile file, string folder)
         {

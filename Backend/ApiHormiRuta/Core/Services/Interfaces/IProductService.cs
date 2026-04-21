@@ -9,7 +9,7 @@ namespace Core.Services.Interfaces
         Task<IQueryable<ProductDto>?> GetAllProductsAsync(ProductQueryFilter queryFilter);
         Task<IQueryable<ProductDto>?> GetAllProductsOfWishList(Guid userId);
         Task AddProductToWishList(CreateWishListDto createDto, Guid userId);
-        Task<DetailProductDto> GetDetailProduct(long id);
+        Task<DetailProductDto> GetDetailProduct(long id, Guid? userId);
         Task<IQueryable<BestSellerDto>> BestSellers();
         Task CreateProduct(CreateProductDto createProductDto);
         Task UpdateProduct(long productId, UpdateProductDto updateProductDto);

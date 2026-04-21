@@ -1,9 +1,11 @@
 ﻿using Core.Dto.Cart;
 using Core.Dto.Product.ProductVariant;
 using Core.Entities;
+using Core.Exceptions;
 using Core.Infraestructure;
 using Core.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using System.Net;
 
 namespace Core.Services.Imp
 {
@@ -99,7 +101,7 @@ namespace Core.Services.Imp
                         TotalAmountPerUnit = x.Quantity * x.UnitPrice
                     }).ToList()
                 })
-                .FirstOrDefaultAsync() ?? throw new Exception("Orden no encontrada");
+                .FirstOrDefaultAsync() ?? throw new BusinessException(HttpStatusCode.NotFound, "Orden no encontrado", "La orden no se encuentra");
 
             return order;
         }

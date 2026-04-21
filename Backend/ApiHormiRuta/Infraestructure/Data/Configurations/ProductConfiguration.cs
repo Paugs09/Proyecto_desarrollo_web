@@ -48,6 +48,10 @@ namespace Infraestructure.Data.Configurations
                 .IsRequired()
                 .HasColumnName("dimensions");
 
+            builder.Property(x => x.Active)
+                .IsRequired()
+                .HasColumnName("activo");
+
             builder.Property(x => x.CreatedAt)
                 .IsRequired()
                 .HasColumnName("created_at");
