@@ -48,6 +48,9 @@ export class ProductFormComponent implements OnInit {
   ngOnInit(): void {
     this.loadFormData();
   }
+  getProductImages(variantIndex: number): FormArray {
+  return this.variants.at(variantIndex).get('productImages') as FormArray;
+}
 
   loadFormData(): void {
     this.productService.getCategories().subscribe({
@@ -154,13 +157,29 @@ export class ProductFormComponent implements OnInit {
     this.variants.at(index).get('sku')?.setValue(`${cleanName}-${random}`);
   }
 
-  onFileSelected(event: any, variantIndex: number): void {
-    const file: File = event.target.files[0];
-    if (file) {
-      this.productService.uploadImage(file).subscribe({
-        next: (url) => {
-          const images = this.variants.at(variantIndex).get('productImages') as FormArray;
-          images.at(0).patchValue({ imageUrl: url });
+  // Permite añadir múltiples imágenes a una variante específica
+addImage(variantIndex: number): void {
+  const images = this.variants.at(variantIndex).get('productImages') as FormArray;
+  images.push(this.fb.group({
+    imageUrl: ['', Validators.required],
+    isPrimary: [false],
+    displayOrder: [images.length + 1]
+  }));
+}
+
+//permitir borrar una imagen específica
+removeImage(variantIndex: number, imageIndex: number): void {
+  const images = this.variants.at(variantIndex).get('productImages') as FormArray;
+  if (images.length > 1) images.removeAt(imageIndex);
+}
+
+  onFileSelected(event: any, variantIndex: number, imageIndex: number): void {
+  const file: File = event.target.files[0];
+  if (file) {
+    this.productService.uploadImage(file).subscribe({
+      next: (url) => {
+        const images = this.variants.at(variantIndex).get('productImages') as FormArray;
+        images.at(imageIndex).patchValue({ imageUrl: url });
           Swal.fire({
             toast: true,
             position: 'top-end',

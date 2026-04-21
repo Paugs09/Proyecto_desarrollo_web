@@ -102,12 +102,24 @@
         </div>
 
         <div formArrayName="productImages" class="mb-6 p-4 bg-[#FDF2E9] rounded-xl border border-[#FDF2E9]">
-          <label class="block text-sm font-bold text-[#8B4513] mb-3">Paso 1: Subir imagen</label>
-          <div *ngFor="let img of variant.get('productImages')?.value; let k = index" [formGroupName]="k" class="flex flex-col sm:flex-row items-center gap-4">
-            <input type="file" (change)="onFileSelected($event, i)" class="text-xs text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:bg-[#F4A261] file:text-white file:font-semibold hover:file:bg-[#E78E46]  cursor-pointer">
-            <input formControlName="imageUrl" readonly class="flex-1 p-2 bg-white border rounded text-[10px] text-gray-500 italic" placeholder="La URL de Supabase aparecerá aquí...">
-          </div>
-        </div>
+  <div class="flex justify-between items-center mb-3">
+    <label class="block text-sm font-bold text-[#8B4513]">Imágenes de la variante</label>
+    <button type="button" (click)="addImage(i)" class="text-xs bg-[#8B4513] text-white px-2 py-1 rounded">+ Añadir Foto</button>
+  </div>
+
+  <div *ngFor="let img of getProductImages(i).controls; let k = index" [formGroupName]="k" class="flex flex-col gap-2 mb-4 border-b border-orange-200 pb-2">
+    <div class="flex flex-col sm:flex-row items-center gap-4">
+      <input type="file" (change)="onFileSelected($event, i, k)" class="text-xs text-gray-500 file:rounded-full file:bg-[#F4A261] cursor-pointer">
+      <input formControlName="imageUrl" readonly class="flex-1 p-2 bg-white border rounded text-[10px]" placeholder="URL...">
+      <button *ngIf="getProductImages(i).length > 1" type="button" (click)="removeImage(i, k)" class="text-red-500 font-bold">×</button>
+    </div>
+    <div class="flex gap-4 items-center">
+        <label class="text-[10px] flex items-center gap-1">
+            <input type="checkbox" formControlName="isPrimary"> Es Principal
+        </label>
+    </div>
+  </div>
+</div>
 
         <div class="space-y-3">
           <div class="flex justify-between items-center">
