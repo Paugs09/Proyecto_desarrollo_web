@@ -29,8 +29,11 @@ export class ProfileComponent implements OnInit {
   let nombreRol = 'HormiSeguidor';
   if (u?.role === 'admin' || u?.roleId === 1) {
     nombreRol = 'Administrador';
-  } else if (u?.role) {
-    // Si el rol es 'cliente' o cualquier otro, capitalizamos la primera letra
+  } else if (u.roleId === 2 || u?.role === 'customer') {
+    nombreRol = 'Cliente';
+  }
+  else if (u?.role) {
+    //  cualquier otro, capitalizamos la primera letra
     nombreRol = u.role.charAt(0).toUpperCase() + u.role.slice(1);
   }
 
