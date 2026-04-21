@@ -16,9 +16,9 @@ namespace Infraestructure.Data.Configurations
                 .IsRequired()
                 .HasColumnName("id");
 
-            builder.Property(x => x.ProductVariantId)
+            builder.Property(x => x.ProductId)
                 .IsRequired()
-                .HasColumnName("product_variant_id");
+                .HasColumnName("product_id");
 
             builder.Property(x => x.UserId)
                 .IsRequired()
@@ -28,9 +28,9 @@ namespace Infraestructure.Data.Configurations
                 .IsRequired()
                 .HasColumnName("created_at");
 
-            builder.HasOne(x => x.ProductVariant)
+            builder.HasOne(x => x.Product)
                 .WithMany(x => x.WishLists)
-                .HasForeignKey(x => x.ProductVariantId)
+                .HasForeignKey(x => x.ProductId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasOne(x => x.User)

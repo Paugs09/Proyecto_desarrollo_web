@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Supabase.Gotrue.Exceptions;
 using System.Reflection;
@@ -21,6 +22,12 @@ namespace Infraestructure.Filters
 
         public async Task OnAuthorizationAsync(AuthorizationFilterContext context)
         {
+            var token = ExtractToken(context.HttpContext.Request);
+            if (token != null) 
+            {
+                await ProcessToken(token, context);
+            }
+
             // Verificar [AllowAnonymous] en el método y controlador
             if (context.ActionDescriptor is ControllerActionDescriptor descriptor)
             {
@@ -31,8 +38,6 @@ namespace Infraestructure.Filters
                     return;
             }
 
-            var token = ExtractToken(context.HttpContext.Request);
-
             if (string.IsNullOrEmpty(token))
             {
                 context.Result = new ObjectResult(new { error = "Token no proporcionado." }) { StatusCode = 401 };
@@ -41,22 +46,27 @@ namespace Infraestructure.Filters
 
             try
             {
-                var user = await _supabase.Auth.GetUser(token);
-
-                if (user == null)
-                {
-                    context.Result = new ObjectResult(new { error = "Token inválido o expirado." }) { StatusCode = 401 };
-                    return;
-                }
-
-                context.HttpContext.Items["UserId"] = user.Id;
-                context.HttpContext.Items["User"] = user;
+                await ProcessToken(token, context);
             }
             catch (GotrueException ex)
             {
                 _logger.LogError($"Error validando token: {ex.Message}");
                 context.Result = new ObjectResult(new { error = "Token inválido o expirado." }) { StatusCode = 401 };
             }
+        }
+
+        private async Task ProcessToken(string token, AuthorizationFilterContext context)
+        {
+            var user = await _supabase.Auth.GetUser(token);
+
+            if (user == null)
+            {
+                context.Result = new ObjectResult(new { error = "Token inválido o expirado." }) { StatusCode = 401 };
+                return;
+            }
+
+            context.HttpContext.Items["UserId"] = user.Id;
+            context.HttpContext.Items["User"] = user;
         }
 
         private static string? ExtractToken(HttpRequest request)

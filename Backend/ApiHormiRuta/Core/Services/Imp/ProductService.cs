@@ -2,35 +2,36 @@
 using Core.Dto.Product.ProductImage;
 using Core.Dto.Product.ProductVariant;
 using Core.Entities;
+using Core.Exceptions;
 using Core.Infraestructure;
 using Core.QueryFilter.Product;
 using Core.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
+using System.Net;
 using System.Text.Json;
 
 namespace Core.Services.Imp
 {
-    public class ProductService(IConfiguration config,
-                                IStorageService storageService,
+    public class ProductService(IStorageService storageService,
                                 ICommonRepository commonRepository,
-                                IProductRepository productRepository,
-                                IGenericRepository<WishList> genericWishListRepository,
+                                IGenericRepository<Order> genericOrderRepository,
                                 IGenericRepository<Product> genericProductRepository,
-                                IGenericRepository<ProductImage> genericProductImageRepository) : IProductService
+                                IGenericRepository<WishList> genericWishListRepository,
+                                IGenericRepository<OrderItem> genericOrderItemRepository) : IProductService
     {
-        private readonly string _bucketName = config["SupabaseS3:BucketName"]!;
         private readonly ICommonRepository _commonRepository = commonRepository;
         private readonly IStorageService _storageService = storageService;
-        private readonly IProductRepository _productRepository = productRepository;
+        public readonly IGenericRepository<Order> _genericOrderRepository = genericOrderRepository;
         private readonly IGenericRepository<WishList> _genericWishListRepository = genericWishListRepository;
+        private readonly IGenericRepository<OrderItem> _genericOrderItemRepository = genericOrderItemRepository;
         private readonly IGenericRepository<Product> _genericProductRepository = genericProductRepository;
-        private readonly IGenericRepository<ProductImage> _genericProductImageRepository = genericProductImageRepository;
 
         public async Task<IQueryable<ProductDto>?> GetAllProductsAsync(ProductQueryFilter queryFilter)
         {
-            var query = _genericProductRepository.GetQueryable().AsNoTracking();
+            var query = _genericProductRepository.GetQueryable()
+                .AsNoTracking()
+                .Where(x => x.Active);
 
             if (queryFilter.CategoryId.HasValue)
                 query = query.Where(x => x.CategoryId == queryFilter.CategoryId);
@@ -58,18 +59,18 @@ namespace Core.Services.Imp
 
             return wishList.Select(x => new ProductDto
             {
-                Id = x.ProductVariant.Id,
-                Name = x.ProductVariant.Product.Name,
-                Category = x.ProductVariant.Product.Category.Name,
-                BasePrice = x.ProductVariant.SpecificPrice,
-                ShortDescription = x.ProductVariant.Product.ShortDescription,
-                ImageUrl = x.ProductVariant.ProductImages.First(i => i.IsPrimary).ImageUrl,
+                Id = x.Product.Id,
+                Name = x.Product.Name,
+                Category = x.Product.Category.Name,
+                BasePrice = x.Product.ProductVariants.First().SpecificPrice,
+                ShortDescription = x.Product.ShortDescription,
+                ImageUrl = x.Product.ProductImages.First(i => i.IsPrimary).ImageUrl,
             });
         }
 
         public async Task AddProductToWishList(CreateWishListDto createDto, Guid userId)
         {
-            var wishListItem = await _genericWishListRepository.FirstOrDefaultAsyncWithIncludes(x => x.UserId == userId && x.ProductVariantId == createDto.ProductVariantId);
+            var wishListItem = await _genericWishListRepository.FirstOrDefaultAsyncWithIncludes(x => x.UserId == userId && x.ProductId == createDto.ProductId);
 
             if (!createDto.IsFavorite && wishListItem != null)
             {
@@ -82,7 +83,7 @@ namespace Core.Services.Imp
                 await _genericWishListRepository.AddAsync(new WishList
                 {
                     UserId = userId,
-                    ProductVariantId = createDto.ProductVariantId,
+                    ProductId = createDto.ProductId,
                 });
                 await _genericWishListRepository.SaveAsync();
             }
@@ -92,17 +93,18 @@ namespace Core.Services.Imp
             }
         }
 
-        public async Task<DetailProductDto> GetDetailProduct(long id)
+        public async Task<DetailProductDto> GetDetailProduct(long id, Guid? userId)
         {
             var detailProduct = await _genericProductRepository.GetQueryable()
                 .AsNoTracking()
-                .Where(x => x.Id == id)
+                .Where(x => x.Id == id && x.Active)
                 .Select(product => new DetailProductDto
                 {
                     Id = product.Id,
                     ProductName = product.Name,
                     ShortDescription = product.ShortDescription,
                     LongDescription = product.LongDescription,
+                    IsFavorite = userId != null && _genericWishListRepository.GetQueryable().Any(x => x.ProductId == product.Id && x.UserId == userId),
                     Category = product.Category.Name,
                     CategoryId = product.CategoryId,
                     Material = product.Material.Name,
@@ -133,9 +135,26 @@ namespace Core.Services.Imp
                         }).ToList()
                     }).ToList()
                 })
-                .FirstOrDefaultAsync() ?? throw new Exception("Producto no encontrado");
+                .FirstOrDefaultAsync() ?? throw new BusinessException(HttpStatusCode.NotFound, "Producto no encontrado", "El producto no se encuentra");
 
             return detailProduct;
+        }
+
+        public async Task<IQueryable<BestSellerDto>> BestSellers()
+        {
+            return _genericOrderItemRepository.GetQueryable()
+                .AsNoTracking()
+                .Where(x => x.Order.PaymentStatus == "Pagado")
+                .GroupBy(x => x.ProductVariantId)
+                .Select(x => new BestSellerDto
+                {
+                    ProductVariantId = x.Key,
+                    ProductName = x.First().ProductVariant.Product.Name,
+                    ImageUrl = x.First().ProductVariant.ProductImages.Where(x => x.IsPrimary).Select(x => x.ImageUrl).First(),
+                    TotalSales = x.Sum(x => x.Quantity)
+                })
+                .OrderByDescending(x => x.TotalSales)
+                .Take(3);
         }
 
         public async Task CreateProduct(CreateProductDto createProductDto)
@@ -168,14 +187,11 @@ namespace Core.Services.Imp
 
         public async Task DeleteProduct(long productId)
         {
-            var imagesUrls = await _genericProductImageRepository.GetQueryable()
-                .AsNoTracking()
-                .Where(i => i.ProductId == productId && i.ImageUrl.Contains(_bucketName))
-                .Select(i => i.ImageUrl)
-                .ToListAsync();
+            var product = await _genericProductRepository.FirstOrDefaultAsyncWithIncludes(x => x.Id == productId) ?? throw new Exception("No se encontro el producto");
+            product.Active = false;
 
-            await _storageService.DeleteMultipleImagesByUrlsAsync(imagesUrls);
-            await _commonRepository.CallFunctionDeleteProduct(productId);
+            _genericProductRepository.Update(product);
+            await _genericProductRepository.SaveAsync();
         }
 
         public async Task<string> CreateProductImage(IFormFile formFile)
