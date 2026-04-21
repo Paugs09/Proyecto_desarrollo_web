@@ -1,14 +1,21 @@
 ﻿using Core.Dto.Auth;
+using Core.Entities;
+using Core.Exceptions;
+using Core.Infraestructure;
 using Core.Services.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using Supabase.Gotrue;
+using System.Net;
 
 namespace Core.Services.Imp
 {
     public class AuthService(Supabase.Client supabaseClient,
-                             IRoleService roleService) : IAuthService
+                             IRoleService roleService,
+                             IGenericRepository<UserProfile> genericUserProfileRepository) : IAuthService
     {
         private readonly Supabase.Client _supabaseClient = supabaseClient;
         private readonly IRoleService _roleService = roleService;
+        private readonly IGenericRepository<UserProfile> _genericUserProfileRepository = genericUserProfileRepository;
 
         public async Task<string> RegisterAsync(UserRegister userRegister)
         {
@@ -22,7 +29,7 @@ namespace Core.Services.Imp
             };
 
             var session = await _supabaseClient.Auth.SignUp(userRegister.Email, userRegister.Password, new SignUpOptions { Data = metadata });
-            return session?.AccessToken ?? throw new Exception("Error al registrar usuario");
+            return session?.AccessToken ?? throw new BusinessException(HttpStatusCode.BadRequest, "No se registro al usuario", "Error al registrar usuario");
         }
 
         public async Task<AuthInfoDto> LoginAsync(string email, string password)
@@ -51,7 +58,7 @@ namespace Core.Services.Imp
 
             if (session?.AccessToken == null)
             {
-                throw new Exception("No se pudo refrescar la sesión.");
+                throw new BusinessException(HttpStatusCode.BadRequest, "No se refrescó la sesión", "No se pudo refrescar la sesión.");
             }
 
             var userId = Guid.Parse(session.User?.Id ?? string.Empty);
@@ -63,6 +70,26 @@ namespace Core.Services.Imp
                 RefreshToken = session.RefreshToken ?? string.Empty,
                 IsAdmin = isAdmin
             };
+        }
+
+        public async Task<UserInfoDto> GetUserInfo(Guid userId)
+        {
+            return await _genericUserProfileRepository
+                .GetQueryable()
+                .AsNoTracking()
+                .Where(x => x.Id == userId)
+                .Select(x => new UserInfoDto
+                {
+                    UserId = x.Id,
+                    FirstName = x.FirstName,
+                    LastName = x.LastName,
+                    Phone = x.PhoneNumber,
+                    Email = x.Email,
+                    ShippingAddress = x.ShippingAddress,
+                    Role = x.Role.Name,
+                    RoleId = x.RoleId,
+                })
+                .FirstOrDefaultAsync() ?? throw new BusinessException(HttpStatusCode.NotFound, "Usuario no encontrado", "El usuario no fue encontrado");
         }
     }
 }

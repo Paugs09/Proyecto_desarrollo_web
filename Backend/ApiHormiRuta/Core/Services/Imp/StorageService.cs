@@ -1,9 +1,11 @@
 ﻿using Amazon.S3;
 using Amazon.S3.Model;
 using Amazon.S3.Transfer;
+using Core.Exceptions;
 using Core.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
+using System.Net;
 
 namespace Core.Services.Imp
 {
@@ -61,7 +63,7 @@ namespace Core.Services.Imp
             }
             catch (AmazonS3Exception e)
             {
-                throw new Exception("Error deleting images from S3", e);
+                throw new BusinessException(HttpStatusCode.BadRequest, "Error", $"Error eliminando imagenes: {e.Message}");
             }
         }
     }
