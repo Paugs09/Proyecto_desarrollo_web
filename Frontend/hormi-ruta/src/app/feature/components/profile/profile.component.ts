@@ -23,30 +23,26 @@ export class ProfileComponent implements OnInit {
   loading = false;
 
   get usuario() {
-  const data = this.userSignal();
-  // Si el back devuelve { user: {...}, token: '...' }, usamos data.user
-  // Si devuelve el usuario directo, usamos data
-  const u = data?.user ? data.user : data;
+  const u = this.userSignal(); // Obtenemos el valor de la Signal
 
-  let nombreRol = 'HormiSeguidor'; 
-  
-  // Lógica de Rol mejorada
-  const roleInfo = u?.role || u?.Role;
-  if (roleInfo?.name) {
-    nombreRol = roleInfo.name === 'admin' ? 'Administrador' : 'Cliente';
-  } else if (u?.roleId || u?.role_id) {
-    const rId = u?.roleId || u?.role_id;
-    nombreRol = rId === 1 ? 'Administrador' : 'Cliente';
+  // Lógica de Rol según el JSON de Scalar (que trae role: "admin" y roleId: 1)
+  let nombreRol = 'HormiSeguidor';
+  if (u?.role === 'admin' || u?.roleId === 1) {
+    nombreRol = 'Administrador';
+  } else if (u?.role) {
+    // Si el rol es 'cliente' o cualquier otro, capitalizamos la primera letra
+    nombreRol = u.role.charAt(0).toUpperCase() + u.role.slice(1);
   }
 
   return {
-    nombre: u?.firstName || u?.first_name || u?.FirstName || 'Usuario',
-    apellido: u?.lastName || u?.last_name || u?.LastName || '',
-    correo: u?.email || u?.Email || 'Sin correo',
-    telefono: u?.phone || u?.Phone || 'No registrado',
-    direccion: u?.shippingAddress || u?.shipping_address || u?.ShippingAddress || 'Sin dirección',
+    // Mapeo exacto de los nombres de campos que se ven en tu imagen de Scalar
+    nombre: u?.firstName || 'Usuario',
+    apellido: u?.lastName || '',
+    correo: u?.email || 'Sin correo',
+    telefono: u?.phone || 'No registrado',
+    direccion: u?.shippingAddress || 'Sin dirección',
     rol: nombreRol,
-    foto: u?.foto || u?.photo_url || ''
+    //foto: u?.foto || u?.photo_url || ''
   };
 }
 
