@@ -1,8 +1,6 @@
 <div class="product-card">
   <div class="image-container">
-    <img
-      [src]="product.imageUrl || 'assets/img/prducts.png'"
-      [alt]="product.name">
+    <img [src]="product.imageUrl || 'assets/img/prducts.png'" [alt]="product.name">
 
     <div class="mobile-icons">
       <button class="icon-btn detail-icon" (click)="goToDetail()">+</button>
@@ -10,6 +8,8 @@
 
     <div class="desktop-actions">
       <button class="btn-details" (click)="goToDetail()">Detalles</button>
+      <button *ngIf="isAdmin()" class="btn-edit" (click)="goToEdit()">Editar</button>
+      <button *ngIf="isAdmin()" class="btn-delete" (click)="delete()">Eliminar</button>
     </div>
   </div>
 

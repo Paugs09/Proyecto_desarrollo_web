@@ -1,14 +1,15 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs'; 
+import { Observable } from 'rxjs';
 import { ProductDetail, ProductDto } from '../interfaces/product.interface';
+import { environment } from '../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class ProductService {
-  
-  private apiUrl = 'https://localhost:44384/api'; 
 
-  constructor(private http: HttpClient) {}
+  private readonly apiUrl = environment.apiUrl;
+
+  constructor(private http: HttpClient) { }
 
   getById(id: number): Observable<ProductDetail> {
     return this.http.get<ProductDetail>(`${this.apiUrl}/product/detail/${id}`);
@@ -28,16 +29,20 @@ export class ProductService {
     return this.http.post(`${this.apiUrl}/product/wish-list`, body);
   }
 
-// METODOS PARA EL FORMULARIO 
+  // METODOS PARA EL FORMULARIO 
   createProduct(productData: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/product`, productData);
   }
 
+  deleteProduct(productId: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/product/${productId}`);
+  }
+
   uploadImage(file: File): Observable<string> {
     const formData = new FormData();
-    formData.append('formFile', file, file.name); 
-    return this.http.post(`${this.apiUrl}/product/upload-image`, formData, { 
-      responseType: 'text' 
+    formData.append('formFile', file, file.name);
+    return this.http.post(`${this.apiUrl}/product/upload-image`, formData, {
+      responseType: 'text'
     });
   }
 
@@ -53,9 +58,9 @@ export class ProductService {
     return this.http.get<any[]>(`${this.apiUrl}/common/parameter/material`);
   }
   getAttributes(): Observable<any[]> {
-  
-  return this.http.get<any[]>(`${this.apiUrl}/common/parameter/attribute`);
-}
+
+    return this.http.get<any[]>(`${this.apiUrl}/common/parameter/attribute`);
+  }
 
   //Listar productos
   getAll(categoryId?: number, productName?: string): Observable<ProductDto[]> {
@@ -63,6 +68,7 @@ export class ProductService {
     if (categoryId) params['categoryId'] = categoryId;
     if (productName) params['productName'] = productName;
 
-  return this.http.get<ProductDto[]>(`${this.apiUrl}/product`, { params }); }
+    return this.http.get<ProductDto[]>(`${this.apiUrl}/product`, { params });
+  }
 
 }

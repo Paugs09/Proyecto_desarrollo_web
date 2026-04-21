@@ -34,7 +34,6 @@ export class HomeComponent {
   constructor(private categoryService: CategoryService, private router: Router) { }
 
   ngOnInit() {
-    console.log('Usuario actual:', this.authService.isAdmin());
     this.getCategories();
   }
 
