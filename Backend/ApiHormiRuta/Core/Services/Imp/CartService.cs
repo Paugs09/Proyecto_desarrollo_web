@@ -29,7 +29,7 @@ namespace Core.Services.Imp
             }
             catch (Postgrest.Exceptions.PostgrestException ex)
             {
-                throw new Exception($"Error en el carrito: {ex.Message}");
+                throw new BusinessException(HttpStatusCode.BadRequest, "Error", $"Error en el carrito: {ex.Message}");
             }
         }
 
@@ -46,8 +46,8 @@ namespace Core.Services.Imp
                 {
                     var order = await _genericOrderRepository.GetQueryable()
                         .Include(x => x.OrderItems)
-                        .FirstOrDefaultAsync(x => x.Id == orderId && x.UserId == userId)
-                        ?? throw new Exception("Orden no encontrada");
+                        .FirstOrDefaultAsync(x => x.Id == orderId && x.UserId == userId) 
+                        ?? throw new BusinessException(HttpStatusCode.NotFound, "No encontrada", "Orden no encontrada");
 
                     if (order.PaymentStatus == "Pagado") return;
 
@@ -57,7 +57,7 @@ namespace Core.Services.Imp
                             .FirstOrDefaultAsync(v => v.Id == item.ProductVariantId);
 
                         if (variant == null || variant.Stock < item.Quantity)
-                            throw new Exception($"Stock insuficiente para la variante ID: {item.ProductVariantId}");
+                            throw new BusinessException(HttpStatusCode.BadRequest, "Stock insuficiente", $"Stock insuficiente para la variante ID: {item.ProductVariantId}");
 
                         variant.Stock -= item.Quantity;
                     }

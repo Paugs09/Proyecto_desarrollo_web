@@ -89,7 +89,7 @@ namespace Core.Services.Imp
             }
             else
             {
-                throw new Exception("El producto ya está en favoritos");
+                throw new BusinessException(HttpStatusCode.BadRequest, "Error", "El producto ya está en favoritos");
             }
         }
 
@@ -167,7 +167,7 @@ namespace Core.Services.Imp
             }
             catch (Exception ex)
             {
-                throw new Exception("Error al procesar la creación del producto en la base de datos", ex);
+                throw new BusinessException(HttpStatusCode.BadRequest, "Errror", $"Error al procesar la creación del producto en la base de datos: {ex.Message}");
             }
         }
 
@@ -181,7 +181,7 @@ namespace Core.Services.Imp
             }
             catch (Exception ex)
             {
-                throw new Exception("Error al editar el producto", ex);
+                throw new BusinessException(HttpStatusCode.BadRequest, "Error", $"Error al editar el producto: {ex.Message}");
             }
         }
 

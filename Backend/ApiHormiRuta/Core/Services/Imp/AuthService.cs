@@ -1,6 +1,8 @@
 ﻿using Core.Dto.Auth;
+using Core.Exceptions;
 using Core.Services.Interfaces;
 using Supabase.Gotrue;
+using System.Net;
 
 namespace Core.Services.Imp
 {
@@ -22,7 +24,7 @@ namespace Core.Services.Imp
             };
 
             var session = await _supabaseClient.Auth.SignUp(userRegister.Email, userRegister.Password, new SignUpOptions { Data = metadata });
-            return session?.AccessToken ?? throw new Exception("Error al registrar usuario");
+            return session?.AccessToken ?? throw new BusinessException(HttpStatusCode.BadRequest, "No se registro al usuario", "Error al registrar usuario");
         }
 
         public async Task<AuthInfoDto> LoginAsync(string email, string password)
@@ -51,7 +53,7 @@ namespace Core.Services.Imp
 
             if (session?.AccessToken == null)
             {
-                throw new Exception("No se pudo refrescar la sesión.");
+                throw new BusinessException(HttpStatusCode.BadRequest, "No se refrescó la sesión", "No se pudo refrescar la sesión.");
             }
 
             var userId = Guid.Parse(session.User?.Id ?? string.Empty);
