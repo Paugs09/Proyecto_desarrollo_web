@@ -7,5 +7,6 @@ namespace Core.Services.Interfaces
         Task<string> RegisterAsync(UserRegister userRegister);
         Task<AuthInfoDto> RefreshTokenAsync(string accessToken, string refreshToken);
         Task<AuthInfoDto> LoginAsync(string email, string password);
+        Task<UserInfoDto> GetUserInfo(Guid userId);
     }
 }

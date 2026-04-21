@@ -64,6 +64,15 @@ namespace API.Controllers
             }
         }
 
+        [HttpGet("user-info")]
+        public async Task<IActionResult> GetUserInfo()
+        {
+            var userId = HttpContext.Items["UserId"]?.ToString();
+            _ = Guid.TryParse(userId, out Guid parsedUserId);
+
+            return Ok(await _authService.GetUserInfo(parsedUserId));
+        }
+
         public class RefreshRequest
         {
             public string AccessToken { get; set; } = string.Empty;
