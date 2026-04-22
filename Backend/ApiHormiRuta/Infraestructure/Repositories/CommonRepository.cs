@@ -1,4 +1,4 @@
-﻿using Core.Dto.Cart;
+﻿using Core.Dto.Cart.Order;
 using Core.Dto.Product;
 using Core.Infraestructure;
 using Infraestructure.Data;
@@ -64,7 +64,7 @@ namespace Infraestructure.Repositories
             }
         }
 
-        public async Task CallFunctionAddOrder(List<CreateOrderItemDto> items, Guid userId)
+        public async Task<InfoOrderCreatedDto?> CallFunctionAddOrder(List<CreateOrderItemDto> items, Guid userId)
         {
             try
             {
@@ -78,7 +78,9 @@ namespace Infraestructure.Repositories
                     )
                     .ToListAsync();
 
-                var jsonResult = result.FirstOrDefault();
+
+                var jsonResult = result.First();
+                return JsonSerializer.Deserialize<InfoOrderCreatedDto>(jsonResult);
             }
             catch (Exception ex)
             { 

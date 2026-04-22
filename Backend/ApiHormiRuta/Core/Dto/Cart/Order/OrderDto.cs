@@ -1,4 +1,4 @@
-﻿namespace Core.Dto.Cart
+﻿namespace Core.Dto.Cart.Order
 {
     public class OrderDto
     {

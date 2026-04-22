@@ -2,11 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
-import { ProductService } from '../../services/product.service'; 
+import { ProductService } from '../../services/product.service';
 import { ProductDetail, ProductVariant } from '../../interfaces/product.interface';
 import { CartService } from '../../services/cart.service';
-import { first } from 'rxjs'; 
-import Swal from 'sweetalert2'; 
+import { first } from 'rxjs';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-detalles',
@@ -27,7 +27,7 @@ export class DetailsComponent implements OnInit {
     private route: ActivatedRoute,
     private productService: ProductService,
     private cartService: CartService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
@@ -36,7 +36,7 @@ export class DetailsComponent implements OnInit {
         next: (data: any) => {
           this.producto = data;
           // Sincronización inicial con el campo del backend
-          this.esFavorito = data.isFavorite; 
+          this.esFavorito = data.isFavorite;
 
           if (this.producto && this.producto.variants.length > 0) {
             this.seleccionarVariante(this.producto.variants[0]);
@@ -53,7 +53,7 @@ export class DetailsComponent implements OnInit {
     if (!this.producto) return;
 
     const nuevoEstado = !this.esFavorito;
-    
+
     // Cumplimos con el Body: { "productId": 1, "isFavorite": true }
     this.productService.toggleFavorite(this.producto.id, nuevoEstado).subscribe({
       next: () => {
@@ -77,13 +77,13 @@ export class DetailsComponent implements OnInit {
 
   actualizarSeleccion(nombreAtributo: string, valor: string) {
     this.seleccionActual[nombreAtributo] = valor;
-    const coincidencia = this.producto?.variants.find(v => 
+    const coincidencia = this.producto?.variants.find(v =>
       v.values.every(val => this.seleccionActual[val.attributeName] === val.value)
     );
     if (coincidencia) {
       this.seleccionarVariante(coincidencia);
     } else {
-      const sugerencia = this.producto?.variants.find(v => 
+      const sugerencia = this.producto?.variants.find(v =>
         v.values.some(val => val.attributeName === nombreAtributo && val.value === valor)
       );
       if (sugerencia) this.seleccionarVariante(sugerencia);
@@ -115,20 +115,19 @@ export class DetailsComponent implements OnInit {
 
   agregarAlCarrito() {
     const commonConfig = {
-    background: '#ffffff',
-    color: '#1E293B',
-    customClass: {
-      popup: 'rounded-[6rem] border-8 border-white shadow-2xl',
-      confirmButton: 'rounded-full px-10 py-3 font-black uppercase tracking-widest transition-transform hover:scale-105',
-      title: 'font-black text-2xl'
-    },
-    buttonsStyling: true,
-    backdrop: `rgba(45, 45, 45, 0.4)` 
-  };
+      background: '#ffffff',
+      color: '#1E293B',
+      customClass: {
+        popup: 'rounded-[6rem] border-8 border-white shadow-2xl',
+        confirmButton: 'rounded-full px-10 py-3 font-black uppercase tracking-widest transition-transform hover:scale-105',
+        title: 'font-black text-2xl'
+      },
+      buttonsStyling: true,
+      backdrop: `rgba(45, 45, 45, 0.4)`
+    };
 
-    if (!this.varianteSeleccionada) 
-      {
-      // alert("Por favor selecciona una opción (talla/color)");
+    if (!this.varianteSeleccionada) {
+
       Swal.fire({
         ...commonConfig,
         title: '¡Hormiguita perdida!',
@@ -139,9 +138,8 @@ export class DetailsComponent implements OnInit {
         confirmButtonColor: '#F4A261'
       });
       return;
-      }
+    }
     if (this.cantidad > (this.varianteSeleccionada.stock || 0)) {
-      // alert(`Solo quedan ${this.varianteSeleccionada.stock} unidades.`);
       Swal.fire({
         ...commonConfig,
         title: '¡Vuelan muy rápido!',
@@ -154,15 +152,12 @@ export class DetailsComponent implements OnInit {
       return;
     }
 
-    // Enviamos un ARRAY 
     const body = [{
       productVariantId: this.varianteSeleccionada.id,
-      quantity: this.cantidad
+      quantify: this.cantidad
     }];
 
-    this.cartService.createOrder(body).subscribe({
-      // next: () => alert("¡Hormiguita feliz! Añadido al carrito."),
-      // error: (err) => alert("Error al añadir al carrito.")
+    this.cartService.syncItems(body).subscribe({
       next: () => {
         Swal.fire({
           toast: true,

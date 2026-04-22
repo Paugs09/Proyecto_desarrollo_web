@@ -1,78 +1,100 @@
 <div class="max-w-4xl mx-auto p-6 bg-white shadow-2xl rounded-xl my-10 border border-gray-100">
+  @if (isImageLoading()) {
+  <div class="loading-overlay">
+    <div class="spinner"></div>
+    <p style="margin-top: 15px; font-weight: 500; color: #333;">
+      Procesando, por favor espere...
+    </p>
+  </div>
+  }
+
   <div class="flex flex-col items-center mb-10">
-  <div class="relative inline-block">
-    <img src="assets/img/HormiAdmin.png" alt="HormiAdmin Logo" class="logo-admin h-24 w-auto object-contain mb-2">
-    <div class="absolute -inset-2 bg-[#F4A261]/10 blur-2xl rounded-full -z-10"></div>
+    <div class="relative inline-block">
+      <img src="assets/img/HormiAdmin.png" alt="HormiAdmin Logo" class="logo-admin h-24 w-auto object-contain mb-2">
+      <div class="absolute -inset-2 bg-[#F4A261]/10 blur-2xl rounded-full -z-10"></div>
+    </div>
+
+    <h2 class="text-4xl font-black text-[#2D5016] text-center tracking-tight">
+      Panel de administración
+    </h2>
+
+    <div class="flex items-center gap-2 mt-2">
+      <div class="h-[2px] w-12 bg-[#F4A261]/30 rounded-full"></div>
+      <span class="text-[#F4A261] text-xs uppercase tracking-[0.3em] font-bold">HormiGuane</span>
+      <div class="h-[2px] w-12 bg-[#F4A261]/30 rounded-full"></div>
+    </div>
   </div>
-  
-  <h2 class="text-4xl font-black text-[#2D5016] text-center tracking-tight">
-    Panel de administración
-  </h2>
-  
-  <div class="flex items-center gap-2 mt-2">
-    <div class="h-[2px] w-12 bg-[#F4A261]/30 rounded-full"></div>
-    <span class="text-[#F4A261] text-xs uppercase tracking-[0.3em] font-bold">HormiGuane</span>
-    <div class="h-[2px] w-12 bg-[#F4A261]/30 rounded-full"></div>
-  </div>
-</div>
   <form [formGroup]="productForm" (ngSubmit)="onSubmit()" class="space-y-8">
-    
+
     <div class="bg-[#FBF5EC]/50 p-6 rounded-xl grid grid-cols-1 md:grid-cols-2 gap-6">
       <div class="md:col-span-2 text-[#E78E46] font-bold text-sm uppercase tracking-wider">Información básica</div>
-      
+
       <div>
         <label class="block text-sm font-semibold text-gray-600 mb-1">Nombre del producto *</label>
-        <input formControlName="name" type="text" class="w-full p-3 border rounded-lg outline-none bg-white transition-all focus:bg-white focus:ring-2 focus:ring-[#F4A261] focus:border-[#F4A261]">
+        <input formControlName="name" type="text"
+          class="w-full p-3 border rounded-lg outline-none bg-white transition-all focus:bg-white focus:ring-2 focus:ring-[#F4A261] focus:border-[#F4A261]">
       </div>
 
       <div>
         <label class="block text-sm font-semibold text-gray-600 mb-1">Categoría principal *</label>
-        <select formControlName="categoryId" class="w-full p-3 border rounded-lg bg-white outline-none bg-white transition-all focus:bg-white focus:ring-2 focus:ring-[#F4A261] focus:border-[#F4A261]">
+        <select formControlName="categoryId"
+          class="w-full p-3 border rounded-lg bg-white outline-none bg-white transition-all focus:bg-white focus:ring-2 focus:ring-[#F4A261] focus:border-[#F4A261]">
           <option *ngFor="let cat of categories" [value]="cat.id">{{cat.name}}</option>
         </select>
       </div>
 
       <div>
-    <label class="block text-sm font-semibold text-gray-600 mb-1">Origen (Municipio) *</label>
-    <select formControlName="municipalityId" class="w-full p-3 border rounded-lg bg-white outline-none bg-white transition-all focus:bg-white focus:ring-2 focus:ring-[#F4A261] focus:border-[#F4A261]">
-      <option *ngFor="let mun of municipalities" [value]="mun.id">{{mun.name}}</option>
-    </select>
-  </div>
+        <label class="block text-sm font-semibold text-gray-600 mb-1">Origen (Municipio) *</label>
+        <select formControlName="municipalityId"
+          class="w-full p-3 border rounded-lg bg-white outline-none bg-white transition-all focus:bg-white focus:ring-2 focus:ring-[#F4A261] focus:border-[#F4A261]">
+          <option *ngFor="let mun of municipalities" [value]="mun.id">{{mun.name}}</option>
+        </select>
+      </div>
 
-  <div>
-  <label class="block text-sm font-semibold text-gray-600 mb-1">Dimensiones (Opcional)</label>
-  <input formControlName="dimensions" type="text" placeholder="Ej: 20x10x5 cm" class="w-full p-3 border rounded-lg bg-white outline-none bg-white transition-all focus:bg-white focus:ring-2 focus:ring-[#F4A261] focus:border-[#F4A261]">
- </div>
+      <div>
+        <label class="block text-sm font-semibold text-gray-600 mb-1">Dimensiones (Opcional)</label>
+        <input formControlName="dimensions" type="text" placeholder="Ej: 20x10x5 cm"
+          class="w-full p-3 border rounded-lg bg-white outline-none bg-white transition-all focus:bg-white focus:ring-2 focus:ring-[#F4A261] focus:border-[#F4A261]">
+      </div>
 
-  <div>
-  <label class="block text-sm font-semibold text-gray-600 mb-1">Material principal</label>
-  <select formControlName="materialId" class="w-full p-3 border rounded-lg bg-white outline-none bg-white transition-all focus:bg-white focus:ring-2 focus:ring-[#F4A261] focus:border-[#F4A261]">
-    <option [value]="null">-- No aplica / Ninguno --</option> 
-    <option *ngFor="let mat of materials" [value]="mat.id">{{mat.name}}</option>
-  </select>
-</div>
+      <div>
+        <label class="block text-sm font-semibold text-gray-600 mb-1">Material principal</label>
+        <select formControlName="materialId"
+          class="w-full p-3 border rounded-lg bg-white outline-none bg-white transition-all focus:bg-white focus:ring-2 focus:ring-[#F4A261] focus:border-[#F4A261]">
+          <option [value]="null">-- No aplica / Ninguno --</option>
+          <option *ngFor="let mat of materials" [value]="mat.id">{{mat.name}}</option>
+        </select>
+      </div>
 
       <div class="md:col-span-2">
         <label class="block text-sm font-semibold text-gray-600 mb-1">Descripción breve *</label>
-        <textarea formControlName="shortDescription" rows="2" class="w-full p-3 border rounded-lg bg-white outline-none bg-white transition-all focus:bg-white focus:ring-2 focus:ring-[#F4A261] focus:border-[#F4A261]" placeholder="Resumen rápido para el cliente..."></textarea>
+        <textarea formControlName="shortDescription" rows="2"
+          class="w-full p-3 border rounded-lg bg-white outline-none bg-white transition-all focus:bg-white focus:ring-2 focus:ring-[#F4A261] focus:border-[#F4A261]"
+          placeholder="Resumen rápido para el cliente..."></textarea>
       </div>
 
       <div class="md:col-span-2">
         <label class="block text-sm font-semibold text-gray-600 mb-1">Descripción larga (Opcional)</label>
-        <textarea formControlName="longDescription" rows="4" class="w-full p-3 border rounded-lg bg-white outline-none bg-white transition-all focus:bg-white focus:ring-2 focus:ring-[#F4A261] focus:border-[#F4A261]" placeholder="Escribe aquí toda la historia, beneficios e ingredientes detallados..."></textarea>
+        <textarea formControlName="longDescription" rows="4"
+          class="w-full p-3 border rounded-lg bg-white outline-none bg-white transition-all focus:bg-white focus:ring-2 focus:ring-[#F4A261] focus:border-[#F4A261]"
+          placeholder="Escribe aquí toda la historia, beneficios e ingredientes detallados..."></textarea>
       </div>
 
       <div class="md:col-span-2">
         <label class="block text-sm font-semibold text-gray-600 mb-1">Notas (Opcional)</label>
-        <input formControlName="notes" type="text" class="w-full p-3 border rounded-lg bg-white outline-none bg-white transition-all focus:bg-white focus:ring-2 focus:ring-[#F4A261] focus:border-[#F4A261]" placeholder="Ej: obvervaciones a tener en cuenta...">
+        <input formControlName="notes" type="text"
+          class="w-full p-3 border rounded-lg bg-white outline-none bg-white transition-all focus:bg-white focus:ring-2 focus:ring-[#F4A261] focus:border-[#F4A261]"
+          placeholder="Ej: obvervaciones a tener en cuenta...">
       </div>
     </div>
 
     <div formArrayName="productVariants" class="space-y-6">
-      <div *ngFor="let variant of variants.controls; let i = index" [formGroupName]="i" class="relative p-6 border-2 border-[#FDF2E9] rounded-2xl bg-white shadow-sm hover:shadow-md transition">
-        
-        <button *ngIf="variants.length > 1" type="button" (click)="removeVariant(i)" class="absolute -top-3 -right-3 bg-red-500 text-white w-8 h-8 rounded-full shadow-lg flex items-center justify-center font-bold hover:bg-red-600 transition-colors">×</button>
-        
+      <div *ngFor="let variant of variants.controls; let i = index" [formGroupName]="i"
+        class="relative p-6 border-2 border-[#FDF2E9] rounded-2xl bg-white shadow-sm hover:shadow-md transition">
+
+        <button *ngIf="variants.length > 1" type="button" (click)="removeVariant(i)"
+          class="absolute -top-3 -right-3 bg-red-500 text-white w-8 h-8 rounded-full shadow-lg flex items-center justify-center font-bold hover:bg-red-600 transition-colors">×</button>
+
         <h3 class="font-bold text-gray-600 mb-4 flex items-center gap-2">
           * Variante / Opción #{{i+1}}
         </h3>
@@ -81,10 +103,16 @@
           <div class="flex flex-col">
             <label class="text-xs font-bold text-gray-400 uppercase">SKU (Código único)</label>
             <div class="flex gap-1">
-              <input formControlName="sku" class="flex-1 p-2 border-b-2 border-gray-200 outline-none focus:border-[#F4A261]" placeholder="EJ: CHO-001">
-              <button type="button" (click)="autoGenerateSKU(i)" class="bg-[#F7F0EB] px-2 rounded hover:bg-[#F0E4DA]" title="Generar código automático">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6 text-[#8B4513] transition-colors hover:text-[#E78E46]">
-                  <path fill-rule="evenodd" d="M9 4.5a.75.75 0 0 1 .721.544l.813 2.846a3.75 3.75 0 0 0 2.576 2.576l2.846.813a.75.75 0 0 1 0 1.442l-2.846.813a3.75 3.75 0 0 0-2.576 2.576l-.813 2.846a.75.75 0 0 1-1.442 0l-.813-2.846a3.75 3.75 0 0 0-2.576-2.576l-2.846-.813a.75.75 0 0 1 0-1.442l2.846-.813A3.75 3.75 0 0 0 7.466 7.89l.813-2.846A.75.75 0 0 1 9 4.5ZM18 1.5a.75.75 0 0 1 .728.568l.258 1.036c.236.94.97 1.674 1.91 1.91l1.036.258a.75.75 0 0 1 0 1.456l-1.036.258c-.94.236-1.674.97-1.91 1.91l-.258 1.036a.75.75 0 0 1-1.456 0l-.258-1.036a2.625 2.625 0 0 0-1.91-1.91l-1.036-.258a.75.75 0 0 1 0-1.456l1.036-.258a2.625 2.625 0 0 0 1.91-1.91l.258-1.036A.75.75 0 0 1 18 1.5ZM16.5 15a.75.75 0 0 1 .712.513l.394 1.183c.15.447.5.799.948.948l1.183.395a.75.75 0 0 1 0 1.422l-1.183.395c-.447.15-.799.5-.948.948l-.395 1.183a.75.75 0 0 1-1.422 0l-.395-1.183a1.5 1.5 0 0 0-.948-.948l-1.183-.395a.75.75 0 0 1 0-1.422l1.183-.395c.447-.15.799-.5.948-.948l.395-1.183A.75.75 0 0 1 16.5 15Z" clip-rule="evenodd" />
+              <input formControlName="sku"
+                class="flex-1 p-2 border-b-2 border-gray-200 outline-none focus:border-[#F4A261]"
+                placeholder="EJ: CHO-001">
+              <button type="button" (click)="autoGenerateSKU(i)" class="bg-[#F7F0EB] px-2 rounded hover:bg-[#F0E4DA]"
+                title="Generar código automático">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                  class="size-6 text-[#8B4513] transition-colors hover:text-[#E78E46]">
+                  <path fill-rule="evenodd"
+                    d="M9 4.5a.75.75 0 0 1 .721.544l.813 2.846a3.75 3.75 0 0 0 2.576 2.576l2.846.813a.75.75 0 0 1 0 1.442l-2.846.813a3.75 3.75 0 0 0-2.576 2.576l-.813 2.846a.75.75 0 0 1-1.442 0l-.813-2.846a3.75 3.75 0 0 0-2.576-2.576l-2.846-.813a.75.75 0 0 1 0-1.442l2.846-.813A3.75 3.75 0 0 0 7.466 7.89l.813-2.846A.75.75 0 0 1 9 4.5ZM18 1.5a.75.75 0 0 1 .728.568l.258 1.036c.236.94.97 1.674 1.91 1.91l1.036.258a.75.75 0 0 1 0 1.456l-1.036.258c-.94.236-1.674.97-1.91 1.91l-.258 1.036a.75.75 0 0 1-1.456 0l-.258-1.036a2.625 2.625 0 0 0-1.91-1.91l-1.036-.258a.75.75 0 0 1 0-1.456l1.036-.258a2.625 2.625 0 0 0 1.91-1.91l.258-1.036A.75.75 0 0 1 18 1.5ZM16.5 15a.75.75 0 0 1 .712.513l.394 1.183c.15.447.5.799.948.948l1.183.395a.75.75 0 0 1 0 1.422l-1.183.395c-.447.15-.799.5-.948.948l-.395 1.183a.75.75 0 0 1-1.422 0l-.395-1.183a1.5 1.5 0 0 0-.948-.948l-1.183-.395a.75.75 0 0 1 0-1.422l1.183-.395c.447-.15.799-.5.948-.948l.395-1.183A.75.75 0 0 1 16.5 15Z"
+                    clip-rule="evenodd" />
                 </svg>
               </button>
             </div>
@@ -92,60 +120,73 @@
 
           <div>
             <label class="text-xs font-bold text-gray-400 block uppercase">Precio ($)</label>
-            <input formControlName="specificPrice" type="number" class="w-full p-2 border border-gray-200 rounded-lg outline-none bg-white focus:bg-white focus:border-[#F4A261]">
+            <input formControlName="specificPrice" type="number"
+              class="w-full p-2 border border-gray-200 rounded-lg outline-none bg-white focus:bg-white focus:border-[#F4A261]">
           </div>
 
           <div>
             <label class="text-xs font-bold text-gray-400 block uppercase">Stock</label>
-            <input formControlName="stock" type="number" class="w-full p-2 border border-gray-200 rounded-lg outline-none bg-white focus:bg-white focus:border-[#F4A261]">
+            <input formControlName="stock" type="number"
+              class="w-full p-2 border border-gray-200 rounded-lg outline-none bg-white focus:bg-white focus:border-[#F4A261]">
           </div>
         </div>
 
         <div formArrayName="productImages" class="mb-6 p-4 bg-[#FDF2E9] rounded-xl border border-[#FDF2E9]">
-  <div class="flex justify-between items-center mb-3">
-    <label class="block text-sm font-bold text-[#8B4513]">Imágenes de la variante</label>
-    <button type="button" (click)="addImage(i)" class="text-xs bg-[#8B4513] text-white px-2 py-1 rounded">+ Añadir Foto</button>
-  </div>
+          <div class="flex justify-between items-center mb-3">
+            <label class="block text-sm font-bold text-[#8B4513]">Imágenes de la variante</label>
+            <button type="button" (click)="addImage(i)" class="text-xs bg-[#8B4513] text-white px-2 py-1 rounded">+
+              Añadir Foto</button>
+          </div>
 
-  <div *ngFor="let img of getProductImages(i).controls; let k = index" [formGroupName]="k" class="flex flex-col gap-2 mb-4 border-b border-orange-200 pb-2">
-    <div class="flex flex-col sm:flex-row items-center gap-4">
-      <input type="file" (change)="onFileSelected($event, i, k)" class="text-xs text-gray-500 file:rounded-full file:bg-[#F4A261] cursor-pointer">
-      <input formControlName="imageUrl" readonly class="flex-1 p-2 bg-white border rounded text-[10px]" placeholder="URL...">
-      <button *ngIf="getProductImages(i).length > 1" type="button" (click)="removeImage(i, k)" class="text-red-500 font-bold">×</button>
-    </div>
-    <div class="flex gap-4 items-center">
-        <label class="text-[10px] flex items-center gap-1">
-            <input type="checkbox" formControlName="isPrimary"> Es Principal
-        </label>
-    </div>
-  </div>
-</div>
+          <div *ngFor="let img of getProductImages(i).controls; let k = index" [formGroupName]="k"
+            class="flex flex-col gap-2 mb-4 border-b border-orange-200 pb-2">
+            <div class="flex flex-col sm:flex-row items-center gap-4">
+              <input type="file" (change)="onFileSelected($event, i, k)"
+                class="text-xs text-gray-500 file:rounded-full file:bg-[#F4A261] cursor-pointer">
+              <input formControlName="imageUrl" readonly class="flex-1 p-2 bg-white border rounded text-[10px]"
+                placeholder="URL...">
+              <button *ngIf="getProductImages(i).length > 1" type="button" (click)="removeImage(i, k)"
+                class="text-red-500 font-bold">×</button>
+            </div>
+            <div class="flex gap-4 items-center">
+              <label class="text-[10px] flex items-center gap-1">
+                <input type="checkbox" formControlName="isPrimary"> Es Principal
+              </label>
+            </div>
+          </div>
+        </div>
 
         <div class="space-y-3">
           <div class="flex justify-between items-center">
             <label class="text-sm font-bold text-gray-600">Especificaciones (Talla, sabor, peso...)</label>
-            <button type="button" (click)="addAttribute(i)" class="text-xs text-[#8B4513]  font-bold hover:underline">+ Añadir Atributo</button>
+            <button type="button" (click)="addAttribute(i)" class="text-xs text-[#8B4513]  font-bold hover:underline">+
+              Añadir Atributo</button>
           </div>
-          
+
           <div formArrayName="attributeValues" class="grid grid-cols-1 gap-2">
-            <div *ngFor="let attr of getAttributes(i).controls; let j = index" [formGroupName]="j" class="flex gap-2 animate-in fade-in duration-300">
+            <div *ngFor="let attr of getAttributes(i).controls; let j = index" [formGroupName]="j"
+              class="flex gap-2 animate-in fade-in duration-300">
               <select formControlName="attributeId" class="p-2 border rounded bg-white text-xs outline-none">
                 <option *ngFor="let a of availableAttributes" [value]="a.id">{{a.name}}</option>
               </select>
-              <input formControlName="value" placeholder="Ej: 38, Fresa, 500g" class="flex-1 p-2 border rounded text-xs outline-none focus:border-[#F4A261]">
-              <button type="button" (click)="removeAttribute(i, j)" class="text-red-400 px-2 font-bold hover:text-red-600">×</button>
+              <input formControlName="value" placeholder="Ej: 38, Fresa, 500g"
+                class="flex-1 p-2 border rounded text-xs outline-none focus:border-[#F4A261]">
+              <button type="button" (click)="removeAttribute(i, j)"
+                class="text-red-400 px-2 font-bold hover:text-red-600">×</button>
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <button type="button" (click)="addVariant()" class="w-full py-3 bg-[#F7F0EB] border-2 border-dashed border-[#8B4513] text-[#8B4513] rounded-xl font-bold hover:bg-[#F0E4DA] transition-all hover:border-[#8B4513]">
+    <button type="button" (click)="addVariant()"
+      class="w-full py-3 bg-[#F7F0EB] border-2 border-dashed border-[#8B4513] text-[#8B4513] rounded-xl font-bold hover:bg-[#F0E4DA] transition-all hover:border-[#8B4513]">
       + Agregar otra combinación (Variante)
     </button>
 
-    <button type="submit" [disabled]="productForm.invalid" class="w-full py-5 bg-[#3aa394] text-white rounded-2xl text-xl font-black shadow-xl hover:bg-[#167567] transition-all disabled:bg-gray-300 disabled:shadow-none transform hover:-translate-y-1">
-       Guardar HormiProducto
+    <button type="submit" [disabled]="productForm.invalid"
+      class="w-full py-5 bg-[#3aa394] text-white rounded-2xl text-xl font-black shadow-xl hover:bg-[#167567] transition-all disabled:bg-gray-300 disabled:shadow-none transform hover:-translate-y-1">
+      Guardar HormiProducto
     </button>
   </form>
 </div>

@@ -22,9 +22,7 @@ namespace Infraestructure.Repositories
             return includeFunc != null ? includeFunc(query) : query;
         }
 
-        public async Task<T?> FirstOrDefaultAsyncWithIncludes(
-            Expression<Func<T, bool>> predicate,
-            Func<IQueryable<T>, IQueryable<T>>? includeFunc = null)
+        public async Task<T?> FirstOrDefaultAsyncWithIncludes(Expression<Func<T, bool>> predicate, Func<IQueryable<T>, IQueryable<T>>? includeFunc = null)
         {
             IQueryable<T> query = _dbSet;
 
@@ -35,16 +33,6 @@ namespace Infraestructure.Repositories
             }
 
             return await query.FirstOrDefaultAsync(predicate);
-        }
-
-        public async Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate, Func<IQueryable<T>, IQueryable<T>>? includeFunc = null)
-        {
-            IQueryable<T> query = _dbSet;
-            if (includeFunc != null)
-            {
-                query = includeFunc(query);
-            }
-            return await query.Where(predicate).ToListAsync();
         }
 
         public async Task AddAsync(T entity)
@@ -59,8 +47,12 @@ namespace Infraestructure.Repositories
 
         public void Update(T entity)
         {
-            _dbSet.Attach(entity);
-            _context.Entry(entity).State = EntityState.Modified;
+            _dbSet.Update(entity);
+        }
+
+        public void UpdateRange(List<T> entity)
+        {
+            _dbSet.UpdateRange(entity);
         }
 
         public async Task DeleteByIdAsync(object id)
@@ -70,6 +62,16 @@ namespace Infraestructure.Repositories
             {
                 _dbSet.Remove(entity);
             }
+        }
+
+        public void Delete(T entity)
+        {
+            _dbSet.Remove(entity);
+        }
+
+        public void DeleteRange(List<T> entities)
+        {
+            _dbSet.RemoveRange(entities);
         }
 
         public async Task<bool> SaveAsync()

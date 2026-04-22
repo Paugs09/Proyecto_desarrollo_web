@@ -1,4 +1,4 @@
-﻿using Core.Dto.Cart;
+﻿using Core.Dto.Cart.Order;
 using Core.Dto.Product;
 
 namespace Core.Infraestructure
@@ -8,6 +8,6 @@ namespace Core.Infraestructure
         Task<List<long>> CallFunctionRegisterProducts(string jsonPayload);
         Task CallFunctionUpdateProduct(long productId, UpdateProductDto updateProductDto);
         Task CallFunctionDeleteProduct(long productId);
-        Task CallFunctionAddOrder(List<CreateOrderItemDto> items, Guid userId);
+        Task<InfoOrderCreatedDto?> CallFunctionAddOrder(List<CreateOrderItemDto> items, Guid userId);
     }
 }

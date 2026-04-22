@@ -1,11 +1,13 @@
-﻿using Core.Dto.Cart;
+﻿using Core.Dto.Cart.CartItem;
+using Core.Dto.Cart.Order;
 
 namespace Core.Services.Interfaces
 {
     public interface ICartService
     {
-        Task CreateOrder(List<CreateOrderItemDto> createOrderItemDto, Guid userId);
+        Task ManageProductsOfCart(List<CreateCartItemDto> cartItemsDto, Guid userId);
+        Task<InfoOrderCreatedDto?> CreateOrder(List<CreateOrderItemDto> items, Guid userId);
         Task FinishOrder(Guid userId, long orderId);
-        Task<OrderDto> GetOrderInfo(Guid userId);
+        IQueryable<OrderItemDto>? GetCartItemInfo(Guid userId);
     }
 }
