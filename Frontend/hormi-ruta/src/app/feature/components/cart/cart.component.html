@@ -2,9 +2,7 @@
 <ng-container *ngIf="isLoading">
   <div class="min-h-screen bg-[#FAF7F2] font-sans flex flex-col items-center justify-center">
     <div class="relative flex flex-col items-center">
-      <img [src]="'assets/hormiga-feliz.gif'" 
-          alt=" " 
-          class="w-32 h-auto object-contain animate-dance relative z-10">
+      <img [src]="'assets/hormiga-feliz.gif'" alt=" " class="w-32 h-auto object-contain animate-dance relative z-10">
       <div class="w-16 h-2 bg-black/10 rounded-full blur-sm mt-[-5px] animate-shadow"></div>
     </div>
     <p class="text-[#8B4513] font-bold text-lg mt-6 tracking-widest animate-pulse uppercase">
@@ -26,10 +24,7 @@
               <div class="flex items-center gap-3">
 
                 <label class="flex items-center gap-2 cursor-pointer select-none">
-                  <input
-                    type="checkbox"
-                    [checked]="allSelected"
-                    [indeterminate]="someSelected"
+                  <input type="checkbox" [checked]="allSelected" [indeterminate]="someSelected"
                     (change)="toggleAll($any($event.target).checked)"
                     class="w-4 h-4 accent-amber-500 cursor-pointer rounded">
                   <span class="text-sm text-gray-600 font-medium">Seleccionar todo</span>
@@ -39,56 +34,47 @@
                   HormiCarrito de productos
                   <span class="text-gray-500 font-medium">({{ totalItemsCount }})</span>
                   <span class="inline-block ml-2 text-amber-500">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline" fill="none" viewBox="0 0 24 24"
+                      stroke="currentColor" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
                     </svg>
                   </span>
                 </h1>
               </div>
 
               <!-- Botón para eliminar productos seleccionados -->
-              <button
-                *ngIf="hasSelection"
-                (click)="removeSelected()"
+              <button *ngIf="hasSelection" (click)="removeSelected()"
                 class="flex items-center gap-1.5 text-sm text-red-500 hover:text-red-600 font-medium px-3 py-1.5 rounded-lg hover:bg-red-50 transition-colors">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                  stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                 </svg>
                 Eliminar seleccionados ({{ selectedIds.size }})
               </button>
             </div>
           </div>
 
-          <ng-container *ngIf="!isLoading && items.length === 0">
-            <div class="min-h-screen bg-[#FAF7F2] font-sans flex flex-col items-center justify-center">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-gray-300 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-              </svg>
-              <p class="text-gray-500 text-lg">Tu HormiCarrito está vacío</p>
-              <a href="#" class="mt-4 inline-block text-amber-600 font-medium hover:underline">Explorar productos</a>
-            </div>
-          </ng-container>
-
           <!-- Lista de productos -->
           <div class="bg-white rounded-2xl shadow-sm overflow-hidden divide-y divide-gray-100">
-            <div *ngFor="let item of items; trackBy: trackById"
-                 (click)="toggleItem(item)"
-                 class="flex items-center gap-4 px-4 sm:px-6 py-4 transition-colors hover:bg-amber-50/40 cursor-pointer"
-                 [ngClass]="isSelected(item) ? 'bg-amber-50/60' : ''">
+            <div *ngFor="let item of items; trackBy: trackById" (click)="toggleItem(item)"
+              class="flex items-center gap-4 px-4 sm:px-6 py-4 transition-colors hover:bg-amber-50/40 cursor-pointer"
+              [ngClass]="isSelected(item) ? 'bg-amber-50/60' : ''">
 
               <div class="flex-shrink-0" (click)="$event.stopPropagation()">
-                <input
-                  type="checkbox"
-                  [checked]="isSelected(item)"
-                  (change)="toggleItem(item)"
+                <input type="checkbox" [checked]="isSelected(item)" (change)="toggleItem(item)"
                   class="w-4 h-4 accent-amber-500 cursor-pointer rounded">
               </div>
 
-              <div class="w-20 h-20 sm:w-24 sm:h-24 flex-shrink-0 rounded-xl overflow-hidden bg-amber-100/60 flex items-center justify-center">
-                <img *ngIf="item.imageUrl; else placeholder" [src]="item.imageUrl" [alt]="item.productName" class="w-full h-full object-cover" />
+              <div
+                class="w-20 h-20 sm:w-24 sm:h-24 flex-shrink-0 rounded-xl overflow-hidden bg-amber-100/60 flex items-center justify-center">
+                <img *ngIf="item.imageUrl; else placeholder" [src]="item.imageUrl" [alt]="item.productName"
+                  class="w-full h-full object-cover" />
                 <ng-template #placeholder>
                   <div class="flex flex-col items-center justify-center w-full h-full bg-amber-100/80 rounded-xl">
-                    <span class="text-[10px] text-amber-400 font-medium text-center px-1 leading-tight">{{ item.category }}</span>
+                    <span class="text-[10px] text-amber-400 font-medium text-center px-1 leading-tight">{{ item.category
+                      }}</span>
                   </div>
                 </ng-template>
               </div>
@@ -101,24 +87,30 @@
 
               <div class="flex flex-col items-center gap-3 flex-shrink-0" (click)="$event.stopPropagation()">
                 <div class="flex items-center gap-2">
-                  <button (click)="openDetail(item)" class="p-1.5 text-gray-400 hover:text-amber-500 transition-colors rounded-lg hover:bg-amber-50">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  <button (click)="openDetail(item)"
+                    class="p-1.5 text-gray-400 hover:text-amber-500 transition-colors rounded-lg hover:bg-amber-50">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                      stroke="currentColor" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                     </svg>
                   </button>
-                  <button
-                    (click)="removeItem(item)"
+                  <button (click)="removeItem(item)"
                     class="p-1.5 text-gray-400 hover:text-red-500 transition-colors rounded-lg hover:bg-red-50">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                      stroke="currentColor" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                     </svg>
                   </button>
                 </div>
 
                 <div class="flex items-center gap-2 border border-gray-200 rounded-full px-2 py-1 bg-white shadow-sm">
-                  <button (click)="decrement(item)" [disabled]="item.quantify <= 1" class="w-6 h-6 flex items-center justify-center rounded-full text-gray-600 hover:bg-amber-100 disabled:opacity-30 font-bold text-lg">−</button>
+                  <button (click)="decrement(item)" [disabled]="item.quantify <= 1"
+                    class="w-6 h-6 flex items-center justify-center rounded-full text-gray-600 hover:bg-amber-100 disabled:opacity-30 font-bold text-lg">−</button>
                   <span class="w-6 text-center text-sm font-semibold text-gray-800">{{ item.quantify }}</span>
-                  <button (click)="increment(item)" class="w-6 h-6 flex items-center justify-center rounded-full text-gray-600 hover:bg-amber-100 font-bold text-lg">+</button>
+                  <button (click)="increment(item)"
+                    class="w-6 h-6 flex items-center justify-center rounded-full text-gray-600 hover:bg-amber-100 font-bold text-lg">+</button>
                 </div>
               </div>
             </div>
@@ -137,10 +129,12 @@
 
             <div class="px-6 py-4 flex gap-3 overflow-x-auto">
               <div *ngFor="let item of selectedItems.slice(0, 4); trackBy: trackById"
-                    class="flex-shrink-0 w-20 flex flex-col items-center gap-1">
+                class="flex-shrink-0 w-20 flex flex-col items-center gap-1">
                 <div class="w-16 h-16 rounded-xl bg-amber-100/70 flex items-center justify-center overflow-hidden">
-                  <img *ngIf="item.imageUrl" [src]="item.imageUrl" [alt]="item.productName" class="w-full h-full object-cover" />
-                  <span *ngIf="!item.imageUrl" class="text-[10px] text-amber-500 font-medium text-center px-1 leading-tight">
+                  <img *ngIf="item.imageUrl" [src]="item.imageUrl" [alt]="item.productName"
+                    class="w-full h-full object-cover" />
+                  <span *ngIf="!item.imageUrl"
+                    class="text-[10px] text-amber-500 font-medium text-center px-1 leading-tight">
                     {{ item.category }}
                   </span>
                 </div>
@@ -149,7 +143,8 @@
                 </p>
               </div>
 
-              <div *ngIf="selectedItems.length > 4" class="flex-shrink-0 w-16 h-16 rounded-xl bg-gray-100 flex items-center justify-center self-center">
+              <div *ngIf="selectedItems.length > 4"
+                class="flex-shrink-0 w-16 h-16 rounded-xl bg-gray-100 flex items-center justify-center self-center">
                 <span class="text-xs font-bold text-gray-500">+{{ selectedItems.length - 4 }}</span>
               </div>
 
@@ -168,9 +163,7 @@
                 <span class="font-extrabold text-xl text-gray-900">{{ formatCurrency(total) }}</span>
               </div>
 
-              <button
-                (click)="checkout()"
-                [disabled]="!hasSelection"
+              <button (click)="checkout()" [disabled]="!hasSelection"
                 class="w-full mt-4 py-3.5 rounded-full text-white font-bold bg-gradient-to-r from-amber-400 to-orange-400 hover:from-amber-500 hover:to-orange-500 active:scale-95 disabled:opacity-40 transition-all shadow-md">
                 Continuar ({{ selectedIds.size }})
               </button>
@@ -188,22 +181,38 @@
     <div *ngIf="detailOpen && selectedProduct" class="fixed inset-0 z-50 flex items-center justify-center">
       <div class="absolute inset-0 bg-black/40" (click)="closeDetail()"></div>
       <div class="relative bg-white rounded-2xl shadow-xl w-full max-w-md mx-4 p-6 z-10">
-        <button (click)="closeDetail()" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center hover:bg-gray-200">
+        <button (click)="closeDetail()"
+          class="absolute top-4 right-4 w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center hover:bg-gray-200">
           <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path d="M6 18L18 6M6 6l12 12" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M6 18L18 6M6 6l12 12" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
           </svg>
         </button>
         <div class="w-full h-48 bg-amber-100/60 rounded-xl overflow-hidden mb-4">
-          <img *ngIf="selectedProduct.imageUrl" [src]="selectedProduct.imageUrl" [alt]="selectedProduct.productName" class="w-full h-full object-cover">
+          <img *ngIf="selectedProduct.imageUrl" [src]="selectedProduct.imageUrl" [alt]="selectedProduct.productName"
+            class="w-full h-full object-cover">
         </div>
-        <span class="text-xs text-amber-600 font-semibold uppercase tracking-wider">{{ selectedProduct.category }}</span>
+        <span class="text-xs text-amber-600 font-semibold uppercase tracking-wider">{{ selectedProduct.category
+          }}</span>
         <h3 class="text-xl font-bold text-gray-900 mt-1 mb-2">{{ selectedProduct.productName }}</h3>
         <p class="text-2xl font-extrabold text-gray-900">{{ formatCurrency(selectedProduct.unitPrice) }}</p>
-        <button (click)="closeDetail()" class="w-full mt-6 py-3 bg-gradient-to-r from-amber-400 to-orange-400 rounded-full text-white font-bold hover:from-amber-500 transition-all">
+        <button (click)="closeDetail()"
+          class="w-full mt-6 py-3 bg-gradient-to-r from-amber-400 to-orange-400 rounded-full text-white font-bold hover:from-amber-500 transition-all">
           Cerrar
         </button>
       </div>
     </div>
 
+  </div>
+</ng-container>
+
+<ng-container *ngIf="!isLoading && items.length === 0">
+  <div class="min-h-screen bg-[#FAF7F2] font-sans flex flex-col items-center justify-center">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-gray-300 mb-4" fill="none" viewBox="0 0 24 24"
+      stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+        d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+    </svg>
+    <p class="text-gray-500 text-lg">Tu HormiCarrito está vacío</p>
+    <a href="#" class="mt-4 inline-block text-amber-600 font-medium hover:underline">Explorar productos</a>
   </div>
 </ng-container>

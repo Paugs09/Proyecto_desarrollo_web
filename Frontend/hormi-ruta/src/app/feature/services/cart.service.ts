@@ -1,15 +1,20 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { OrderDto } from '../interfaces/cart.interface';
+import { OrderDto, OrderItemDto } from '../interfaces/cart.interface';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CartService {
-  private apiUrl = 'https://localhost:44384/api/cart';
+  private apiUrl = `${environment.apiUrl}/cart`;
 
   constructor(private http: HttpClient) { }
+
+  syncItems(cartItem: any[]): Observable<any> {
+    return this.http.post(`${this.apiUrl}/items`, cartItem);
+  }
 
   createOrder(items: any[]): Observable<any> {
     return this.http.post(`${this.apiUrl}/create-order`, items);
@@ -19,7 +24,7 @@ export class CartService {
     return this.http.put(`${this.apiUrl}/finish-order/${orderId}`, null);
   }
 
-  listOrderItems(): Observable<OrderDto> {
-    return this.http.get<OrderDto>(`${this.apiUrl}/order-info`);
+  listProductsOfCart(): Observable<OrderItemDto[]> {
+    return this.http.get<OrderItemDto[]>(`${this.apiUrl}/items`);
   }
 }

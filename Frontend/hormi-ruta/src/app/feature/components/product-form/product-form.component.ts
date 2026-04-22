@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ProductService } from '../../services/product.service';
@@ -14,22 +14,13 @@ import Swal from 'sweetalert2';
 export class ProductFormComponent implements OnInit {
   private fb = inject(FormBuilder);
   private productService = inject(ProductService);
+  isImageLoading = signal(false);
 
   productForm: FormGroup;
   categories: any[] = [];
   municipalities: any[] = [];
   materials: any[] = [];
   availableAttributes: any[] = [];
-
-  //quemasdas => availableAttributes = [
-    //{ id: 1, name: 'Talla' },
-    //{ id: 2, name: 'Color' },
-    //{ id: 3, name: 'Cantidad' },
-    //{ id: 4, name: 'Sabor' },
-    //{ id: 5, name: 'Peso/Gramaje' },
-    //{ id: 6, name: 'Capacidad (ml/L)'}
-    
-  //];
 
   constructor() {
     this.productForm = this.fb.group({
@@ -49,8 +40,8 @@ export class ProductFormComponent implements OnInit {
     this.loadFormData();
   }
   getProductImages(variantIndex: number): FormArray {
-  return this.variants.at(variantIndex).get('productImages') as FormArray;
-}
+    return this.variants.at(variantIndex).get('productImages') as FormArray;
+  }
 
   loadFormData(): void {
     this.productService.getCategories().subscribe({
@@ -70,7 +61,8 @@ export class ProductFormComponent implements OnInit {
     });
 
     this.productService.getMunicipalities().subscribe({
-      next: (data) =>{ this.municipalities = data;
+      next: (data) => {
+        this.municipalities = data;
       },
       error: () => {
         this.municipalities = [{ id: 1, name: 'Curití' }, { id: 2, name: 'Guane' }, { id: 3, name: 'Barichara' }];
@@ -84,22 +76,22 @@ export class ProductFormComponent implements OnInit {
       }
     });
     this.productService.getAttributes().subscribe({
-    next: (data) => {
-      console.log('Atributos cargados desde el Backend');
-      this.availableAttributes = data;
-    },
-    error: () => {
-      console.warn('Usando atributos de emergencia');
-      this.availableAttributes = [
-        { id: 1, name: 'Talla' },
-        { id: 2, name: 'Color' },
-        { id: 3, name: 'Cantidad' },
-        { id: 4, name: 'Sabor' },
-        { id: 5, name: 'Peso/Gramaje' },
-        { id: 6, name: 'Capacidad (ml/L)'}
-      ];
-    }
-  });
+      next: (data) => {
+        console.log('Atributos cargados desde el Backend');
+        this.availableAttributes = data;
+      },
+      error: () => {
+        console.warn('Usando atributos de emergencia');
+        this.availableAttributes = [
+          { id: 1, name: 'Talla' },
+          { id: 2, name: 'Color' },
+          { id: 3, name: 'Cantidad' },
+          { id: 4, name: 'Sabor' },
+          { id: 5, name: 'Peso/Gramaje' },
+          { id: 6, name: 'Capacidad (ml/L)' }
+        ];
+      }
+    });
 
 
 
@@ -138,13 +130,13 @@ export class ProductFormComponent implements OnInit {
   }
 
   addAttribute(variantIndex: number): void {
-  const defaultId = this.availableAttributes.length > 0 ? this.availableAttributes[0].id : 1;
-  
-  this.getAttributes(variantIndex).push(this.fb.group({
-    attributeId: [defaultId, Validators.required],
-    value: ['', Validators.required]
-  }));
-}
+    const defaultId = this.availableAttributes.length > 0 ? this.availableAttributes[0].id : 1;
+
+    this.getAttributes(variantIndex).push(this.fb.group({
+      attributeId: [defaultId, Validators.required],
+      value: ['', Validators.required]
+    }));
+  }
 
   removeAttribute(variantIndex: number, attrIndex: number): void {
     this.getAttributes(variantIndex).removeAt(attrIndex);
@@ -158,28 +150,31 @@ export class ProductFormComponent implements OnInit {
   }
 
   // Permite añadir múltiples imágenes a una variante específica
-addImage(variantIndex: number): void {
-  const images = this.variants.at(variantIndex).get('productImages') as FormArray;
-  images.push(this.fb.group({
-    imageUrl: ['', Validators.required],
-    isPrimary: [false],
-    displayOrder: [images.length + 1]
-  }));
-}
+  addImage(variantIndex: number): void {
+    const images = this.variants.at(variantIndex).get('productImages') as FormArray;
+    images.push(this.fb.group({
+      imageUrl: ['', Validators.required],
+      isPrimary: [false],
+      displayOrder: [images.length + 1]
+    }));
+  }
 
-//permitir borrar una imagen específica
-removeImage(variantIndex: number, imageIndex: number): void {
-  const images = this.variants.at(variantIndex).get('productImages') as FormArray;
-  if (images.length > 1) images.removeAt(imageIndex);
-}
+  //permitir borrar una imagen específica
+  removeImage(variantIndex: number, imageIndex: number): void {
+    const images = this.variants.at(variantIndex).get('productImages') as FormArray;
+    if (images.length > 1) images.removeAt(imageIndex);
+  }
 
   onFileSelected(event: any, variantIndex: number, imageIndex: number): void {
-  const file: File = event.target.files[0];
-  if (file) {
-    this.productService.uploadImage(file).subscribe({
-      next: (url) => {
-        const images = this.variants.at(variantIndex).get('productImages') as FormArray;
-        images.at(imageIndex).patchValue({ imageUrl: url });
+    const file: File = event.target.files[0];
+    if (file) {
+      this.isImageLoading.set(true);
+      this.productService.uploadImage(file).subscribe({
+        next: (url) => {
+          const images = this.variants.at(variantIndex).get('productImages') as FormArray;
+          images.at(imageIndex).patchValue({ imageUrl: url });
+          this.isImageLoading.set(false);
+
           Swal.fire({
             toast: true,
             position: 'top-end',
@@ -191,8 +186,9 @@ removeImage(variantIndex: number, imageIndex: number): void {
             customClass: { popup: 'rounded-2xl border-2 border-[#3aa394]' }
           });
         },
-        // error: () => alert('Error al subir imagen. Revisa la conexión.')
         error: () => {
+          this.isImageLoading.set(false);
+
           Swal.fire({
             title: '<span class="block text-center">¡Ups!</span>',
             html: '<p class="text-center">Error al subir la imagen. Revisa tu conexión.</p>',

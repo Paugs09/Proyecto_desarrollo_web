@@ -1,4 +1,5 @@
-﻿using Core.Dto.Cart;
+﻿using Core.Dto.Cart.CartItem;
+using Core.Dto.Cart.Order;
 using Core.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,14 +11,23 @@ namespace API.Controllers
     {
         private readonly ICartService _cartService = cartService;
 
+        [HttpPost("items")]
+        public async Task<IActionResult> ManageProductsOfCart(List<CreateCartItemDto> items)
+        {
+            var userId = HttpContext.Items["UserId"]?.ToString();
+            _ = Guid.TryParse(userId, out Guid parsedUserId);
+
+            await _cartService.ManageProductsOfCart(items, parsedUserId);
+            return Created();
+        }
+
         [HttpPost("create-order")]
         public async Task<IActionResult> CreateOrder(List<CreateOrderItemDto> createOrderItemDto)
         {
             var userId = HttpContext.Items["UserId"]?.ToString();
             _ = Guid.TryParse(userId, out Guid parsedUserId);
 
-            await _cartService.CreateOrder(createOrderItemDto, parsedUserId);
-            return Ok();
+            return Created((string?)null, await _cartService.CreateOrder(createOrderItemDto, parsedUserId));
         }
 
         [HttpPut("finish-order/{id}")]
@@ -30,13 +40,13 @@ namespace API.Controllers
             return Ok();
         }
 
-        [HttpGet("order-info")]
-        public async Task<IActionResult> ListOrderItems()
+        [HttpGet("items")]
+        public async Task<IActionResult> ListCartItems()
         {
             var userId = HttpContext.Items["UserId"]?.ToString();
             _ = Guid.TryParse(userId, out Guid parsedUserId);
 
-            var orderDto = await _cartService.GetOrderInfo(parsedUserId);
+            var orderDto = _cartService.GetCartItemInfo(parsedUserId);
             return Ok(orderDto);
         }
     }

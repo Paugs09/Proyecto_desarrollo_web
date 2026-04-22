@@ -12,7 +12,8 @@
         public long RoleId { get; set; }
 
         public Role Role { get; set; } = null!;
-        public virtual ICollection<WishList> WishLists { get; set; } = [];
-        public virtual ICollection<Order> Orders { get; set; } = [];
+        public virtual ICollection<WishList>? WishLists { get; set; }
+        public virtual ICollection<Order>? Orders { get; set; }
+        public virtual ICollection<CartItem>? CartItems { get; set; }
     }
 }

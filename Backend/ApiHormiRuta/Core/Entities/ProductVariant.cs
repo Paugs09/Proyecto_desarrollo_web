@@ -12,6 +12,7 @@
         public virtual Product Product { get; set; } = null!;
         public virtual ICollection<VariantValue> VariantValues { get; set; } = [];
         public virtual ICollection<ProductImage> ProductImages { get; set; } = [];
-        public virtual ICollection<OrderItem> OrderItems { get; set; } = [];
+        public virtual ICollection<OrderItem>? OrderItems { get; set; }
+        public virtual ICollection<CartItem>? CartItems { get; set; }
     }
 }

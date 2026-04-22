@@ -1,8 +1,8 @@
-﻿namespace Core.Dto.Cart
+﻿namespace Core.Dto.Cart.Order
 {
     public class CreateOrderItemDto
     {
         public long ProductVariantId { get; set; }
-        public int Quantity { get; set; }
+        public int Quantify { get; set; }
     }
 }
