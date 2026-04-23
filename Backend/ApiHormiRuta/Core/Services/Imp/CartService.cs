@@ -55,7 +55,7 @@ namespace Core.Services.Imp
                     foreach (var item in order.OrderItems)
                     {
                         var variant = await _genericProductVariantRepository.GetQueryable()
-                            .FirstOrDefaultAsync(v => v.Id == item.ProductVariantId);
+                            .FirstOrDefaultAsync(v => v.Id == item.ProductVariantId && v.IsActive);
 
                         if (variant == null || variant.Stock < item.Quantity)
                             throw new BusinessException(HttpStatusCode.BadRequest, "Stock insuficiente", $"Stock insuficiente para la variante ID: {item.ProductVariantId}");
@@ -63,7 +63,7 @@ namespace Core.Services.Imp
                         variant.Stock -= item.Quantity;
 
                         var cartProduct = await _genericCartItemRepository.GetQueryable()
-                        .FirstOrDefaultAsync(x => x.ProductVariantId == variant.Id && x.UserId == userId);
+                        .FirstOrDefaultAsync(x => x.ProductVariantId == variant.Id && x.UserId == userId && x.ProductVariant.IsActive);
 
                         if (cartProduct != null) _genericCartItemRepository.Delete(cartProduct);
                     }
@@ -88,7 +88,7 @@ namespace Core.Services.Imp
 
             // Trae solo los que ya existen para este usuario
             var existingItems = await _genericCartItemRepository.GetQueryable().Where(x =>
-                x.UserId == userId && productVariantIds.Contains(x.ProductVariantId))
+                x.UserId == userId && productVariantIds.Contains(x.ProductVariantId) && x.ProductVariant.IsActive)
                 .ToListAsync();
 
             var toUpdate = new List<CartItem>();
@@ -97,7 +97,7 @@ namespace Core.Services.Imp
 
             foreach (var dto in cartItemsDto)
             {
-                var existing = existingItems.FirstOrDefault(x => x.ProductVariantId == dto.ProductVariantId);
+                var existing = existingItems.FirstOrDefault(x => x.ProductVariantId == dto.ProductVariantId && x.ProductVariant.IsActive);
 
                 if (existing != null)
                 {
@@ -131,7 +131,7 @@ namespace Core.Services.Imp
         {
             var cart = _genericCartItemRepository.GetQueryable()
                 .AsNoTracking()
-                .Where(x => x.UserId == userId)
+                .Where(x => x.UserId == userId && x.ProductVariant.IsActive)
                 .Select(x=> new OrderItemDto
                 {
                     ProductVariantId = x.ProductVariantId,

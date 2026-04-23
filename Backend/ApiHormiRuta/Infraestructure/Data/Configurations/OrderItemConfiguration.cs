@@ -32,6 +32,14 @@ namespace Infraestructure.Data.Configurations
                 .IsRequired()
                 .HasColumnName("unit_price");
 
+            builder.Property(oi => oi.VariantSnapshot)
+                .IsRequired()
+                .HasColumnName("variant_snapshot");
+
+            builder.Property(oi => oi.ProductSnapshot)
+                .IsRequired()
+                .HasColumnName("product_snapshot");
+
             builder.Property(oi => oi.CreatedAt)
                 .IsRequired()
                 .HasColumnName("created_at");
