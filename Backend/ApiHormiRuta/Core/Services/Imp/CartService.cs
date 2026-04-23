@@ -83,13 +83,15 @@ namespace Core.Services.Imp
 
         public async Task ManageProductsOfCart(List<CreateCartItemDto> cartItemsDto, Guid userId)
         {
-            // Obtiene todos los IDs de la petición para una sola consulta
             var productVariantIds = cartItemsDto.Select(x => x.ProductVariantId).ToList();
 
-            // Trae solo los que ya existen para este usuario
-            var existingItems = await _genericCartItemRepository.GetQueryable().Where(x =>
-                x.UserId == userId && productVariantIds.Contains(x.ProductVariantId) && x.ProductVariant.IsActive)
+            var existingItems = await _genericCartItemRepository
+                .GetQueryable(q => q.Include(x => x.ProductVariant))
+                .Where(x => x.UserId == userId && productVariantIds.Contains(x.ProductVariantId))
                 .ToListAsync();
+
+            // Convertimos a Diccionario para búsqueda O(1)
+            var existingItemsDict = existingItems.ToDictionary(x => x.ProductVariantId);
 
             var toUpdate = new List<CartItem>();
             var toRemove = new List<CartItem>();
@@ -97,13 +99,16 @@ namespace Core.Services.Imp
 
             foreach (var dto in cartItemsDto)
             {
-                var existing = existingItems.FirstOrDefault(x => x.ProductVariantId == dto.ProductVariantId && x.ProductVariant.IsActive);
+                existingItemsDict.TryGetValue(dto.ProductVariantId, out var existing);
 
                 if (existing != null)
                 {
-                    if (dto.Quantify <= 0)
+                    // Si la cantidad es 0 o el producto ya no está activo, lo quitamos del carrito
+                    if (dto.Quantify <= 0 || !existing.ProductVariant.IsActive)
+                    {
                         toRemove.Add(existing);
-                    else
+                    }
+                    else if (existing.Quantify != dto.Quantify) // Solo actualiza si hubo cambios
                     {
                         existing.Quantify = dto.Quantify;
                         toUpdate.Add(existing);
@@ -120,9 +125,10 @@ namespace Core.Services.Imp
                 }
             }
 
+            // 3. Ejecución por lotes
+            if (toRemove.Count != 0) _genericCartItemRepository.DeleteRange(toRemove);
             if (toUpdate.Count != 0) _genericCartItemRepository.UpdateRange(toUpdate);
             if (toAdd.Count != 0) await _genericCartItemRepository.AddRangeAsync(toAdd);
-            if (toRemove.Count != 0) _genericCartItemRepository.DeleteRange(toRemove);
 
             await _genericCartItemRepository.SaveAsync();
         }
