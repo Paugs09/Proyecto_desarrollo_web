@@ -7,6 +7,7 @@
         public string Sku { get; set; } = string.Empty;
         public decimal SpecificPrice { get; set; }
         public int Stock { get; set; }
+        public bool IsActive { get; set; }
         public DateTime CreatedAt { get; set; }
 
         public virtual Product Product { get; set; } = null!;

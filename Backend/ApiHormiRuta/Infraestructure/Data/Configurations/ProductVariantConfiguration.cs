@@ -32,6 +32,10 @@ namespace Infraestructure.Data.Configurations
                 .IsRequired()
                 .HasColumnName("stock");
 
+            builder.Property(x => x.IsActive)
+                .IsRequired()
+                .HasColumnName("is_active");
+
             builder.Property(x => x.CreatedAt)
                 .IsRequired()
                 .HasColumnName("created_at");
