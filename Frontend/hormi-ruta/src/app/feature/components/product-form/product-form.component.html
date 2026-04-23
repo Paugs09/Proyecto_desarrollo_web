@@ -13,9 +13,9 @@
       <img src="assets/img/HormiAdmin.png" alt="HormiAdmin Logo" class="logo-admin h-24 w-auto object-contain mb-2">
       <div class="absolute -inset-2 bg-[#F4A261]/10 blur-2xl rounded-full -z-10"></div>
     </div>
-
+    
     <h2 class="text-4xl font-black text-[#2D5016] text-center tracking-tight">
-      Panel de administración
+      {{ isEditMode ? 'Editar producto' : 'Panel de administración' }}
     </h2>
 
     <div class="flex items-center gap-2 mt-2">
@@ -185,8 +185,10 @@
     </button>
 
     <button type="submit" [disabled]="productForm.invalid"
-      class="w-full py-5 bg-[#3aa394] text-white rounded-2xl text-xl font-black shadow-xl hover:bg-[#167567] transition-all disabled:bg-gray-300 disabled:shadow-none transform hover:-translate-y-1">
-      Guardar HormiProducto
+      class="w-full py-5 bg-[#3aa394] text-white rounded-2xl text-xl font-black shadow-xl
+            hover:bg-[#167567] transition-all disabled:bg-gray-300 disabled:shadow-none
+            transform hover:-translate-y-1">
+      {{ isEditMode ? 'Guardar cambios' : 'Guardar HormiProducto' }}
     </button>
   </form>
 </div>

@@ -42,3 +42,11 @@ export interface ProductDto {
   imageUrl: string;
   category?: string;
 }
+
+//Top vendidos
+export interface BestSellerDto {
+  productVariantId : number;
+  productName : string;
+  imageUrl: string;
+  totalSales: number; 
+}

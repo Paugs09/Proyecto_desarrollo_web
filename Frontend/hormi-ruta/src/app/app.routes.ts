@@ -23,12 +23,17 @@ export const routes: Routes = [
   { path: 'adventure-form', component: AdventureFormComponent },
   { path: 'adventure-form/:id', component: AdventureFormComponent },
   {path: 'products', component:ProductsComponent},
-
   {path: 'cart', component: CartComponent},
 
   //{ path: 'admin/crear-producto', component: ProductFormComponent },
   { 
     path: 'admin/crear-producto', 
+    component: ProductFormComponent, 
+    canActivate: [adminGuard] 
+  },
+
+  { 
+    path: 'admin/editar-producto/:id',
     component: ProductFormComponent, 
     canActivate: [adminGuard] 
   }
