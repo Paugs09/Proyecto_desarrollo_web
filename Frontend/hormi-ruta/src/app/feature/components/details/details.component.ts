@@ -8,6 +8,7 @@ import { CartService } from '../../services/cart.service';
 import { first } from 'rxjs';
 import Swal from 'sweetalert2';
 
+
 @Component({
   selector: 'app-detalles',
   standalone: true,
@@ -152,6 +153,22 @@ export class DetailsComponent implements OnInit {
       return;
     }
 
+    // --- 2. BLOQUEO DE PANTALLA ---
+    // Alerta que NO se puede cerrar para que el usuario no toque nada
+    Swal.fire({
+
+      title: 'Sincronizando...',
+      text: 'Llevando tus productos al hormiguero',
+      imageUrl: 'assets/hormiga-feliz.gif',
+      imageWidth: 80,
+      allowOutsideClick: false, // IMPIDE que cierren haciendo clic fuera
+      allowEscapeKey: false,    
+      showConfirmButton: false, 
+      didOpen: () => {
+        Swal.showLoading(); 
+      }
+    });
+
     const body = [{
       productVariantId: this.varianteSeleccionada.id,
       quantify: this.cantidad
@@ -163,8 +180,8 @@ export class DetailsComponent implements OnInit {
           toast: true,
           position: 'top-end',
           showConfirmButton: false,
-          timer: 3500,
-          timerProgressBar: true,
+          timer: 900,
+          timerProgressBar: false,
           title: '<span class="block text-center w-full">¡Añadido con éxito!</span>',
           imageUrl: 'assets/hormiga-feliz.gif',
           imageWidth: 50,

@@ -49,15 +49,6 @@ export class ProfileComponent implements OnInit {
   };
 }
 
-  //usuario = {
-    //FirstName: 'John',
-    //LastName: 'Doe',
-    //Email: 'usuario@correo.com',
-    //Phone: '+57 300 000 0000',
-    //ShippingAddress: 'Carrera 10 #5-20, San Gil',
-    //rol: 'HormiSeguidor',
-    //foto: ''};
-
   ngOnInit(): void {
     this.cargarFavoritos();
     console.log('Datos del usuario logueado:', this.userSignal());
