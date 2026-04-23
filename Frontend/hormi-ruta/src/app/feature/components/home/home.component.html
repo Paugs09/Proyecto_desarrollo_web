@@ -19,7 +19,7 @@
 
 <!--Categorías-->
 <!-- Desktop -->
-<div class="hidden md:flex overflow-visible w-full items-center mt-8">
+<div class="hidden md:flex overflow-visible w-full items-center mt-8 mb-12">
   <a
     *ngFor="let category of categories"
     [routerLink]="'/products'"
@@ -94,53 +94,77 @@
 
   </a>
 </div>
-<div class="container-top text-center">
- <button class="bg-[#F4A261] hover:bg-[#e8935a] mt-4 text-lg text-white font-bold px-6 py-3 rounded-full 
-            transition-all duration-200 transform hover:-translate-y-1 hover:shadow-lg 
-            active:scale-95 active:brightness-90" routerLink="/products">Ver todos los productos</button>
-</div>
 
+<!--Top productos vendidos-->
+<div class="container-top text-center mt-20 px-4">
+  <h2 class="text-center text-3xl text-[#333] font-bold italic text-gray-700 mb-2">
+    Los más vendidos
+  </h2>
+  <p class="text-gray-500 italic text-lg mb-8 text-center">Los favoritos de nuestra comunidad hormiguera</p>
 
-<!--Top 3 de productos-->
-<!-- <div class="container-top text-center mt-16">
-  <h2 class="text-center text-2xl font-semibold italic text-gray-700 mb-8">Los más vendidos</h2>
-  <br>
-  <section class="products-content"> -->
-    <!-- Desktop -->
-    <!-- <div class="products-grid">
-      @for (item of products; track item) {
-        <app-product-card></app-product-card>
+  @if (bestSellers.length === 0) {
+    <div class="flex justify-center gap-6">
+      @for (s of [1,2,3]; track s) {
+        <div class="w-64 h-80 rounded-2xl bg-gray-100 animate-pulse"></div>
       }
-    </div> -->
+    </div>
+  } @else {
+    <div class="flex flex-col md:flex-row justify-center gap-6 max-w-4xl mx-auto">
+      @for (item of bestSellers; track item.productVariantId; let i = $index) {
+        <div
+          class="group relative flex-1 rounded-2xl overflow-hidden cursor-pointer
+                 shadow-md hover:shadow-2xl transition-all duration-500 hover:-translate-y-2
+                 min-w-[200px] max-w-[280px] mx-auto md:mx-0"
+          style="aspect-ratio: 3/4;">
 
-    <!-- Mobile-->
-    <!-- <div class="products-carousel">
-      <div class="products-carousel__track">
-        @for (item of products; track item; let i = $index) {
-          <div class="products-carousel__slide"
-               [class.active]="i === currentSlide">
-            <app-product-card></app-product-card>
+          <img [src]="item.imageUrl || 'assets/img/prducts.png'"
+               [alt]="item.productName"
+               class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+
+          <div class="absolute top-3 left-3">
+            <span class="text-xs font-bold px-2 py-1 rounded-full"
+                  [ngClass]="{
+                    'bg-yellow-400 text-yellow-900': i === 0,
+                    'bg-gray-300 text-gray-700': i === 1,
+                    'bg-amber-600 text-white': i === 2
+                  }">
+              {{ i === 0 ? '🥇 #1' : i === 1 ? '🥈 #2' : '🥉 #3' }}
+            </span>
           </div>
-        }
-      </div> -->
 
-      <!-- Dots -->
-      <!-- <div class="products-carousel__dots">
-        @for (item of products; track item; let i = $index) {
-          <button
-            class="products-carousel__dot"
-            [class.active]="i === currentSlide"
-            (click)="goToSlide(i)">
-          </button>
-        }
-      </div>
-    </div> -->
+          <!-- Overlay -->
+          <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent
+                      opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
 
-  <!-- </section>
-  <button class="bg-[#F4A261] hover:bg-[#e8935a] mt-10 text-lg text-white font-bold px-6 py-3 rounded-full 
-            transition-all duration-200 transform hover:-translate-y-1 hover:shadow-lg 
-            active:scale-95 active:brightness-90" routerLink="/products">Ver todo</button>
-</div> -->
+          <!-- Info -->
+          <div class="absolute bottom-0 left-0 right-0 p-4
+                      translate-y-full group-hover:translate-y-0
+                      transition-transform duration-500">
+            <p class="text-white font-bold text-sm leading-snug mb-1">
+              {{ item.productName }}
+            </p>
+            <p class="text-[#F4A261] text-xs font-medium">
+              {{ item.totalSales }} vendidos
+            </p>
+          </div>
+
+          <div class="absolute bottom-0 left-0 right-0 p-3
+                      group-hover:opacity-0 transition-opacity duration-300">
+            <div class="bg-black/50 backdrop-blur-sm rounded-xl px-3 py-2">
+              <p class="text-white text-xs font-semibold truncate">{{ item.productName }}</p>
+            </div>
+          </div>
+
+        </div>
+      }
+    </div>
+  }
+  <button class="bg-[#F4A261] hover:bg-[#e8935a] mt-10 text-lg text-white font-bold px-6 py-3 rounded-full
+            transition-all duration-200 transform hover:-translate-y-1 hover:shadow-lg
+            active:scale-95 active:brightness-90" routerLink="/products">
+    Ver todos los productos
+  </button>
+</div>
 
 
 <!-- Seccion botones login/registro -->
@@ -210,11 +234,11 @@
 
 
 <!-- Sección final-->
-<section class="bg-[#FBF5EC] px-6 py-12 mt-16 mb-0 pb-26">
+<section class="bg-[#FBF5EC] px-6 py-12 mt-14 mb-0 pb-26">
   <div class="flex flex-col md:flex-row items-center justify-center gap-10 max-w-6xl mx-auto">
     <div class="flex-1">
-      <h2 class="text-3xl font-bold italic text-[#333] mb-4 text-center">Origen guanentino</h2>
-      <p class="text-gray-600 italic text-xl mb-8 text-center">
+      <h2 class="text-center text-3xl text-[#333] font-bold italic text-gray-700 mb-4">Origen guanentino</h2>
+      <p class="text-gray-500 italic text-lg mb-8 text-center">
         ¡En HormiGuane ofrecemos los mejores productos tradicionales de los municipios guanentinos!
       </p>
 

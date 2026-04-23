@@ -44,8 +44,8 @@ namespace Core.Services.Imp
                 Id = x.Id,
                 Name = x.Name,
                 ShortDescription = x.ShortDescription,
-                BasePrice = x.ProductVariants != null ? x.ProductVariants.First().SpecificPrice : 0,
-                ImageUrl = x.ProductVariants != null ? x.ProductVariants.First().ProductImages.First(i => i.IsPrimary).ImageUrl : null,
+                BasePrice = x.ProductVariants != null ? x.ProductVariants.First(x=> x.IsActive).SpecificPrice : 0,
+                ImageUrl = x.ProductVariants != null ? x.ProductVariants.First(x => x.IsActive).ProductImages.First(i => i.IsPrimary).ImageUrl : null,
             });
 
             return products;
@@ -55,14 +55,14 @@ namespace Core.Services.Imp
         {
             var wishList = _genericWishListRepository.GetQueryable()
                 .AsNoTracking()
-                .Where(x => x.UserId == userId);
+                .Where(x => x.UserId == userId && x.Product.Active);
 
             return wishList.Select(x => new ProductDto
             {
                 Id = x.Product.Id,
                 Name = x.Product.Name,
                 Category = x.Product.Category.Name,
-                BasePrice = x.Product.ProductVariants.First().SpecificPrice,
+                BasePrice = x.Product.ProductVariants.First(x => x.IsActive).SpecificPrice,
                 ShortDescription = x.Product.ShortDescription,
                 ImageUrl = x.Product.ProductImages.First(i => i.IsPrimary).ImageUrl,
             });
@@ -70,7 +70,7 @@ namespace Core.Services.Imp
 
         public async Task AddProductToWishList(CreateWishListDto createDto, Guid userId)
         {
-            var wishListItem = await _genericWishListRepository.FirstOrDefaultAsyncWithIncludes(x => x.UserId == userId && x.ProductId == createDto.ProductId);
+            var wishListItem = await _genericWishListRepository.FirstOrDefaultAsyncWithIncludes(x => x.UserId == userId && x.ProductId == createDto.ProductId && x.Product.Active);
 
             if (!createDto.IsFavorite && wishListItem != null)
             {
@@ -113,7 +113,9 @@ namespace Core.Services.Imp
                     MunicipalityId = product.MunicipalityId,
                     Notes = product.Notes,
                     Dimensions = product.Dimensions,
-                    Variants = product.ProductVariants.Select(x => new DetailProductVariantDto
+                    Variants = product.ProductVariants
+                    .Where(x => x.IsActive)
+                    .Select(x => new DetailProductVariantDto
                     {
                         Id = x.Id,
                         Sku = x.Sku,
@@ -144,7 +146,7 @@ namespace Core.Services.Imp
         {
             return _genericOrderItemRepository.GetQueryable()
                 .AsNoTracking()
-                .Where(x => x.Order.PaymentStatus == "Pagado")
+                .Where(x => x.Order.PaymentStatus == "Pagado" && x.ProductVariant.Product.Active)
                 .GroupBy(x => x.ProductVariantId)
                 .Select(x => new BestSellerDto
                 {
@@ -175,8 +177,6 @@ namespace Core.Services.Imp
         {
             try
             {
-                await _storageService.DeleteMultipleImagesByUrlsAsync(updateProductDto.ImageUrlsToDelete);
-
                 await _commonRepository.CallFunctionUpdateProduct(productId, updateProductDto);
             }
             catch (Exception ex)

@@ -1,20 +1,88 @@
-<div class="product-card">
-  <div class="image-container">
-    <img [src]="product.imageUrl || 'assets/img/prducts.png'" [alt]="product.name">
+<div class="group relative flex flex-col h-full rounded-2xl overflow-hidden bg-white border border-[#f0e8dc] shadow-sm
+           hover:shadow-[0_12px_40px_rgba(139,69,19,0.18)] hover:-translate-y-1 hover:border-[#f0e8dc]
+           transition-all duration-300">
+  <div class="relative w-full overflow-hidden" style="aspect-ratio: 3/4; background:#FDF2E9">
+    <img [src]="product.imageUrl || 'assets/img/prducts.png'" [alt]="product.name" class="w-full h-full object-cover block transition-transform duration-500 ease-out group-hover:scale-[1.07]">
+    <div class="absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t from-[#8B4513]/60 to-transparent pointer-events-none z-10"></div>
 
-    <div class="mobile-icons">
-      <button class="icon-btn detail-icon" (click)="goToDetail()">+</button>
+    <!--Mobile-->
+    <div class="md:hidden absolute top-3 right-3 z-20 flex flex-col gap-2 pointer-events-none">
+
+      <button class="pointer-events-auto w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-md active:scale-90 transition-transform duration-150" (click)="goToDetail()" title="Ver detalle">
+        <svg class="w-[18px] h-[18px] stroke-[#8B4513]" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+          <circle cx="12" cy="12" r="3"/>
+        </svg>
+      </button>
+
+      <button *ngIf="isAdmin()" class="pointer-events-auto w-10 h-10 rounded-full bg-[#3aa394] flex items-center justify-center shadow-md active:scale-90 transition-transform duration-150" (click)="goToEdit()" title="Editar">
+        <svg class="w-[18px] h-[18px] stroke-white" viewBox="0 0 24 24" fill="none"
+             stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+          <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+        </svg>
+      </button>
+
+      <button *ngIf="isAdmin()" class="pointer-events-auto w-10 h-10 rounded-full bg-red-500 flex items-center justify-center shadow-md active:scale-90 transition-transform duration-150" (click)="delete()" title="Eliminar">
+        <svg class="w-[18px] h-[18px] stroke-white" viewBox="0 0 24 24" fill="none"
+             stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="3 6 5 6 21 6"/>
+          <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+          <path d="M10 11v6M14 11v6"/>
+          <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+        </svg>
+      </button>
     </div>
 
-    <div class="desktop-actions">
-      <button class="btn-details" (click)="goToDetail()">Detalles</button>
-      <button *ngIf="isAdmin()" class="btn-edit" (click)="goToEdit()">Editar</button>
-      <button *ngIf="isAdmin()" class="btn-delete" (click)="delete()">Eliminar</button>
-    </div>
-  </div>
 
-  <div class="product-info">
-    <p class="price">${{ product.basePrice | number:'1.0-0' }}</p>
-    <p class="title">{{ product.name }}</p>
+    <!--Desktop-->
+    <div class="hidden md:flex absolute top-3 right-3 z-20 flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+        
+        <button *ngIf="isAdmin()" (click)="goToEdit()" title="Editar" class="pointer-events-auto w-9 h-9 rounded-full bg-[#3aa394]/85 backdrop-blur-sm
+                     flex items-center justify-center
+                     shadow-[0_2px_8px_rgba(45,80,22,0.3)]
+                     hover:bg-[#167567] hover:scale-110 active:scale-95
+                     transition-all duration-150">
+          <svg class="w-4 h-4 stroke-white" viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+          </svg>
+        </button>
+
+        <button *ngIf="isAdmin()" (click)="delete()" title="Eliminar" class="pointer-events-auto w-9 h-9 rounded-full bg-red-500/85 backdrop-blur-sm
+                     flex items-center justify-center
+                     shadow-[0_2px_8px_rgba(192,57,43,0.3)]
+                     hover:bg-red-600 hover:scale-110 active:scale-95
+                     transition-all duration-150">
+          <svg class="w-4 h-4 stroke-white" viewBox="0 0 24 24" fill="none"
+             stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="3 6 5 6 21 6"/>
+            <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+            <path d="M10 11v6M14 11v6"/>
+            <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+          </svg>
+        </button>
+
+    </div>
+
+    <div class="hidden md:flex absolute inset-x-0 bottom-0 z-20 px-4 pb-4
+                opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+      <button (click)="goToDetail()"
+              class="w-full flex items-center justify-center gap-2 py-[10px] px-4 rounded-xl
+                     bg-white text-[#8B4513] font-bold text-sm
+                     shadow-[0_3px_12px_rgba(0,0,0,0.18)] hover:scale-90 active:scale-80 transition-all duration-150">
+        <svg class="w-4 h-4 stroke-[#8B4513]" viewBox="0 0 24 24" fill="none"
+             stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+          <circle cx="12" cy="12" r="3"/>
+        </svg>
+        Ver detalles
+      </button>
+    </div>
+ </div>
+
+  <div class="px-4 py-3 bg-white z-10">
+    <p class="font-extrabold text-[1.1rem] text-gray-700 m-0 leading-tight tracking-tight">${{ product.basePrice | number:'1.0-0' }}</p>
+    <p class="text-[#7a6652] text-[0.82rem] font-medium mt-[2px] mb-0 truncate">{{ product.name }}</p>
   </div>
 </div>

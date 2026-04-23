@@ -1,19 +1,20 @@
 import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { NgFor } from '@angular/common';
+import { NgFor, NgClass } from '@angular/common';
 import { CarouselComponent } from '../carousel/carousel.component';
 import { ICarouselItem } from '../carousel/Icarousel-item.metadata';
 import { CardsComponent, IPlaceCard } from '../cards/cards.component';
 import { Router, RouterLink, RouterLinkActive  } from '@angular/router';
-import { ProductCardComponent } from '../product-card/product-card.component';
 import { CategoryService } from '../../services/category.service';
 import { Category } from '../../interfaces/category.interface';
 import { AuthService } from '../../services/auth.service';
+import { BestSellerDto } from '../../interfaces/product.interface';
+import { ProductService } from '../../services/product.service';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CarouselComponent, FormsModule, NgFor, CardsComponent, RouterLink, RouterLinkActive, ProductCardComponent],
+  imports: [CarouselComponent, FormsModule, NgFor, NgClass, CardsComponent, RouterLink, RouterLinkActive],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
@@ -21,20 +22,21 @@ export class HomeComponent {
 
   private readonly authService = inject(AuthService);
   categories: Category[] = [];
+  bestSellers: BestSellerDto[] = [];
   homeSearchText = '';  
 
   //Control del carrusel de productos
   currentSlide = 0;
-  // products = [1, 2, 3];
 
   goToSlide(index: number) {
     this.currentSlide = index;
   }
 
-  constructor(private categoryService: CategoryService, private router: Router) { }
+  constructor(private categoryService: CategoryService, private router: Router, private productService: ProductService) { }
 
   ngOnInit() {
     this.getCategories();
+    this.getBestSellers();
   }
 
   //Buscar productos en el buscador
@@ -51,7 +53,6 @@ export class HomeComponent {
     if (event.key === 'Enter') this.searchProducts();
   }
 
-
   private getCategories() {
     this.categoryService.getCategories().subscribe({
       next: (data) => {
@@ -61,6 +62,13 @@ export class HomeComponent {
         console.error('Error cargando categorías', error);
       }
     });
+  }
+
+  private getBestSellers() {
+    this.productService.getBestSellers().subscribe({
+      next: (data) => this.bestSellers = data,
+      error: (err) => console.log('Error cargando best sellers', err)
+    })
   }
 
   carouselItems: ICarouselItem[] = [

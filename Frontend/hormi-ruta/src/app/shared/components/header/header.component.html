@@ -14,13 +14,15 @@
     <!-- Nav -->
     <nav class="hidden md:flex items-center gap-2">
 
-      <a *ngIf="isAdmin()" routerLink="/admin/crear-producto" class="text-white font-medium py-3 border-b border-white/15
-                hover:text-white/75 transition no-underline">
-        Crear productos
+      <a *ngIf="isAdmin()" routerLink="/admin/crear-producto" class="inline-flex items-center gap-2 text-white font-medium text-sm px-4 py-2 rounded-full bg-black/25 hover:bg-black/35 transition no-underline">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+        </svg>
+        Crear producto
       </a>
 
       <a routerLink="/home"
-        class="text-white font-medium text-sm px-4 py-2 rounded-full bg-black/25 hover:bg-black/35 transition no-underline">Conócenos</a>
+        class="text-white font-medium text-sm px-4 py-2 rounded-lg hover:bg-white/15 transition no-underline">Conócenos</a>
 
       <a routerLink="/login"
         class="text-white font-medium text-sm px-4 py-2 rounded-lg hover:bg-white/15 transition no-underline">Inicia

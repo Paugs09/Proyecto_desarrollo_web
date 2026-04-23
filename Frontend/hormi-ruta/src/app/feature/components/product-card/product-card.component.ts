@@ -27,7 +27,7 @@ export class ProductCardComponent {
   }
 
   goToEdit() {
-
+    this.router.navigate(['/admin/editar-producto', this.product.id]);
   }
 
   delete() {
@@ -36,7 +36,6 @@ export class ProductCardComponent {
         this.productChanged.emit();
       },
       error: (err) => {
-
       }
     });
   }

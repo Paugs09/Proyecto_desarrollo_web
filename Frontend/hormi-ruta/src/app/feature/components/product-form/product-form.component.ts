@@ -1,8 +1,10 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ProductService } from '../../services/product.service';
 import Swal from 'sweetalert2';
+import { forkJoin } from 'rxjs'; 
 
 @Component({
   selector: 'app-product-form',
@@ -11,10 +13,16 @@ import Swal from 'sweetalert2';
   templateUrl: './product-form.component.html',
   styleUrls: ['./product-form.component.scss']
 })
+
 export class ProductFormComponent implements OnInit {
   private fb = inject(FormBuilder);
   private productService = inject(ProductService);
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
+
   isImageLoading = signal(false);
+  isEditMode = false;
+  editProductId?: number;
 
   productForm: FormGroup;
   categories: any[] = [];
@@ -37,8 +45,89 @@ export class ProductFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loadFormData();
+    const id = this.route.snapshot.paramMap.get('id');
+
+    // Sincronización: cargar diccionarios primero, luego el producto
+    forkJoin({
+      categories: this.productService.getCategories(),
+      municipalities: this.productService.getMunicipalities(),
+      materials: this.productService.getMaterials(),
+      attributes: this.productService.getAttributes()
+    }).subscribe({
+      next: (res) => {
+        this.categories = res.categories;
+        this.municipalities = res.municipalities;
+        this.materials = res.materials;
+        this.availableAttributes = res.attributes;
+
+        if (id) {
+          this.isEditMode = true;
+          this.editProductId = +id;
+          this.loadProductForEdit(this.editProductId);
+        } else {
+          this.addVariant(); 
+        }
+      },
+      error: () => this.showError('Error al cargar datos maestros del servidor')
+    });
   }
+
+loadProductForEdit(id: number): void {
+    this.productService.getById(id).subscribe({
+      next: (product: any) => {
+        this.variants.clear();
+        
+        product.variants.forEach((v: any) => {
+          const variantGroup = this.fb.group({
+            sku: [v.sku, Validators.required],
+            specificPrice: [v.specificPrice, [Validators.required, Validators.min(0)]],
+            stock: [v.stock, [Validators.required, Validators.min(0)]],
+            productImages: this.fb.array([]),
+            attributeValues: this.fb.array([])
+          });
+
+          // Imágenes
+          const imagesArray = variantGroup.get('productImages') as FormArray;
+          if (v.images) {
+            v.images.forEach((img: any, idx: number) => {
+              imagesArray.push(this.fb.group({
+                imageUrl: [img.imageUrl, Validators.required],
+                isPrimary: [img.isPrimary],
+                displayOrder: [img.displayOrder ?? idx + 1]
+              }));
+            });
+          }
+
+          // Especificaciones
+          const attrsArray = variantGroup.get('attributeValues') as FormArray;
+          const sourceAttrs = v.attributeValues || v.values || [];
+          sourceAttrs.forEach((attr: any) => {
+            attrsArray.push(this.fb.group({
+              attributeId: [attr.attributeId, Validators.required],
+              value: [attr.value, Validators.required]
+            }));
+          });
+
+          this.variants.push(variantGroup);
+        });
+
+        // Patch datos generales
+        this.productForm.patchValue({
+          name: product.productName,
+          shortDescription: product.shortDescription,
+          longDescription: product.longDescription,
+          notes: product.notes,
+          dimensions: product.dimensions,
+          categoryId: product.categoryId,
+          municipalityId: product.municipalityId,
+          materialId: product.materialId
+        });
+      },
+      error: () => this.showError('No se encontró el producto solicitado')
+    });
+  }
+
+
   getProductImages(variantIndex: number): FormArray {
     return this.variants.at(variantIndex).get('productImages') as FormArray;
   }
@@ -92,9 +181,6 @@ export class ProductFormComponent implements OnInit {
         ];
       }
     });
-
-
-
   }
 
   get variants(): FormArray {
@@ -204,78 +290,117 @@ export class ProductFormComponent implements OnInit {
   }
 
   onSubmit(): void {
-    if (this.productForm.valid) {
-      const raw = this.productForm.value;
-
-      const productDto = {
-        name: raw.name,
-        shortDescription: raw.shortDescription,
-        longDescription: raw.longDescription || "",
-        categoryId: Number(raw.categoryId),
-        materialId: raw.materialId ? Number(raw.materialId) : null,
-        municipalityId: Number(raw.municipalityId),
-        notes: raw.notes || "",
-        dimensions: raw.dimensions || "",
-        productVariants: raw.productVariants.map((v: any) => ({
-          sku: v.sku,
-          specificPrice: Number(v.specificPrice),
-          stock: Number(v.stock),
-          productImages: v.productImages.map((img: any) => ({
-            imageUrl: img.imageUrl,
-            isPrimary: Boolean(img.isPrimary),
-            displayOrder: Number(img.displayOrder)
-          })),
-          attributeValues: v.attributeValues.map((attr: any) => ({
-            attributeId: Number(attr.attributeId),
-            value: String(attr.value)
-          }))
-        }))
-      };
-
-      this.productService.createProduct(productDto).subscribe({
-        next: () => {
-          // alert('Hormiguita feliz ¡Producto guardado exitosamente!');
-          Swal.fire({
-            title: '<span class="block text-center">¡Hormiguita feliz!</span>',
-            html: '<p class="text-center">El producto ha sido guardado exitosamente.</p>',
-            imageUrl: 'assets/hormiga-feliz.gif',
-            imageWidth: 150,
-            confirmButtonColor: '#3aa394',
-            background: '#ffffff',
-            customClass: { popup: 'rounded-[3rem] border-8 border-white shadow-2xl' }
-          });
-          this.resetForm();
-        },
-        error: (err) => {
-          console.error('Error detallado:', err);
-          // alert(' Error 400/500. Revisa que los IDs existan en el Back.');
-          Swal.fire({
-            title: '<span class="block text-center">Error de registro</span>',
-            html: '<p class="text-center">Error 400/500. Revisa que los IDs existan en el Backend.</p>',
-            imageUrl: 'assets/Hormiga-triste.png',
-            imageWidth: 120,
-            confirmButtonColor: '#ec7272',
-            background: '#ffffff',
-            customClass: { popup: 'rounded-[3rem] border-8 border-white shadow-2xl' }
-          });
-        }
-      });
-    } else {
-      // alert(' Por favor completa los campos marcados con asterisco (*).');
-      Swal.fire({
-        title: '<span class="block text-center">Formulario incompleto</span>',
-        html: '<p class="text-center">Por favor completa los campos obligatorios (*).</p>',
-        icon: 'warning',
-        confirmButtonColor: '#F4A261',
-        background: '#ffffff',
-        customClass: { popup: 'rounded-[2rem] text-center' }
-      });
-    }
+  if (this.productForm.invalid) {
+    Swal.fire({
+      title: '<span class="block text-center">Formulario incompleto</span>',
+      html: '<p class="text-center">Por favor completa los campos obligatorios (*).</p>',
+      icon: 'warning',
+      confirmButtonColor: '#F4A261',
+      background: '#ffffff',
+      customClass: { popup: 'rounded-[2rem] text-center' }
+    });
+    return;
   }
+
+  const raw = this.productForm.value;
+
+  // Objeto base del producto
+  const productDto = {
+    name: raw.name,
+    shortDescription: raw.shortDescription,
+    longDescription: raw.longDescription || "",
+    categoryId: Number(raw.categoryId),
+    materialId: raw.materialId ? Number(raw.materialId) : null,
+    municipalityId: Number(raw.municipalityId),
+    notes: raw.notes || "",
+    dimensions: raw.dimensions || "",
+    productVariants: raw.productVariants.map((v: any) => ({
+      sku: v.sku,
+      specificPrice: Number(v.specificPrice),
+      stock: Number(v.stock),
+      productImages: v.productImages.map((img: any) => ({
+        imageUrl: img.imageUrl,
+        isPrimary: Boolean(img.isPrimary),
+        displayOrder: Number(img.displayOrder)
+      })),
+      attributeValues: v.attributeValues.map((attr: any) => ({
+        attributeId: Number(attr.attributeId),
+        value: String(attr.value)
+      }))
+    }))
+  };
+
+  const updateDto = {
+    ...productDto
+  };
+
+  // Llamar a UPDATE o a CREATE
+  if (this.isEditMode && this.editProductId) {
+    // --- Lógica de edición ---
+    this.productService.updateProduct(this.editProductId, updateDto).subscribe({
+      next: () => {
+        this.handleSuccessAlert('¡Producto actualizado!', 'Los cambios se guardaron correctamente.');
+        this.router.navigate(['/products']);
+      },
+      error: (err) => {
+        console.error('Error en edición:', err);
+        this.handleErrorAlert('Error de edición', 'La base de datos rechazó los cambios. Revisa la consola.');
+      }
+    });
+  } else {
+    // --- Lógica de creación ---
+    this.productService.createProduct(productDto).subscribe({
+      next: () => {
+        this.handleSuccessAlert('¡Hormiguita feliz!', 'El producto ha sido guardado exitosamente.');
+        this.resetForm();
+      },
+      error: (err) => {
+        console.error('Error en creación:', err);
+        this.handleErrorAlert('Error de registro', 'No se pudo crear el producto.');
+      }
+    });
+  }
+}
 
   resetForm(): void {
     this.productForm.reset();
     this.variants.clear();
     this.variants.push(this.createVariant());
+  }
+
+  // --- Manejo de alertas ---
+  private showError(msg: string) {
+    Swal.fire({
+      title: '<span class="block text-center">¡Ups!</span>',
+      html: `<p class="text-center">${msg}</p>`,
+      imageUrl: 'assets/Hormiga-triste.png',
+      imageWidth: 100,
+      confirmButtonColor: '#FCA5A5',
+      background: '#FBF5EC',
+      customClass: { popup: 'rounded-[3rem] border-8 border-white' }
+    });
+  }
+  private handleSuccessAlert(title: string, text: string) {
+    Swal.fire({
+      title: `<span class="block text-center">${title}</span>`,
+      html: `<p class="text-center">${text}</p>`,
+      imageUrl: 'assets/hormiga-feliz.gif',
+      imageWidth: 150,
+      confirmButtonColor: '#3aa394',
+      background: '#ffffff',
+      customClass: { popup: 'rounded-[3rem] border-8 border-white shadow-2xl' }
+    });
+  }
+
+  private handleErrorAlert(title: string, text: string) {
+    Swal.fire({
+      title: `<span class="block text-center">${title}</span>`,
+      html: `<p class="text-center">${text}</p>`,
+      imageUrl: 'assets/Hormiga-triste.png',
+      imageWidth: 120,
+      confirmButtonColor: '#ec7272',
+      background: '#ffffff',
+      customClass: { popup: 'rounded-[3rem] border-8 border-white shadow-2xl' }
+    });
   }
 }
