@@ -54,6 +54,15 @@ namespace API.Controllers
             return Ok();
         }
 
+        [HttpGet("purchase-history")]
+        public IActionResult GetPurchaseProducts()
+        {
+            var userId = HttpContext.Items["UserId"]?.ToString();
+            _ = Guid.TryParse(userId, out Guid parsedUserId);
+
+            return Ok(_productService.PurchaseHistory(parsedUserId));
+        }
+
         [HttpPost()]
         [AdminOnly]
         public async Task<IActionResult> CreateProduct([FromBody] CreateProductDto dto)

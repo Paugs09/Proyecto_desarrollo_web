@@ -8,6 +8,7 @@ using Core.QueryFilter.Product;
 using Core.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 using System.Net;
 using System.Text.Json;
 
@@ -157,6 +158,17 @@ namespace Core.Services.Imp
                 })
                 .OrderByDescending(x => x.TotalSales)
                 .Take(3);
+        }
+
+        public object PurchaseHistory(Guid userId)
+        {
+            var product = _genericOrderItemRepository
+                .GetQueryable(query => query.Include(x => x.Order))
+                .AsNoTracking()
+                .Where(x => x.Order.UserId == userId && x.Order.PaymentStatus == "Pagado")
+                .Select(x =>  new { ProductSnapshot = JsonSerializer.Deserialize<ProductSnapshotDto>(x.ProductSnapshot ?? string.Empty), VariantSnapshot = JsonSerializer.Deserialize<ProductVariantSnapshotDto>(x.VariantSnapshot ?? string.Empty) });
+
+            return product;
         }
 
         public async Task CreateProduct(CreateProductDto createProductDto)
