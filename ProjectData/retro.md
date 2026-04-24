@@ -34,14 +34,17 @@ No obstante, se identificó que el desarrollo pudo haber sido más eficiente med
 
 Como aprendizaje, se resalta la importancia de fortalecer la planificación técnica, definir claramente los objetivos de cada tarea y preparar el entorno para la integración completa del sistema en el siguiente sprint.
 
+## Retrospectiva Sprint 4:
+=====================
+---------------------------
+Durante el desarrollo del sprint 4, el equipo de trabajo logró consolidar la integración de datos y la implementación de operaciones CRUD, permitiendo que el sitio web comenzara a trabajar con información dinámica. Gracias a este avance se evidencian mejoras en la organización del trabajo, el manejo de ramas en el repositorio y en la funcionalidad real del sistema. Del mismo modo, la comunicación constante y las reuniones con objetivos claros contribuyeron al cumplimiento de los objetivos planteados. 
 
+A pesar de estos logros, se identificaron algunas dificultades con relación a la gestión de código colaborativo, principalmente en la resolución de conflictos durante los procesos de merge, lo que generó interrupciones y consumo de tiempo adicional. Además de esto, se evidenció la necesidad de fortalecer la comunicación al momento de realizar cambios en funcionalidades compartidas.
+
+De esta forma, el equipo reconoce la importancia de seguir reforzando las prácticas de comunicación efectiva y se plantea un uso más estratégico de plataformas de colaboración como Gather, el manejo de ramas basadas en main según los cambios a realizar junto con un mantenimiento de la organización del tablero de tareas para optimizar el rendimiento en los próximos sprints y asegurar una evolución continua del proyecto.
 
 ## Representación gráfica de la retrospectiva con la dinámica de estrella de mar:
 =====================
 ---------------------------
 
-La formulación de la retrospectiva se encuentra en el drive adjunto en el tablero SCRUM que se gestiona mediante **Bitrix24 Scrum**.
-
-> 🔒 **Acceso restringido:** El tablero es privado. Si necesitas acceso, solicítalo al equipo para ser añadido como parte interesada.
-
-[🔗 Ver retrospectiva - HormiRuta](https://b24-s0ulxn.bitrix24.co/~7NHVl)
+[🔗 Ver retrospectiva - HormiGuane](https://b24-s0ulxn.bitrix24.co/~7NHVl)
