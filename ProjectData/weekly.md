@@ -235,3 +235,75 @@ A partir de los resultados de la retrospectiva, se fijaron nuevas tareas en el t
 
 #### Objetivo de mejora — Herramientas para reuniones semanales
 Como objetivo de mejora planteado en la retrospectiva, el equipo exploró y probó nuevas herramientas para la realización de las reuniones semanales, con el fin de optimizar la comunicación, la colaboración y el seguimiento del proyecto.
+
+---
+---
+
+# SÉPTIMA REUNIÓN
+=====================
+---------------------------
+
+### REBRANDING Y CAMBIOS EN LA DEFINICIÓN ESTRATÉGICA
+
+#### Rebranding y enfoque del proyecto
+Se oficializó el cambio de nombre del proyecto de "HormiRuta" a "HormiGuane". Este proceso incluyó el replanteamiento del enfoque estratégico y la actualización del archivo README.md para alinear la visión del equipo con la nueva identidad y los objetivos del proyecto.
+
+#### Definición y distribución de productos
+Se definieron los productos finales que formarán parte de la plataforma, estableciendo su distribución lógica y categorización. Este ajuste asegura que el catálogo sea coherente con el nuevo concepto de marca y las necesidades identificadas.
+
+#### Ajuste de wireframes y mockups
+Debido al cambio en el enfoque del proyecto, se actualizaron los wireframes y mockups en Figma. Se realizaron modificaciones en los diseños de baja y alta fidelidad para integrar la nueva estructura de productos y asegurar que la interfaz gráfica responda correctamente al replanteamiento estratégico.
+
+---
+---
+
+# OCTAVA REUNIÓN
+=====================
+---------------------------
+
+### ESTABILIZACIÓN TÉCNICA, RESOLUCIÓN DE BLOQUEOS Y ASIGNACIÓN DE NUEVAS TAREAS
+
+#### Solución de inconsistencias y refactorización
+Se realizó una sesión técnica para resolver inconsistencias surgidas al adaptar el nuevo enfoque de HormiGuane con los componentes reutilizados del proyecto anterior. Se aseguró que la lógica de los componentes heredados fuera compatible con la nueva estructura de datos y la identidad de marca actual.
+
+#### Resolución de bloqueos
+Se abordaron y solucionaron errores críticos en el código, despejando dudas técnicas y eliminando bloqueos que impedían el avance del equipo. Este proceso permitió estabilizar la rama de desarrollo y garantizar que la integración entre los componentes antiguos y los nuevos sea fluida.
+
+#### Nuevas tareas asignadas
+Se definieron y asignaron nuevas tareas en el tablero Scrum. Estas responsabilidades están enfocadas en avanzar con las funcionalidades pendientes del nuevo enfoque, asegurando una distribución equitativa del trabajo para cumplir con los objetivos del sprint actual.
+
+---
+---
+
+# NOVENA REUNIÓN
+=====================
+---------------------------
+
+### NUEVA ESTRATEGIA DE RAMIFICACIÓN Y SEGUIMIENTO DE AVANCES
+
+#### Nueva gestión de ramas en GitHub
+Debido a conflictos recurrentes durante los merges, se definió un nuevo manejo de ramificación. Se acordó la creación de ramas específicas por cada Sprint, utilizando una nomenclatura que indique la tarea a realizar. Este enfoque busca evitar que un miembro del equipo sobreescriba el trabajo de otro al editar el mismo componente, estableciendo además que cualquier cambio mayor debe partir de una rama nueva basada siempre en main.
+
+#### Visualización de avances y seguimiento
+Se llevó a cabo una revisión de las tareas asignadas en la reunión anterior para monitorear el progreso de cada integrante. El equipo presentó los adelantos en el desarrollo de HormiGuane, permitiendo verificar que el flujo de trabajo se mantiene alineado con los objetivos del sprint.
+
+#### Resolución de dudas en el desarrollo
+Se abrió un espacio para despejar interrogantes técnicas surgidas durante la implementación. Esta dinámica facilitó la fluidez en el desarrollo, eliminando bloqueos específicos y asegurando que todos los miembros tengan claridad sobre la lógica de los componentes y la integración con el nuevo sistema de ramas.
+
+---
+---
+
+# DÉCIMA REUNIÓN
+=====================
+---------------------------
+
+### RETROSPECTIVA DEL SPRINT 4 Y CIERRE DE OBJETIVOS
+
+#### Retrospectiva del sprint 4
+El equipo llevó a cabo la sesión de retrospectiva correspondiente al Sprint 4. Durante la reunión, se analizaron los puntos fuertes de la iteración, especialmente la eficacia de la nueva estrategia de ramificación en GitHub, y se identificaron áreas de mejora en la comunicación técnica para seguir optimizando los tiempos de entrega en el próximo sprint.
+
+#### Revisión de tareas terminadas
+Se realizó una revisión de los entregables para verificar el cumplimiento de los objetivos planteados. Se confirmó que todas las tareas definidas para este sprint se encuentran completamente terminadas y funcionales, cumpliendo con los criterios de aceptación establecidos para el desarrollo de la plataforma.
+
+#### Validación de objetivos alcanzados
+Se compararon los resultados finales con el plan inicial del sprint, validando que el equipo logró estabilizar el nuevo enfoque del proyecto y la integración de componentes. Con esta revisión, se da por concluido formalmente el sprint 4, dejando el proyecto listo para la planeación de la siguiente etapa.
