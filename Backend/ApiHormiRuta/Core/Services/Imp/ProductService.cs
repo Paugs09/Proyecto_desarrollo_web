@@ -166,7 +166,7 @@ namespace Core.Services.Imp
                 .GetQueryable(query => query.Include(x => x.Order))
                 .AsNoTracking()
                 .Where(x => x.Order.UserId == userId && x.Order.PaymentStatus == "Pagado")
-                .Select(x =>  new { ProductSnapshot = JsonSerializer.Deserialize<ProductSnapshotDto>(x.ProductSnapshot ?? string.Empty), VariantSnapshot = JsonSerializer.Deserialize<ProductVariantSnapshotDto>(x.VariantSnapshot ?? string.Empty) });
+                .Select(x =>  new {PurchaseDate = x.Order.OrderDate, ProductSnapshot = JsonSerializer.Deserialize<ProductSnapshotDto>(x.ProductSnapshot ?? string.Empty), VariantSnapshot = JsonSerializer.Deserialize<ProductVariantSnapshotDto>(x.VariantSnapshot ?? string.Empty) });
 
             return product;
         }

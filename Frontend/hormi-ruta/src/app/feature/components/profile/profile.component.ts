@@ -4,11 +4,12 @@ import { CommonModule } from '@angular/common';
 import { ProductService } from '../../services/product.service';
 import { AuthService } from '../../services/auth.service';
 import { first } from 'rxjs';
+import { PurchaseHistoryComponent } from '../purchase-history/purchase-history.component';
 
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule, PurchaseHistoryComponent],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss'
 })

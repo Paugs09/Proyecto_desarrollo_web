@@ -80,4 +80,7 @@ export class ProductService {
     return this.http.get<BestSellerDto[]>(`${this.apiUrl}/product/best-sellers`);
   }
 
+  getPurchaseHistory(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/product/purchase-history`);
+  }
 }

@@ -1,0 +1,134 @@
+<div class="purchase-history">
+    <div class="purchase-history__header">
+        <h2 class="purchase-history__title">Historial de Compras</h2>
+    </div>
+
+    <div class="purchase-history__filters" *ngIf="purchases.length > 0">
+        <input type="text" class="purchase-history__search" placeholder="Buscar por nombre de producto o SKU..."
+            [value]="searchTerm" (input)="onSearch($event)" aria-label="Buscar en historial de compras">
+    </div>
+
+    <div class="purchase-history__content" *ngIf="purchases.length > 0; else emptyState">
+        <div class="purchase-card" *ngFor="let purchase of filteredPurchases; let idx = index">
+
+            <!-- Header de la tarjeta -->
+            <div class="purchase-card__header">
+                <div class="purchase-card__info-compact">
+                    <span class="purchase-card__date">{{ purchase.purchaseDate | date:'d MMMM, y':'':'es-CO' | titlecase
+                        }}</span>
+                    <span class="purchase-card__badge">{{ purchase.status }}</span>
+                </div>
+            </div>
+
+            <!-- Contenido principal -->
+            <div class="purchase-card__body">
+
+                <!-- Imagen del producto -->
+                <div class="purchase-card__image-section">
+                    <div class="purchase-card__image-wrapper">
+                        <img [routerLink]="[`/details/${purchase.productSnapshot.product_id}`]"
+                            [src]="purchase.variantSnapshot.images[0]?.url" [alt]="purchase.productSnapshot.name"
+                            class="purchase-card__image" loading="lazy">
+                        <span class="purchase-card__quantity-badge">
+                            {{ purchase.variantSnapshot.quantify_purchased }}x
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Información del producto -->
+                <div class="purchase-card__product-info">
+                    <div class="purchase-card__product-header">
+                        <h3 [routerLink]="[`/details/${purchase.productSnapshot.product_id}`]"
+                            class="purchase-card__product-name">
+                            {{ purchase.productSnapshot.name }}
+                        </h3>
+                        <p class="purchase-card__sku">SKU: {{ purchase.variantSnapshot.sku }}</p>
+                    </div>
+
+                    <p class="purchase-card__description">
+                        {{ purchase.productSnapshot.short_description }}
+                    </p>
+
+                    <!-- Detalles del producto -->
+                    <div class="purchase-card__details">
+                        <div class="purchase-card__detail-item">
+                            <span class="purchase-card__detail-label">Categoría:</span>
+                            <span class="purchase-card__detail-value">{{ purchase.productSnapshot.category }}</span>
+                        </div>
+                        <div class="purchase-card__detail-item">
+                            <span class="purchase-card__detail-label">Municipio:</span>
+                            <span class="purchase-card__detail-value">{{ purchase.productSnapshot.municipality }}</span>
+                        </div>
+                        <div *ngIf="purchase.productSnapshot.notes" class="purchase-card__detail-item">
+                            <span class="purchase-card__detail-label">Notas:</span>
+                            <span class="purchase-card__detail-value">{{ purchase.productSnapshot.notes }}</span>
+                        </div>
+
+                        <div *ngIf="purchase.productSnapshot.material" class="purchase-card__detail-item">
+                            <span class="purchase-card__detail-label">Material:</span>
+                            <span class="purchase-card__detail-value">{{ purchase.productSnapshot.material }}</span>
+                        </div>
+
+                        <!-- Atributos de la variante -->
+                        <div class="purchase-card__detail-item" *ngFor="let attr of getVariantAttributes(purchase)">
+                            <span class="purchase-card__detail-label">{{ attr.key }}:</span>
+                            <span class="purchase-card__detail-value">{{ attr.value }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Información de precios -->
+                <div class="purchase-card__pricing">
+                    <div class="purchase-card__price-row">
+                        <span class="purchase-card__price-label">Precio unitario:</span>
+                        <span class="purchase-card__price-value">
+                            {{ purchase.variantSnapshot.price_at_purchase | currency:'COP':'symbol-narrow':'1.0-0' }}
+                        </span>
+                    </div>
+
+                    <!-- Indicador si el precio cambió -->
+                    <div class="purchase-card__price-comparison"
+                        *ngIf="purchase.variantSnapshot.price_at_purchase !== purchase.variantSnapshot.current_list_price">
+                        <span class="purchase-card__price-label">Precio actual:</span>
+                        <span class="purchase-card__price-current" [class.purchase-card__price-current--increased]="
+                            purchase.variantSnapshot.current_list_price > purchase.variantSnapshot.price_at_purchase">
+                            {{ purchase.variantSnapshot.current_list_price | currency:'COP':'symbol-narrow':'1.0-0' }}
+                            <span class="purchase-card__price-change">
+                                {{ getPriceChange(purchase) }}
+                            </span>
+                        </span>
+                    </div>
+
+                    <div class="purchase-card__divider"></div>
+
+                    <div class="purchase-card__price-row">
+                        <span class="purchase-card__price-label">Cantidad comprada:</span>
+                        <span class="purchase-card__info-value">
+                            {{ purchase.variantSnapshot.quantify_purchased }}
+                        </span>
+                    </div>
+
+                    <div class="purchase-card__price-row purchase-card__price-row--total">
+                        <span class="purchase-card__price-label">Total:</span>
+                        <span class="purchase-card__price-total">
+                            {{ purchase.variantSnapshot.total_value | currency:'COP':'symbol-narrow':'1.0-0' }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Estado vacío -->
+    <ng-template #emptyState>
+        <div class="purchase-history__empty">
+            <img src="assets/hormiga-feliz.gif" alt="hormiga" class="purchase-history__empty-icon">
+            <h3 class="purchase-history__empty-title">Sin compras aún</h3>
+            <p class="purchase-history__empty-text">Comienza a explorar nuestras artesanías Guanentinas</p>
+            <button class="purchase-history__empty-cta" (click)="goToShop()">
+                Explorar productos
+            </button>
+        </div>
+    </ng-template>
+</div>

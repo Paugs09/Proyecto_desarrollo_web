@@ -8,7 +8,6 @@ import { CartService } from '../../services/cart.service';
 import { first } from 'rxjs';
 import Swal from 'sweetalert2';
 
-
 @Component({
   selector: 'app-detalles',
   standalone: true,

@@ -1,73 +1,78 @@
 <div class="bg-[#FBF5EC] min-h-screen px-4 py-8 md:px-12 flex flex-col font-sans">
   <div class="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-10">
 
-    <div class="lg:col-span-4 self-start bg-white rounded-3xl shadow-sm p-8 flex flex-col items-center border border-orange-50">
-  
-  <div class="flex flex-col items-center mb-6">
-    <h1 class="text-3xl font-bold text-gray-900 text-center">
-      {{ usuario.nombre }} {{ usuario.apellido }}
-    </h1>
-    <span class="mt-2 px-3 py-1 bg-[#FDF8F1] text-[#A66C44] text-xs font-semibold rounded-full border border-orange-100 uppercase tracking-wider">
-      {{ usuario.rol }}
-    </span>
-  </div>
+    <div
+      class="lg:col-span-4 self-start bg-white rounded-3xl shadow-sm p-8 flex flex-col items-center border border-orange-50">
 
-  <!--<div class="w-40 h-40 bg-gray-200 rounded-full border-2 border-orange-100 flex items-center justify-center mb-6 overflow-hidden shadow-inner">
+      <div class="flex flex-col items-center mb-6">
+        <h1 class="text-3xl font-bold text-gray-900 text-center">
+          {{ usuario.nombre }} {{ usuario.apellido }}
+        </h1>
+        <span
+          class="mt-2 px-3 py-1 bg-[#FDF8F1] text-[#A66C44] text-xs font-semibold rounded-full border border-orange-100 uppercase tracking-wider">
+          {{ usuario.rol }}
+        </span>
+      </div>
+
+      <!--<div class="w-40 h-40 bg-gray-200 rounded-full border-2 border-orange-100 flex items-center justify-center mb-6 overflow-hidden shadow-inner">
     <img *ngIf="usuario.foto" [src]="usuario.foto" class="w-full h-full object-cover" alt="Foto de perfil">
     <svg *ngIf="!usuario.foto" class="w-20 h-20 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
       <path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"></path>
     </svg>
   </div>-->
 
-  <div class="w-full space-y-2 mb-8 text-center text-sm text-gray-600">
-    <p class="font-bold text-gray-800">{{ usuario.correo }}</p>
-    <p>{{ usuario.telefono }}</p>
-    <p class="italic">Dirección: {{ usuario.direccion }}</p>
-  </div>
+      <div class="w-full space-y-2 mb-8 text-center text-sm text-gray-600">
+        <p class="font-bold text-gray-800">{{ usuario.correo }}</p>
+        <p>{{ usuario.telefono }}</p>
+        <p class="italic">Dirección: {{ usuario.direccion }}</p>
+      </div>
 
-  <button class="w-full bg-[#E5954D] text-white font-bold py-3 rounded-xl hover:bg-[#D5853D] transition-colors shadow-sm">
-    Editar perfil
-  </button>
-</div>
+      <button
+        class="w-full bg-[#E5954D] text-white font-bold py-3 rounded-xl hover:bg-[#D5853D] transition-colors shadow-sm">
+        Editar perfil
+      </button>
+    </div>
 
     <div class="lg:col-span-8 flex flex-col gap-6">
-      
+
       <div class="flex items-center gap-6 border-b border-gray-200 px-4">
-        <button (click)="pestanaActiva = 'favoritos'" 
-                class="pb-3 text-sm font-bold transition-all border-b-2"
-                [ngClass]="pestanaActiva === 'favoritos' ? 'text-[#A66C44] border-[#A66C44]' : 'text-gray-400 border-transparent'">
+        <button (click)="pestanaActiva = 'favoritos'" class="pb-3 text-sm font-bold transition-all border-b-2"
+          [ngClass]="pestanaActiva === 'favoritos' ? 'text-[#A66C44] border-[#A66C44]' : 'text-gray-400 border-transparent'">
           Mis Favoritos
+        </button>
+        <button (click)="pestanaActiva = 'purchase-history'" class="pb-3 text-sm font-bold transition-all border-b-2"
+          [ngClass]="pestanaActiva === 'purchase-history' ? 'text-[#A66C44] border-[#A66C44]' : 'text-gray-400 border-transparent'">
+          Historial de compras
         </button>
       </div>
 
-      <div class="bg-white rounded-3xl shadow-sm border border-orange-50 overflow-hidden">
-        
+      <div *ngIf="pestanaActiva == 'favoritos'" class="bg-white rounded-3xl shadow-sm border border-orange-50 overflow-hidden">
+
         <div class="px-8 py-5 border-b border-gray-100 bg-[#FDF8F1]/50 flex items-center justify-between">
           <h2 class="text-xl font-black text-gray-900">
             Favoritos <span class="text-[#A66C44] font-medium ml-1">({{ productosFiltrados.length }})</span>
           </h2>
 
-          <button *ngIf="haySeleccionados" 
-                  (click)="eliminarFavoritosSeleccionados()"
-                  class="text-sm text-red-500 hover:bg-red-50 font-bold px-4 py-2 rounded-xl border border-red-200 transition-all">
+          <button *ngIf="haySeleccionados" (click)="eliminarFavoritosSeleccionados()"
+            class="text-sm text-red-500 hover:bg-red-50 font-bold px-4 py-2 rounded-xl border border-red-200 transition-all">
             Quitar seleccionados
           </button>
         </div>
 
         <div class="divide-y divide-gray-100">
           <div *ngIf="loading" class="p-10 text-center text-gray-400">Cargando tus favoritos...</div>
-          
-          <div *ngFor="let item of productosFiltrados" 
-               class="flex items-center gap-5 p-6 hover:bg-gray-50/50 transition-colors">
-            
-            <input type="checkbox" [(ngModel)]="item.seleccionado" 
-                   class="w-6 h-6 rounded border-gray-300 text-[#E5954D] focus:ring-[#E5954D] cursor-pointer">
 
-            <div (click)="irADetalle(item.id)" 
-                 class="w-20 h-20 bg-gray-100 rounded-2xl flex-shrink-0 overflow-hidden border border-orange-50 cursor-pointer hover:opacity-80 transition-all">
-              <img *ngIf="item.foto" 
-                   [src]="item.foto.startsWith('http') ? item.foto : 'https://aifocklirqkrvpmlgnjr.supabase.co/storage/v1/object/public/hormiguane-images/' + item.foto" 
-                   class="w-full h-full object-cover" alt="Imagen producto">
+          <div *ngFor="let item of productosFiltrados"
+            class="flex items-center gap-5 p-6 hover:bg-gray-50/50 transition-colors">
+
+            <input type="checkbox" [(ngModel)]="item.seleccionado"
+              class="w-6 h-6 rounded border-gray-300 text-[#E5954D] focus:ring-[#E5954D] cursor-pointer">
+
+            <div (click)="irADetalle(item.id)"
+              class="w-20 h-20 bg-gray-100 rounded-2xl flex-shrink-0 overflow-hidden border border-orange-50 cursor-pointer hover:opacity-80 transition-all">
+              <img *ngIf="item.foto"
+                [src]="item.foto.startsWith('http') ? item.foto : 'https://aifocklirqkrvpmlgnjr.supabase.co/storage/v1/object/public/hormiguane-images/' + item.foto"
+                class="w-full h-full object-cover" alt="Imagen producto">
             </div>
 
             <div (click)="irADetalle(item.id)" class="flex-grow min-w-0 cursor-pointer group">
@@ -82,7 +87,8 @@
 
             <div class="text-red-500 opacity-80">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" />
+                <path
+                  d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" />
               </svg>
             </div>
           </div>
@@ -92,4 +98,11 @@
           </div>
         </div>
 
-      </div> </div> </div> </div>
+      </div>
+
+      <div *ngIf="pestanaActiva == 'purchase-history'" class="bg-white rounded-3xl shadow-sm border border-orange-50 overflow-hidden">
+        <app-purchase-history></app-purchase-history>
+      </div>
+    </div>
+  </div>
+</div>
