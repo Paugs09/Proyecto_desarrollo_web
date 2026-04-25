@@ -13,7 +13,7 @@
       <img src="assets/img/HormiAdmin.png" alt="HormiAdmin Logo" class="logo-admin h-24 w-auto object-contain mb-2">
       <div class="absolute -inset-2 bg-[#F4A261]/10 blur-2xl rounded-full -z-10"></div>
     </div>
-    
+
     <h2 class="text-4xl font-black text-[#2D5016] text-center tracking-tight">
       {{ isEditMode ? 'Editar producto' : 'Panel de administración' }}
     </h2>
@@ -140,6 +140,7 @@
 
           <div *ngFor="let img of getProductImages(i).controls; let k = index" [formGroupName]="k"
             class="flex flex-col gap-2 mb-4 border-b border-orange-200 pb-2">
+            <img *ngIf="img.get('imageUrl')?.value" [src]="img.get('imageUrl')?.value" alt="foto" class="w-34 h-34 object-cover rounded border">
             <div class="flex flex-col sm:flex-row items-center gap-4">
               <input type="file" (change)="onFileSelected($event, i, k)"
                 class="text-xs text-gray-500 file:rounded-full file:bg-[#F4A261] cursor-pointer">
@@ -184,8 +185,7 @@
       + Agregar otra combinación (Variante)
     </button>
 
-    <button type="submit" [disabled]="productForm.invalid"
-      class="w-full py-5 bg-[#3aa394] text-white rounded-2xl text-xl font-black shadow-xl
+    <button type="submit" [disabled]="productForm.invalid" class="w-full py-5 bg-[#3aa394] text-white rounded-2xl text-xl font-black shadow-xl
             hover:bg-[#167567] transition-all disabled:bg-gray-300 disabled:shadow-none
             transform hover:-translate-y-1">
       {{ isEditMode ? 'Guardar cambios' : 'Guardar HormiProducto' }}
