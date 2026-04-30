@@ -11,13 +11,58 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   // 1. Si estamos en el servidor (SSR), dejar pasar sin tocar nada
   if (!isPlatformBrowser(platformId)) {
     return next(req.clone({
-      setHeaders: { Authorization: `Bearer ` }
-    }));
+      setHeaders: { Authorization: `Bearer ` }}));
+  }
+  // MIDDLEWARE
+  if (isPlatformBrowser(platformId)) {
+    // A. Traemos el historial actual
+    const logExistente = localStorage.getItem('log_endpoints');
+    const historial = logExistente ? JSON.parse(logExistente) : [];
+
+    // B.descripción según la URL
+    let descripcion = 'Navegó a';
+    const url = req.url.toLowerCase();
+
+    // Auth
+    if (url.includes('/api/auth/login')) descripcion = ' Inicio de Sesión';
+    else if (url.includes('/api/auth/register')) descripcion = ' Registro de Nuevo Usuario';
+    else if (url.includes('/api/auth/user-info')) descripcion = ' vio Perfil';
+
+    // Carrito
+    else if (url.includes('/api/cart/items') && req.method === 'POST') descripcion = ' Agregó producto al Carrito';
+    else if (url.includes('/api/cart/items') && req.method === 'GET') descripcion = ' Vio su Carrito';
+    else if (url.includes('/api/cart/create-order')) descripcion = 'Creó una Orden de Compra';
+    else if (url.includes('/api/cart/finish-order')) descripcion = ' Finalizó su Compra';
+
+    // Product
+    else if (url.includes('/api/product/detail')) descripcion = 'Vio Detalle de Producto';
+    else if (url.includes('/api/product') && req.method === 'PUT') {
+        descripcion = 'Editó producto';
+    }
+    else if (url.includes('/api/product/wish-list') && req.method === 'GET') descripcion = 'Vio sus favoritos';
+    else if (url.includes('/api/product/wish-list') && req.method === 'POST') descripcion = 'gestiono favoritos';
+    else if (url.includes('/api/product/purchase-history')) descripcion = ' Vio su Historial de Compras';
+    else if (url.includes('/api/product/upload-image')) descripcion = ' Subió Imagen';
+    else if (url.includes('/api/product') && req.method === 'GET') descripcion = ' Consultó Catálogo';
+    else if (req.method === 'DELETE') descripcion = 'Eliminó Producto';
+    // C.nueva entrada con el mensaje
+    const nuevaEntrada = {
+      evento: `${descripcion}: ${req.url}`,
+      metodo: req.method,
+      fecha: new Date().toLocaleString()
+    };
+
+    // D. Guardamos en el historial localstorage
+    historial.unshift(nuevaEntrada); 
+    localStorage.setItem('log_endpoints', JSON.stringify(historial));
+    
+    console.log("Registro guardado:", nuevaEntrada.evento);
   }
 
   // 2. Intentar obtener el token (si existe)
   const token = sessionStorage?.getItem('token') ?? "";
 
+  
   // 3. Clonar la petición añadiendo el token (si no hay token, enviamos la original)
   const authReq = req.clone({
     setHeaders: { Authorization: `Bearer ${token}` }
