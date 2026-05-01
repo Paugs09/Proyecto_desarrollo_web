@@ -1,5 +1,4 @@
-﻿using Core.Dto.Product.ProductImage;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace Core.Dto.Product
 {
@@ -9,7 +8,7 @@ namespace Core.Dto.Product
         public long ProductId { get; set; }
 
         [JsonPropertyName("name")]
-        public string Name { get; set; }
+        public required string Name { get; set; }
 
         [JsonPropertyName("short_description")]
         public string? ShortDescription { get; set; }
@@ -21,13 +20,13 @@ namespace Core.Dto.Product
         public int CategoryId { get; set; }
 
         [JsonPropertyName("category")]
-        public string Category { get; set; }
+        public required string Category { get; set; }
 
         [JsonPropertyName("municipality_id")]
         public int MunicipalityId { get; set; }
 
         [JsonPropertyName("municipality")]
-        public string Municipality { get; set; }
+        public required string Municipality { get; set; }
 
         [JsonPropertyName("notes")]
         public string? Notes { get; set; }

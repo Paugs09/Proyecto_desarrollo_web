@@ -108,7 +108,7 @@ namespace Core.Services.Imp
                     IsFavorite = userId != null && _genericWishListRepository.GetQueryable().Any(x => x.ProductId == product.Id && x.UserId == userId),
                     Category = product.Category.Name,
                     CategoryId = product.CategoryId,
-                    Material = product.Material.Name,
+                    Material = product.Material != null ? product.Material.Name : null,
                     MaterialId = product.MaterialId,
                     Municipality = product.Municipality.Name,
                     MunicipalityId = product.MunicipalityId,

@@ -44,7 +44,7 @@ namespace Infraestructure.Repositories
                     Id = p.Id,
                     Name = p.Name,
                     ShortDescription = p.ShortDescription,
-                    Category = p.Category?.Name,
+                    Category = p.Category.Name,
                     BasePrice = variant?.SpecificPrice ?? 0,
                     ImageUrl = image?.ImageUrl
                 };
