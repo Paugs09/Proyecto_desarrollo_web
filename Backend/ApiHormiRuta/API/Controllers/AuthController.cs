@@ -73,6 +73,13 @@ namespace API.Controllers
             return Ok(await _authService.GetUserInfo(parsedUserId));
         }
 
+        [HttpPost("upload-avatar")]
+        [AllowAnonymous]
+        public async Task<IActionResult> UploadAvatar([FromForm] IFormFile formFile)
+        {
+            return Ok(await _authService.UploadImagesForAvatar(formFile));
+        }
+
         public class RefreshRequest
         {
             public string AccessToken { get; set; } = string.Empty;

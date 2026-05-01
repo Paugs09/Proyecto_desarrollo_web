@@ -3,6 +3,7 @@ using Core.Entities;
 using Core.Exceptions;
 using Core.Infraestructure;
 using Core.Services.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Supabase.Gotrue;
 using System.Net;
@@ -11,10 +12,12 @@ namespace Core.Services.Imp
 {
     public class AuthService(Supabase.Client supabaseClient,
                              IRoleService roleService,
+                             IStorageService storageService,
                              IGenericRepository<UserProfile> genericUserProfileRepository) : IAuthService
     {
         private readonly Supabase.Client _supabaseClient = supabaseClient;
         private readonly IRoleService _roleService = roleService;
+        private readonly IStorageService _storageService = storageService;
         private readonly IGenericRepository<UserProfile> _genericUserProfileRepository = genericUserProfileRepository;
 
         public async Task<string> RegisterAsync(UserRegister userRegister)
@@ -25,7 +28,8 @@ namespace Core.Services.Imp
                 { "first_name", userRegister.FirstName },
                 { "last_name", userRegister.LastName },
                 { "phone", userRegister.Phone ?? string.Empty },
-                { "shipping_address", userRegister.ShippingAddress ?? string.Empty }
+                { "shipping_address", userRegister.ShippingAddress ?? string.Empty },
+                { "avatar", userRegister.Avatar ?? string.Empty }
             };
 
             var session = await _supabaseClient.Auth.SignUp(userRegister.Email, userRegister.Password, new SignUpOptions { Data = metadata });
@@ -88,8 +92,15 @@ namespace Core.Services.Imp
                     ShippingAddress = x.ShippingAddress,
                     Role = x.Role.Name,
                     RoleId = x.RoleId,
+                    Avatar = x.Avatar
                 })
                 .FirstOrDefaultAsync() ?? throw new BusinessException(HttpStatusCode.NotFound, "Usuario no encontrado", "El usuario no fue encontrado");
+        }
+
+        public async Task<string> UploadImagesForAvatar(IFormFile formFile)
+        {
+            var imagePath = await _storageService.UploadImageAsync(formFile, "user-avatars");
+            return imagePath;
         }
     }
 }

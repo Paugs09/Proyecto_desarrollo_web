@@ -44,6 +44,10 @@ namespace Infraestructure.Data.Configurations
                 .IsRequired()
                 .HasColumnName("role_id");
 
+            builder.Property(u => u.Avatar)
+                .IsRequired(false)
+                .HasColumnName("avatar");
+
             builder.HasOne(x => x.Role)
                 .WithMany(x => x.UserProfiles)
                 .HasForeignKey(x => x.RoleId)

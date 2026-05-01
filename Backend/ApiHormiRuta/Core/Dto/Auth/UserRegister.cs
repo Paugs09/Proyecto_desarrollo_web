@@ -8,5 +8,6 @@
         public string Password { get; set; } = string.Empty;
         public string? Phone { get; set; }
         public string? ShippingAddress { get; set; }
+        public string? Avatar { get; set; }
     }
 }

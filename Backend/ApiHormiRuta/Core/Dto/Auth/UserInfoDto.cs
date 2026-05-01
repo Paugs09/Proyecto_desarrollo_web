@@ -10,5 +10,6 @@
         public string? ShippingAddress { get; set; }
         public string Role { get; set; } = string.Empty;
         public long RoleId { get; set; }
+        public string? Avatar {  get; set; }
     }
 }
