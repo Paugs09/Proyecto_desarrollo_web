@@ -18,13 +18,18 @@ export class RegisterComponent {
   showPassword = signal(false);
   error = signal<string | null>(null);
 
+isUploadingImage = signal(false);
+fotoUrl = signal<string | null>(null);
+
+
   form = this.fb.group({
     firstName: ['', [Validators.required]],
     lastName: ['', [Validators.required]],
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.minLength(6)]],
     phone: [''],
-    shippingAddress: ['']
+    shippingAddress: [''],
+    avatar: ['']
   });
 
   togglePasswordVisibility() {
@@ -35,6 +40,28 @@ export class RegisterComponent {
     const control = this.form.get(field);
     return control?.invalid && (control?.touched || control?.dirty);
   }
+
+  
+
+
+  onFileSelected(event: any) {
+  const file: File = event.target.files[0];
+  if (file) {
+    this.isUploadingImage.set(true);
+    
+    this.authService.uploadAvatar(file).subscribe({
+      next: (url) => {
+        this.fotoUrl.set(url);
+        // PatchValue pone la URL en el campo 'avatar' del JSON de registro
+        this.form.patchValue({ avatar: url }); 
+        this.isUploadingImage.set(false);
+      },
+      error: (err) => {
+        this.isUploadingImage.set(false);
+        console.error("Error al subir avatar:", err);
+      }
+    });}}
+
 
   onSubmit() {
     if (this.form.valid) {
