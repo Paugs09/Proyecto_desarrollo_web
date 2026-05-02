@@ -49,6 +49,17 @@ export class AuthService {
     );
   }
 
+  //foto
+  uploadAvatar(file: File): Observable<string> {
+  const formData = new FormData();
+  
+  formData.append('FormFile', file); 
+
+  return this.http.post(`${this.apiUrl}/upload-avatar`, formData, { 
+    responseType: 'text' 
+  });
+}
+
   refreshToken(): Observable<any> {
     const body = {
       accessToken: sessionStorage.getItem('token'),

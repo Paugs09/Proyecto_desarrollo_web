@@ -37,6 +37,12 @@ export class ProfileComponent implements OnInit {
     //  cualquier otro, capitalizamos la primera letra
     nombreRol = u.role.charAt(0).toUpperCase() + u.role.slice(1);
   }
+  
+  //asegurar 
+  const foto = u?.avatar || u?.avatar_url || '';
+  const avatarFinal = (foto && !foto.startsWith('http')) 
+    ? `https://aifocklirqkrvpmlgnjr.supabase.co/storage/v1/object/public/hormiguane-images/user-avatars/${foto}` 
+    : foto;
 
   return {
     
@@ -45,8 +51,8 @@ export class ProfileComponent implements OnInit {
     correo: u?.email || 'Sin correo',
     telefono: u?.phone || 'No registrado',
     direccion: u?.shippingAddress || 'Sin dirección', 
-    rol: nombreRol
-    //foto: u?.foto || u?.photo_url || ''
+    rol: nombreRol,
+    avatar: avatarFinal
   };
 }
 
