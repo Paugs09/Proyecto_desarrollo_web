@@ -8,6 +8,7 @@ import {
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
+import { switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -75,7 +76,9 @@ export class LoginComponent {
     const info = { email, password};
     console.log('Login info:', info);
 
-    this.authService.login(info).subscribe({
+    this.authService.login(info).pipe(
+      switchMap(() => this.authService.getUserInfo())
+    ).subscribe({
       next: () => {
         this.router.navigate(['/home']);
       },
