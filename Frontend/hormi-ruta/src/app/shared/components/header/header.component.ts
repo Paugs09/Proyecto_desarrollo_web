@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { CommonModule, NgClass } from '@angular/common';
 import { AuthService } from '../../../feature/services/auth.service';
 
@@ -12,9 +12,18 @@ import { AuthService } from '../../../feature/services/auth.service';
 })
 export class HeaderComponent {
   private readonly authService = inject(AuthService);
+  private readonly router = inject(Router);
   protected isAdmin = this.authService.isAdmin;
+  readonly user = this.authService.user;
   menuOpen = false;
   cartOpen = false;
+  profileOpen = false;
+
+  ngOnInit(): void {
+    if (sessionStorage.getItem('token') && !this.user()) {
+      this.authService.getUserInfo().subscribe();
+    }
+  }
 
   toggleMenu() {
     this.menuOpen = !this.menuOpen;
@@ -22,5 +31,12 @@ export class HeaderComponent {
 
   closeMenu() {
     this.menuOpen = false;
+  }
+
+  logout() {
+    this.authService.logout();
+    this.closeMenu();
+    this.profileOpen = false;
+    this.router.navigate(['/login']);
   }
 }
