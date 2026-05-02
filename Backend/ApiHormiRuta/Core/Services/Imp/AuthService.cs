@@ -36,6 +36,20 @@ namespace Core.Services.Imp
             return session?.AccessToken ?? throw new BusinessException(HttpStatusCode.BadRequest, "No se registro al usuario", "Error al registrar usuario");
         }
 
+        public async Task UserUpdate(Guid userId, UserUpdateDto userUpdateDto)
+        {
+            var user = await _genericUserProfileRepository.FirstOrDefaultAsyncWithIncludes(x => x.Id == userId) ?? throw new BusinessException(HttpStatusCode.BadRequest, "No se encuentra al usuario", "Error al actualizar el usuario");
+
+            user.FirstName = userUpdateDto.FirstName;
+            user.LastName = userUpdateDto.LastName;
+            user.PhoneNumber = userUpdateDto.PhoneNumber;
+            user.ShippingAddress = userUpdateDto.ShippingAddress;
+            user.Avatar = userUpdateDto.Avatar;
+
+            _genericUserProfileRepository.Update(user);
+            await _genericUserProfileRepository.SaveAsync();
+        }
+
         public async Task<AuthInfoDto> LoginAsync(string email, string password)
         {
             var session = await _supabaseClient.Auth.SignIn(email, password);

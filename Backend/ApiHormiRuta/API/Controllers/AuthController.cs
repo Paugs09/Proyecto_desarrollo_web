@@ -1,4 +1,5 @@
 ﻿using Core.Dto.Auth;
+using Core.Exceptions;
 using Core.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -22,6 +23,20 @@ namespace API.Controllers
                 return Ok(new { Token = token });
             }
             catch (GotrueException ex) { return BadRequest(ex.Message); }
+        }
+
+        [HttpPut("user-update")]
+        public async Task<IActionResult> UserUpdate([FromBody] UserUpdateDto updateDto)
+        {
+            try
+            {
+                var userId = HttpContext.Items["UserId"]?.ToString();
+                _ = Guid.TryParse(userId, out Guid parsedUserId);
+
+                await _authService.UserUpdate(parsedUserId, updateDto);
+                return new ObjectResult(new { StatusCode = StatusCodes.Status204NoContent});
+            }
+            catch (BusinessException ex) { return BadRequest(ex.Message); }
         }
 
         [HttpPost("login")]
