@@ -5,11 +5,12 @@ import { ProductService } from '../../services/product.service';
 import { AuthService } from '../../services/auth.service';
 import { first } from 'rxjs';
 import { PurchaseHistoryComponent } from '../purchase-history/purchase-history.component';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [FormsModule, CommonModule, PurchaseHistoryComponent],
+  imports: [FormsModule, CommonModule, PurchaseHistoryComponent, RouterLink],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss'
 })

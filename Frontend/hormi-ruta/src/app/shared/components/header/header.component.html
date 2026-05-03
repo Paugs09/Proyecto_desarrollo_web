@@ -14,11 +14,12 @@
     <!-- Nav -->
     <nav class="hidden md:flex items-center gap-2">
 
-      <a *ngIf="isAdmin()" routerLink="/admin/crear-producto" class="inline-flex items-center gap-2 text-white font-medium text-sm px-4 py-2 rounded-full bg-black/25 hover:bg-black/35 transition no-underline">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
+      <a *ngIf="isAdmin()" routerLink="/admin/crear-producto" class="inline-flex items-center gap-1.5 text-white font-semibold text-sm px-4 py-2 rounded-full bg-white/20 border border-white/40 hover:bg-white/30 transition-all no-underline whitespace-nowrap shadow-sm backdrop-blur-sm">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4 flex-shrink-0">
           <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
         </svg>
-        Crear producto
+        <span class="hidden lg:inline">Crear producto</span>
+        <span class="lg:hidden">Crear</span>
       </a>
 
       <a routerLink="/home"
@@ -133,7 +134,12 @@
     <div class="flex flex-col px-6 bg-[#2e8a7d]">
 
       <a *ngIf="isAdmin()" routerLink="/admin/crear-producto" (click)="closeMenu()"
-        class="text-white font-medium py-3 border-b border-white/15 hover:text-white/75 transition no-underline">
+        class="flex items-center gap-3 text-white font-medium py-3 border-b border-white/15 hover:text-white/75 transition no-underline">
+         <span class="flex items-center justify-center w-7 h-7 rounded-full bg-white/20 flex-shrink-0">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+          </svg>
+        </span>
         Crear productos
       </a>
 

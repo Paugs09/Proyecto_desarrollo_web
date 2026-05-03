@@ -1,0 +1,98 @@
+<div class="bg-[#FBF5EC] min-h-screen flex items-center justify-center px-4 py-10">
+  <div class="bg-white rounded-xl shadow-md w-full max-w-md p-8">
+
+    <h1 class="text-3xl font-bold text-center text-[#2D5016] mb-6">
+      Editar perfil
+    </h1>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-4">
+
+      <!-- Avatar -->
+      <div class="flex flex-col items-center justify-center mb-8">
+        <div class="relative group">
+          <div class="w-32 h-32 rounded-full border-4 border-[#F4A261] overflow-hidden bg-[#FBF5EC] shadow-xl flex items-center justify-center relative">
+
+            @if (isUploadingImage()) {
+              <div class="absolute inset-0 bg-white/80 flex flex-col items-center justify-center z-10">
+                <div class="animate-spin rounded-full h-8 w-8 border-4 border-[#2D5016] border-t-transparent mb-2"></div>
+                <span class="text-[8px] font-bold text-[#2D5016] animate-pulse">SUBIENDO...</span>
+              </div>
+            }
+
+            @if (fotoUrl()) {
+              <img [src]="fotoUrl()" class="w-full h-full object-cover">
+            } @else {
+              <div class="flex flex-col items-center opacity-30">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                </svg>
+              </div>
+            }
+          </div>
+
+          <label for="avatar-input"
+            class="absolute -bottom-1 -right-1 bg-[#4f8c27] text-white rounded-full cursor-pointer hover:bg-[#1a310d] transition-all shadow-md hover:scale-110 active:scale-95 w-12 h-12 flex items-center justify-center overflow-hidden border-2 border-white">
+            <img src="../../../../assets/hormiguita.png" alt="Cambiar foto" class="w-full h-full object-cover">
+          </label>
+          <input type="file" id="avatar-input" class="hidden" (change)="onFileSelected($event)" accept="image/*">
+        </div>
+
+        @if (fotoUrl()) {
+          <p class="text-[10px] font-black text-green-600 mt-2 uppercase tracking-widest flex items-center gap-1">
+            <span class="text-xs">✓</span> Foto cargada con éxito
+          </p>
+        } @else {
+          <p class="text-[10px] font-bold text-gray-400 mt-2 uppercase tracking-widest">Sube tu foto de perfil</p>
+        }
+      </div>
+
+      <!-- Nombre -->
+      <div>
+        <label class="block text-sm font-medium mb-1">Nombre</label>
+        <input type="text" formControlName="firstName" placeholder="Tu nombre"
+          [class.border-red-500]="isFieldInvalid('firstName')"
+          class="w-full bg-[#FBF5EC] border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#F4A261] transition"/>
+      </div>
+
+      <!-- Apellidos -->
+      <div>
+        <label class="block text-sm font-medium mb-1">Apellidos</label>
+        <input type="text" formControlName="lastName" placeholder="Tus apellidos"
+          [class.border-red-500]="isFieldInvalid('lastName')"
+          class="w-full bg-[#FBF5EC] border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#F4A261] transition"/>
+      </div>
+
+      <!-- Teléfono -->
+      <div>
+        <label class="block text-sm font-medium mb-1">Número Telefónico</label>
+        <input type="tel" formControlName="phoneNumber" placeholder="Ej: +57..."
+          class="w-full bg-[#FBF5EC] border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#F4A261] transition"/>
+      </div>
+
+      <!-- Dirección -->
+      <div>
+        <label class="block text-sm font-medium mb-1">Dirección de Envío <span class="text-gray-500">(opcional)</span></label>
+        <textarea formControlName="shippingAddress" rows="2" placeholder="Calle, ciudad..."
+          class="w-full bg-[#FBF5EC] border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#F4A261] transition"></textarea>
+      </div>
+
+      @if (successMessage()) {
+        <p class="text-green-600 text-sm font-semibold text-center">{{ successMessage() }}</p>
+      }
+      @if (errorMessage()) {
+        <p class="text-red-500 text-sm font-semibold text-center">{{ errorMessage() }}</p>
+      }
+
+      <!-- Botón -->
+      <button type="submit" [disabled]="form.invalid || isLoading()"
+        class="w-full font-semibold py-2 rounded bg-[#F4A261] text-[#2D5016] hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition">
+        @if (isLoading()) {
+          Guardando...
+        } @else {
+          Guardar cambios
+        }
+      </button>
+
+    </form>
+  </div>
+</div>

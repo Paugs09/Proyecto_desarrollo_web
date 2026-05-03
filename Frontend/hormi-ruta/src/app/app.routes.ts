@@ -11,6 +11,7 @@ import { CartComponent } from './feature/components/cart/cart.component';
 
 import { ProductFormComponent } from './feature/components/product-form/product-form.component';
 import { adminGuard } from './feature/guards/admin.guard';
+import { EditProfileComponent } from './feature/components/edit-profile/edit-profile.component';
 
 
 export const routes: Routes = [
@@ -24,8 +25,8 @@ export const routes: Routes = [
   { path: 'adventure-form/:id', component: AdventureFormComponent },
   {path: 'products', component:ProductsComponent},
   {path: 'cart', component: CartComponent},
+  {path: 'edit-profile', component: EditProfileComponent},
 
-  //{ path: 'admin/crear-producto', component: ProductFormComponent },
   { 
     path: 'admin/crear-producto', 
     component: ProductFormComponent, 
