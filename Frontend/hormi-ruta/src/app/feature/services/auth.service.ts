@@ -12,7 +12,6 @@ import { isPlatformBrowser } from '@angular/common';
 export class AuthService {
   private readonly apiUrl = `${environment.apiUrl}/auth`;
   private readonly http = inject(HttpClient);
-  //private readonly router = inject(Router);
   private platformId = inject(PLATFORM_ID);
 
   // Estado privado: Intentamos recuperar el objeto completo
@@ -22,7 +21,10 @@ export class AuthService {
   readonly user = this._user.asReadonly();
 
   // Computed: Reacciona automáticamente
-  readonly isAdmin = computed(() => !!this.user()?.isAdmin);
+    readonly isAdmin = computed(() => {
+      const u = this.user();
+      return !!u?.isAdmin || u?.roleId === 1 || u?.role === 'admin';
+    });
 
   private readonly logoutSubject = new Subject<void>();
   readonly logout$ = this.logoutSubject.asObservable();
@@ -93,11 +95,25 @@ export class AuthService {
   }
 
   getUserInfo(): Observable<any> {
-  return this.http.get<any>(`${this.apiUrl}/user-info`).pipe(
-    tap(userData => {
-      sessionStorage.setItem('user_data', JSON.stringify(userData));
-      this._user.set(userData);
-    })
-  );
-}
+    return this.http.get<any>(`${this.apiUrl}/user-info`).pipe(
+      tap(userData => {
+        const datosActuales = this._user();
+        const datosCompletos = {
+          ...userData,
+          isAdmin: userData.isAdmin
+            ?? datosActuales?.isAdmin
+            ?? (userData.roleId === 1 || userData.role === 'admin')
+        };
+        sessionStorage.setItem('user_data', JSON.stringify(datosCompletos));
+        this._user.set(datosCompletos);
+      })
+    );
+  }
+
+  //editar info de usuario
+  updateUser(data: object): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/user-update`, data).pipe(
+      tap(() => this.getUserInfo().subscribe())
+    );
+  }
 }
