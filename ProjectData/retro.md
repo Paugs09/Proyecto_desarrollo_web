@@ -1,12 +1,3 @@
-## Retrospectiva del README inicial 
-=====================
----------------------------
-Calificación: 3.3 / 5.0 (Se acordó con el docente para una nueva revisión del README, conforme a las entregas requeridas en el documento en ágora correspondiente al sprint 1)
-
-El README presenta una estructura clara y bien organizada. Se destacan positivamente el título, la descripción del proyecto, el público objetivo, la identificación de los integrantes y el apartado de inspiraciones, el cual incluye referencias pertinentes con enlaces e imágenes.
-
-No obstante, el documento se encuentra incompleto desde el punto de vista técnico, ya que no incluye secciones fundamentales como: tecnologías que van a utilizar, instrucciones de instalación y uso según las tecnologías a utilizar, falta de evidencias de la tabla de trabajo por Sprints.
-
 ## Retrospectiva Sprint 1:
 =====================
 ---------------------------
@@ -42,6 +33,16 @@ Durante el desarrollo del sprint 4, el equipo de trabajo logró consolidar la in
 A pesar de estos logros, se identificaron algunas dificultades con relación a la gestión de código colaborativo, principalmente en la resolución de conflictos durante los procesos de merge, lo que generó interrupciones y consumo de tiempo adicional. Además de esto, se evidenció la necesidad de fortalecer la comunicación al momento de realizar cambios en funcionalidades compartidas.
 
 De esta forma, el equipo reconoce la importancia de seguir reforzando las prácticas de comunicación efectiva y se plantea un uso más estratégico de plataformas de colaboración como Gather, el manejo de ramas basadas en main según los cambios a realizar junto con un mantenimiento de la organización del tablero de tareas para optimizar el rendimiento en los próximos sprints y asegurar una evolución continua del proyecto.
+
+## Retrospectiva Sprint 5:
+=====================
+---------------------------
+Durante el desarrollo del sprint 5, el equipo de desarrollo logró completar todos los requerimientos planteados para la continuidad del proceso de avances en el proyecto, permitiendo que el sitio web implementara middlewares, CRUD completo y permisos de usuarios, además de mejoras en la visualización de los datos del perfil. Gracias a este avance se evidencian mejoras en la organización del trabajo, desde la distribución de tareas a tiempo hasta las reuniones programadas y el informe constante de novedades, dudas, bloqueos por medio del grupo de WhatsApp respectivo a los miembros del equipo. 
+
+Adicionalmente, se reconoce la importancia de seguir un buen manejo del control de versiones con ramas, lo cual permitió una excelente comunicación, organización y claridad de los cambios realizados en el proyecto reflejados en el repositorio, así como la buena capacidad de respuesta ante imprevistos o fallos inesperados relacionados a las herramientas utilizadas para el seguimiento de reuniones y metodología de trabajo.
+
+De esta forma, el equipo reconoce la importancia de continuar reforzando las prácticas de comunicación efectiva, constante y respetuosa para seguir alcanzando los objetivos de cada tarea y asegurar una evolución continua del proyecto. 
+
 
 ## Representación gráfica de la retrospectiva con la dinámica de estrella de mar:
 =====================
