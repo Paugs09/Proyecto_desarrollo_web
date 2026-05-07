@@ -307,3 +307,39 @@ Se realizó una revisión de los entregables para verificar el cumplimiento de l
 
 #### Validación de objetivos alcanzados
 Se compararon los resultados finales con el plan inicial del sprint, validando que el equipo logró estabilizar el nuevo enfoque del proyecto y la integración de componentes. Con esta revisión, se da por concluido formalmente el sprint 4, dejando el proyecto listo para la planeación de la siguiente etapa.
+
+---
+---
+
+# UNDÉCIMA REUNIÓN
+=====================
+---------------------------
+
+### DISTRIBUCIÓN DE TAREAS SPRINT 5 Y SEGUIMIENTO DE AVANCES
+
+#### Distribución de tareas
+Se definieron y asignaron nuevas tareas en el tablero Scrum. Estas responsabilidades están enfocadas en avanzar con las funcionalidades pendientes del nuevo enfoque, asegurando una distribución equitativa del trabajo para cumplir con los objetivos del sprint actual.
+
+#### Visualización de avances y seguimiento
+Se llevó a cabo una revisión de las tareas asignadas en la reunión anterior para monitorear el progreso de cada integrante. El equipo presentó los adelantos en el desarrollo de HormiGuane, permitiendo verificar que el flujo de trabajo se mantiene alineado con los objetivos del sprint.
+
+#### Resolución de dudas en el desarrollo
+Se abrió un espacio para despejar interrogantes técnicas surgidas durante la implementación. Esta dinámica facilitó la fluidez en el desarrollo, eliminando bloqueos específicos y asegurando que todos los miembros tengan claridad sobre la lógica de los componentes y la integración con el nuevo sistema de ramas.
+
+---
+---
+
+# DUODÉCIMA REUNIÓN
+=====================
+---------------------------
+
+### RETROSPECTIVA DEL SPRINT 5 Y CIERRE DE OBJETIVOS
+
+#### Retrospectiva del sprint 5
+El equipo llevó a cabo la sesión de retrospectiva correspondiente al Sprint 5. Durante la reunión, se identificaron regiones de mejora para el siguiente sprint con respecto a visualización de información y detalles de diseño para mejorar la interacción intuitiva del usuario con el sitio web.
+
+#### Revisión de tareas terminadas
+Se realizó una revisión de los entregables para verificar el cumplimiento de los objetivos planteados. Se confirmó que todas las tareas definidas para este sprint se encuentran completamente terminadas y funcionales, cumpliendo con los criterios de aceptación establecidos para el desarrollo de la plataforma.
+
+#### Validación de objetivos alcanzados
+Se compararon los resultados finales con el plan inicial del sprint, validando que el equipo logró estabilizar el nuevo enfoque del proyecto y la integración de componentes. Con esta revisión, se da por concluido formalmente el sprint 5, dejando el proyecto listo para la planeación de la siguiente etapa.
