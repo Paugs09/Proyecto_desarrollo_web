@@ -343,3 +343,20 @@ Se realizó una revisión de los entregables para verificar el cumplimiento de l
 
 #### Validación de objetivos alcanzados
 Se compararon los resultados finales con el plan inicial del sprint, validando que el equipo logró estabilizar el nuevo enfoque del proyecto y la integración de componentes. Con esta revisión, se da por concluido formalmente el sprint 5, dejando el proyecto listo para la planeación de la siguiente etapa.
+
+---
+---
+
+# DECIMOTERCERA REUNIÓN
+=====================
+---------------------------
+
+### REVISIÓN DE ENTREGABLES Y RETROSPECTIVA DEL SPRINT 6
+
+#### Revisión de tareas terminadas
+Se realizó una revisión de los entregables para verificar el cumplimiento de los objetivos planteados. Se confirmó que todas las tareas definidas para este sprint se encuentran completamente terminadas y funcionales adaptadas a las tecnologías implementadas de nuestro proyecto, cumpliendo con los criterios de aceptación establecidos para el desarrollo de la plataforma.
+
+#### Retrospectiva del sprint 5
+El equipo llevó a cabo la sesión de retrospectiva correspondiente al Sprint 6. Durante la reunión, se identificaron avances significativos para el desarrollo de los siguientes sprints para dar por culminado el proyecto. 
+
+
