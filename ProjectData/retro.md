@@ -43,6 +43,15 @@ Adicionalmente, se reconoce la importancia de seguir un buen manejo del control 
 
 De esta forma, el equipo reconoce la importancia de continuar reforzando las prácticas de comunicación efectiva, constante y respetuosa para seguir alcanzando los objetivos de cada tarea y asegurar una evolución continua del proyecto. 
 
+## Retrospectiva Sprint 6:
+=====================
+---------------------------
+En el transcurso del sprint 6, el equipo de desarrollo logró verificar el buen funcionamiento del modelo de la base de datos que ya se había adelantado en sprints anteriores en la herramienta de Supabase, siguiendo las instrucciones propuestas por el docente pero adaptándolas a nuestro proyecto y tecnologías seleccionadas. Para conseguir el cumplimiento adecuado de los objetivos del sprint, fue de gran importancia continuar con la metodología de trabajo que se ha ido implementando en el transcurso del proyecto, desde la distribución de tareas a tiempo hasta la revisión de los resultados obtenidos de cada tarea.
+
+Además de lo mencionado anteriormente, se reconoce la entrega y el esfuerzo de cada uno de los miembros del equipo al cumplir con cada asignación en los tiempos establecidos, incluyendo la dedicación y creatividad de los desarrolladores para proponer nuevas ideas e implementaciones a agregar buscando un mayor detalle y cuidado visual del proyecto.
+
+De esta manera, este sprint deja como aprendizaje clave seguir con la práctica de una comunicación activa y respetuosa entre los miembros del equipo, así como la importancia del trabajo y reuniones proactivas.
+
 
 ## Representación gráfica de la retrospectiva con la dinámica de estrella de mar:
 =====================
