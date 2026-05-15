@@ -1,0 +1,145 @@
+-- WARNING: This schema is for context only and is not meant to be run.
+-- Table order and constraints may not be valid for execution.
+
+CREATE TABLE public.attribute_values (
+  id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+  attribute_id bigint NOT NULL,
+  value character varying NOT NULL,
+  created_at timestamp with time zone DEFAULT now(),
+  CONSTRAINT attribute_values_pkey PRIMARY KEY (id),
+  CONSTRAINT attribute_values_attribute_id_fkey FOREIGN KEY (attribute_id) REFERENCES public.attributes(id)
+);
+CREATE TABLE public.attributes (
+  id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+  name character varying NOT NULL,
+  created_at timestamp with time zone DEFAULT now(),
+  CONSTRAINT attributes_pkey PRIMARY KEY (id)
+);
+CREATE TABLE public.cart-items (
+  id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+  user_id uuid NOT NULL DEFAULT auth.uid(),
+  product_variant_id bigint NOT NULL,
+  created_at timestamp with time zone NOT NULL DEFAULT now(),
+  quantify integer NOT NULL,
+  CONSTRAINT cart-items_pkey PRIMARY KEY (id),
+  CONSTRAINT cart-items_product_variant_id_fkey FOREIGN KEY (product_variant_id) REFERENCES public.product_variants(id)
+);
+CREATE TABLE public.categories (
+  id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+  name character varying NOT NULL,
+  description text NOT NULL DEFAULT ''::text,
+  created_at timestamp with time zone DEFAULT now(),
+  image_url text,
+  CONSTRAINT categories_pkey PRIMARY KEY (id)
+);
+CREATE TABLE public.materials (
+  id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+  name character varying NOT NULL,
+  created_at timestamp with time zone DEFAULT now(),
+  CONSTRAINT materials_pkey PRIMARY KEY (id)
+);
+CREATE TABLE public.municipalities (
+  id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+  name character varying NOT NULL,
+  created_at timestamp with time zone DEFAULT now(),
+  CONSTRAINT municipalities_pkey PRIMARY KEY (id)
+);
+CREATE TABLE public.order_items (
+  id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+  order_id bigint NOT NULL,
+  variant_id bigint NOT NULL,
+  quantity integer NOT NULL,
+  unit_price numeric NOT NULL,
+  created_at timestamp with time zone DEFAULT now(),
+  variant_snapshot jsonb,
+  product_snapshot jsonb,
+  CONSTRAINT order_items_pkey PRIMARY KEY (id),
+  CONSTRAINT order_items_order_id_fkey FOREIGN KEY (order_id) REFERENCES public.orders(id),
+  CONSTRAINT order_items_variant_id_fkey FOREIGN KEY (variant_id) REFERENCES public.product_variants(id)
+);
+CREATE TABLE public.orders (
+  id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+  user_id uuid NOT NULL,
+  order_date timestamp with time zone NOT NULL DEFAULT now(),
+  payment_status character varying NOT NULL DEFAULT 'Pending'::character varying,
+  shipping_status character varying NOT NULL DEFAULT 'Processing'::character varying,
+  total_amount numeric NOT NULL,
+  created_at timestamp with time zone DEFAULT now(),
+  CONSTRAINT orders_pkey PRIMARY KEY (id),
+  CONSTRAINT orders_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id)
+);
+CREATE TABLE public.product_images (
+  id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+  product_id bigint NOT NULL,
+  variant_id bigint NOT NULL,
+  image_url text NOT NULL,
+  is_primary boolean NOT NULL DEFAULT false,
+  display_order integer NOT NULL DEFAULT 0,
+  created_at timestamp with time zone DEFAULT now(),
+  CONSTRAINT product_images_pkey PRIMARY KEY (id),
+  CONSTRAINT product_images_product_id_fkey FOREIGN KEY (product_id) REFERENCES public.products(id),
+  CONSTRAINT product_images_variant_id_fkey FOREIGN KEY (variant_id) REFERENCES public.product_variants(id)
+);
+CREATE TABLE public.product_variants (
+  id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+  product_id bigint NOT NULL,
+  sku character varying NOT NULL UNIQUE,
+  specific_price numeric NOT NULL,
+  stock integer NOT NULL DEFAULT 0,
+  created_at timestamp with time zone DEFAULT now(),
+  is_active boolean NOT NULL DEFAULT true,
+  CONSTRAINT product_variants_pkey PRIMARY KEY (id),
+  CONSTRAINT product_variants_product_id_fkey FOREIGN KEY (product_id) REFERENCES public.products(id)
+);
+CREATE TABLE public.products (
+  id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+  name character varying NOT NULL,
+  short_description character varying NOT NULL,
+  long_description text,
+  category_id bigint NOT NULL,
+  material_id bigint,
+  municipality_id bigint NOT NULL,
+  created_at timestamp with time zone DEFAULT now(),
+  notes character varying NOT NULL DEFAULT ''::character varying,
+  dimensions character varying NOT NULL DEFAULT ''::character varying,
+  updated_at date,
+  activo boolean NOT NULL DEFAULT true,
+  CONSTRAINT products_pkey PRIMARY KEY (id),
+  CONSTRAINT products_category_id_fkey FOREIGN KEY (category_id) REFERENCES public.categories(id),
+  CONSTRAINT products_material_id_fkey FOREIGN KEY (material_id) REFERENCES public.materials(id),
+  CONSTRAINT products_municipality_id_fkey FOREIGN KEY (municipality_id) REFERENCES public.municipalities(id)
+);
+CREATE TABLE public.roles (
+  id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+  name character varying NOT NULL UNIQUE,
+  description text,
+  CONSTRAINT roles_pkey PRIMARY KEY (id)
+);
+CREATE TABLE public.users (
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  first_name character varying NOT NULL,
+  last_name character varying,
+  email character varying NOT NULL UNIQUE,
+  phone character varying,
+  shipping_address text,
+  created_at timestamp with time zone NOT NULL DEFAULT now(),
+  role_id bigint NOT NULL DEFAULT 2,
+  avatar text,
+  CONSTRAINT users_pkey PRIMARY KEY (id),
+  CONSTRAINT users_role_id_fkey FOREIGN KEY (role_id) REFERENCES public.roles(id)
+);
+CREATE TABLE public.variant_values (
+  variant_id bigint NOT NULL,
+  attribute_value_id bigint NOT NULL,
+  CONSTRAINT variant_values_pkey PRIMARY KEY (variant_id, attribute_value_id),
+  CONSTRAINT variant_values_variant_id_fkey FOREIGN KEY (variant_id) REFERENCES public.product_variants(id),
+  CONSTRAINT variant_values_attribute_value_id_fkey FOREIGN KEY (attribute_value_id) REFERENCES public.attribute_values(id)
+);
+CREATE TABLE public.wish_list (
+  id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+  product_id bigint NOT NULL,
+  user_id uuid NOT NULL DEFAULT auth.uid(),
+  created_at timestamp with time zone NOT NULL DEFAULT now(),
+  CONSTRAINT wish_list_pkey PRIMARY KEY (id),
+  CONSTRAINT wish_list_product_id_fkey FOREIGN KEY (product_id) REFERENCES public.products(id)
+);
