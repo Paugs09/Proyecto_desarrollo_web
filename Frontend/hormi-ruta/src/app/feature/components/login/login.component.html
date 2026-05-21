@@ -21,6 +21,7 @@
               class="w-full bg-[#FBF5EC] border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#F4A261] transition"
               [disabled]="isLoading()"
             />
+            <!--VALIDACIÓN EN FORMULARIO: Renderiza el mensaje de error específico si el correo no cumple con el formato o todavia hace falta -->
             @if (isFieldInvalid('email')) {
               <p class="text-red-500 text-xs mt-1">{{ getErrorMessage('email') }}</p>
             }
@@ -73,6 +74,7 @@
                 }
               </button>
             </div>
+            <!--VALIDACIÓN EN FORMULARIO: Muestra de forma reactiva el mensaje de error si la contraseña está vacía(no cumple) -->
             @if (isFieldInvalid('password')) {
               <p class="text-red-500 text-xs mt-1">{{ getErrorMessage('password') }}</p>
             }
@@ -89,6 +91,7 @@
             <label for="remember" class="ml-2 text-sm">Recuérdame</label>
           </div>
  
+          <!-- VALIDACIÓN FRONTEND: Renderiza una alerta visual cuando se detecta un fallo en el formulario -->
           <!-- Error General -->
           @if (error()) {
             <div class="bg-red-50 border border-red-200 rounded px-3 py-2 text-red-700 text-sm">
@@ -96,6 +99,7 @@
             </div>
           }
  
+          <!--VALIDACIÓN EN FORMULARIO: Bloquea el botón e impide el envío si los campos no pasan los filtros del frontend -->
           <!-- Botón Envío -->
           <button
             type="submit"

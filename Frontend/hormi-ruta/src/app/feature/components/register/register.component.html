@@ -50,6 +50,7 @@
       
       <div>
         <label for="firstName" class="block text-sm font-medium mb-1">Nombre</label>
+        <!--VALIDACIÓN FRONTEND -->
         <input
           id="firstName"
           type="text"
@@ -62,6 +63,7 @@
 
       <div>
         <label for="lastName" class="block text-sm font-medium mb-1">Apellidos</label>
+        <!--VALIDACIÓN FRONTEND -->
         <input
           id="lastName"
           type="text"
@@ -85,6 +87,8 @@
 
       <div>
         <label for="email" class="block text-sm font-medium mb-1">Correo Electrónico</label>
+        
+        <!--VALIDACIÓN FRONTEND -->
         <input
           id="email"
           type="email"
@@ -98,6 +102,7 @@
       <div>
         <label for="password" class="block text-sm font-medium mb-1">Contraseña</label>
         <div class="relative">
+          <!--VALIDACIÓN FRONTEND -->
           <input
             id="password"
             [type]="showPassword() ? 'text' : 'password'"
@@ -131,6 +136,7 @@
         ></textarea>
       </div>
 
+      <!--VALIDACIÓN FRONTEND: Deshabilitación del botón de envío si el formulario contiene errores -->
       <button
         type="submit"
         [disabled]="form.invalid || isLoading()"
