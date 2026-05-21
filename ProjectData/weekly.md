@@ -356,7 +356,22 @@ Se compararon los resultados finales con el plan inicial del sprint, validando q
 #### Revisión de tareas terminadas
 Se realizó una revisión de los entregables para verificar el cumplimiento de los objetivos planteados. Se confirmó que todas las tareas definidas para este sprint se encuentran completamente terminadas y funcionales adaptadas a las tecnologías implementadas de nuestro proyecto, cumpliendo con los criterios de aceptación establecidos para el desarrollo de la plataforma.
 
-#### Retrospectiva del sprint 5
+#### Retrospectiva del sprint 6
 El equipo llevó a cabo la sesión de retrospectiva correspondiente al Sprint 6. Durante la reunión, se identificaron avances significativos para el desarrollo de los siguientes sprints para dar por culminado el proyecto. 
 
+---
+---
 
+# DECIMOCUARTA REUNIÓN
+=====================
+---------------------------
+
+### REVISIÓN DE ENTREGABLES Y RETROSPECTIVA DEL SPRINT 7
+
+#### Revisión de tareas terminadas
+Se realizó una revisión de los entregables para verificar el cumplimiento de los objetivos y tareas planteadas, las cuales fueron definidas por medio de un daily en el grupo oficial de WhatsApp debido a temas de tiempo en la confirmación de los entregables para el sprint 7. 
+
+Se confirmó que todas las tareas definidas para este sprint se encuentran completamente terminadas y funcionales adaptadas a las tecnologías implementadas de nuestro proyecto, cumpliendo con los criterios de aceptación establecidos para el desarrollo de la plataforma.
+
+#### Retrospectiva del sprint 7
+El equipo llevó a cabo la sesión de retrospectiva correspondiente al Sprint 7. Durante la reunión, se verificó el estado del sitio web, confirmando que se encuentra adecuado para la finalización de los sprints planteados y comenzar a preparar el video de presentación final. 
