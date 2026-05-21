@@ -52,6 +52,14 @@ Además de lo mencionado anteriormente, se reconoce la entrega y el esfuerzo de 
 
 De esta manera, este sprint deja como aprendizaje clave seguir con la práctica de una comunicación activa y respetuosa entre los miembros del equipo, así como la importancia del trabajo y reuniones proactivas.
 
+## Retrospectiva Sprint 7:
+=====================
+---------------------------
+Durante el desarrollo del sprint 7, se identificaron las buenas prácticas técnicas y organizacionales implementadas en el equipo de trabajo como la gestión de ramas en Git (lo que garantizó la estabilidad del código final), la división equitativa de tareas y la autonomía individual que permitieron una alta eficiencia en el desarrollo, resaltando también la buena respuesta ante imprevistos técnicos para evitar retrasos en la entrega de los objetivos definidos. 
+
+El equipo concluye que el éxito y la eficiencia del proyecto se debieron directamente a una excelente unión colectiva entre los miembros. Adicionalmente, se plantea potenciar la comunicación activa, asegurando que esta dinámica de trabajo bien coordinada se convierte en la base para futuros proyectos.
+
+El proyecto HormiGuane finaliza el sprint 7 sin registro de bloqueos, procesos ineficientes, ni malas prácticas pendientes por corregir. 
 
 ## Representación gráfica de la retrospectiva con la dinámica de estrella de mar:
 =====================
