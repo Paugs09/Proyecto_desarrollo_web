@@ -1,7 +1,9 @@
+// FRONTEND - Arquitectura de Componentes Angular
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
+// CONEXIÓN FRONTEND-BACKEND - Servicios de comunicación
 import { ProductService } from '../../services/product.service';
 import { ProductDetail, ProductVariant } from '../../interfaces/product.interface';
 import { CartService } from '../../services/cart.service';
@@ -126,6 +128,11 @@ export class DetailsComponent implements OnInit {
       backdrop: `rgba(45, 45, 45, 0.4)`
     };
 
+
+
+
+    // VALIDACIÓN FRONTEND: Control de selección de variante obligatoria
+
     if (!this.varianteSeleccionada) {
 
       Swal.fire({
@@ -139,6 +146,8 @@ export class DetailsComponent implements OnInit {
       });
       return;
     }
+
+    // VALIDACIÓN FRONTEND:Control de Stock disponible. Si pide más del stok en la bd, frena la operación y evita que la API falle o procese una compra inválida
     if (this.cantidad > (this.varianteSeleccionada.stock || 0)) {
       Swal.fire({
         ...commonConfig,
@@ -207,5 +216,6 @@ export class DetailsComponent implements OnInit {
 
   cambiarImagen(url: string) { this.imagenPrincipalUrl = url; }
   sumar() { this.cantidad++; }
+  // VALIDACIÓN FRONTEND: Control de rango mínimo. no permitira que el contador sea menor a 1
   restar() { if (this.cantidad > 1) this.cantidad--; }
 }

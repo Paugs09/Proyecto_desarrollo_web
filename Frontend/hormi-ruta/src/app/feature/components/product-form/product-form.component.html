@@ -24,6 +24,7 @@
       <div class="h-[2px] w-12 bg-[#F4A261]/30 rounded-full"></div>
     </div>
   </div>
+  <!-- VALIDACIÓN EN FORMULARIO: Vincula lo qjue se muestra con la lógica  y las reglas de validación del componente -->
   <form [formGroup]="productForm" (ngSubmit)="onSubmit()" class="space-y-8">
 
     <div class="bg-[#FBF5EC]/50 p-6 rounded-xl grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -92,6 +93,7 @@
       <div *ngFor="let variant of variants.controls; let i = index" [formGroupName]="i"
         class="relative p-6 border-2 border-[#FDF2E9] rounded-2xl bg-white shadow-sm hover:shadow-md transition">
 
+        <!-- VALIDACIÓN FRONTEND: Restricción de interfaz que impide eliminar variantes sin una ya existente-->
         <button *ngIf="variants.length > 1" type="button" (click)="removeVariant(i)"
           class="absolute -top-3 -right-3 bg-red-500 text-white w-8 h-8 rounded-full shadow-lg flex items-center justify-center font-bold hover:bg-red-600 transition-colors">×</button>
 
@@ -146,6 +148,7 @@
                 class="text-xs text-gray-500 file:rounded-full file:bg-[#F4A261] cursor-pointer">
               <input formControlName="imageUrl" readonly class="flex-1 p-2 bg-white border rounded text-[10px]"
                 placeholder="URL...">
+                <!--VALIDACIÓN FRONTEND-->
               <button *ngIf="getProductImages(i).length > 1" type="button" (click)="removeImage(i, k)"
                 class="text-red-500 font-bold">×</button>
             </div>
@@ -185,6 +188,7 @@
       + Agregar otra combinación (Variante)
     </button>
 
+    <!-- VALIDACIÓN EN FORMULARIO: Bloquea el botón e impide la persistencia si los campos obligatorios, precios o stocks son inválidos -->
     <button type="submit" [disabled]="productForm.invalid" class="w-full py-5 bg-[#3aa394] text-white rounded-2xl text-xl font-black shadow-xl
             hover:bg-[#167567] transition-all disabled:bg-gray-300 disabled:shadow-none
             transform hover:-translate-y-1">

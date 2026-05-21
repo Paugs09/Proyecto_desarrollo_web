@@ -7,10 +7,12 @@ export const adminGuard = () => {
   const authService = inject(AuthService);
   const router = inject(Router);
 
+  // VALIDACIÓN FRONTEND: Verifica mediante el servicio si el usuario posee el rol de administrador para permitir el acceso
   if (authService.isAdmin()) {
     return true;
   }
 
+  // VALIDACIÓN FRONTEND: Bloqueo de navegación y alerta visual con SweetAlert en caso de acceso no autorizado
   Swal.fire({
     title: '<span class="block text-center">Acceso denegado</span>',
     html: '<p class="text-center">Solo el personal autorizado puede entrar aquí.</p>',

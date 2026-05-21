@@ -48,7 +48,9 @@
 
       <!-- Nombre -->
       <div>
+        
         <label class="block text-sm font-medium mb-1">Nombre</label>
+        <!-- VALIDACIÓN EN FORMULARIO:class.border-red-500 Cambia el borde a rojo si el campo Nombre no pasa las reglas de validación -->
         <input type="text" formControlName="firstName" placeholder="Tu nombre"
           [class.border-red-500]="isFieldInvalid('firstName')"
           class="w-full bg-[#FBF5EC] border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#F4A261] transition"/>
@@ -57,6 +59,7 @@
       <!-- Apellidos -->
       <div>
         <label class="block text-sm font-medium mb-1">Apellidos</label>
+        <!-- VALIDACIÓN EN FORMULARIO: (isFieldInvalid)Control visual de campo obligatorio e inválido para el Apellido -->
         <input type="text" formControlName="lastName" placeholder="Tus apellidos"
           [class.border-red-500]="isFieldInvalid('lastName')"
           class="w-full bg-[#FBF5EC] border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#F4A261] transition"/>
@@ -76,6 +79,7 @@
           class="w-full bg-[#FBF5EC] border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#F4A261] transition"></textarea>
       </div>
 
+      <!-- VALIDACIÓN BACKEND: Muestra las respuestas de error o éxito que envía el servidor al procesar los datos -->
       @if (successMessage()) {
         <p class="text-green-600 text-sm font-semibold text-center">{{ successMessage() }}</p>
       }
@@ -83,6 +87,7 @@
         <p class="text-red-500 text-sm font-semibold text-center">{{ errorMessage() }}</p>
       }
 
+      <!-- VALIDACIÓN FRONTEND: Deshabilita por completo el botón si el formulario tiene datos inválidos, impidiendo el envío -->
       <!-- Botón -->
       <button type="submit" [disabled]="form.invalid || isLoading()"
         class="w-full font-semibold py-2 rounded bg-[#F4A261] text-[#2D5016] hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition">

@@ -21,7 +21,7 @@ export class RegisterComponent {
 isUploadingImage = signal(false);
 fotoUrl = signal<string | null>(null);
 
-
+ // VALIDACIÓN FRONTEND
   form = this.fb.group({
     firstName: ['', [Validators.required]],
     lastName: ['', [Validators.required]],
@@ -36,6 +36,7 @@ fotoUrl = signal<string | null>(null);
     this.showPassword.update(v => !v);
   }
 
+  // VALIDACIÓN FRONTEND
   isFieldInvalid(field: string) {
     const control = this.form.get(field);
     return control?.invalid && (control?.touched || control?.dirty);
@@ -64,6 +65,7 @@ fotoUrl = signal<string | null>(null);
 
 
   onSubmit() {
+    // VALIDACIÓN FRONTEND
     if (this.form.valid) {
       this.isLoading.set(true);
 

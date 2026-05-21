@@ -25,6 +25,7 @@ export class EditProfileComponent implements OnInit {
 
   readonly user = this.authService.user;
 
+  // VALIDACIÓN EN FORMULARIO: Define los campos obligatorios para el formulario
   form = this.fb.group({
     firstName: ['', [Validators.required]],
     lastName:  ['', [Validators.required]],
@@ -47,6 +48,7 @@ export class EditProfileComponent implements OnInit {
     }
   }
 
+  // VALIDACIÓN FRONTEND: Verifica en tiempo real si un campo cumple con sus reglas de validación antes de alertar visualmente al usuario
   isFieldInvalid(field: string): boolean {
     const control = this.form.get(field);
     return !!(control?.invalid && (control?.touched || control?.dirty));
@@ -72,6 +74,7 @@ export class EditProfileComponent implements OnInit {
   }
 
   onSubmit(): void {
+    // VALIDACIÓN EN FORMULARIO: detiene el envío si el usuario intenta enviar datos que no vacíos
     if (this.form.invalid) return;
 
     this.isLoading.set(true);
@@ -90,6 +93,7 @@ export class EditProfileComponent implements OnInit {
           this.router.navigate(['/profile']);
         });
       },
+      // VALIDACIÓN BACKEND: Captura si el servidor rechazó la actualización por problemas internos o de base de datos
       error: (err: unknown) => {
         this.isLoading.set(false);
         console.error(err);

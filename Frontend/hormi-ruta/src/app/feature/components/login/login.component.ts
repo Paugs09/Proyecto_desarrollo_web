@@ -26,6 +26,7 @@ export class LoginComponent {
   
   }
 
+  // VALIDACIÓN EN FORMULARIO: Define las reglas estrictas en el cliente (campos obligatorios, formato de correo válido y longitud mínima de caracteres)
   readonly form: FormGroup = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.minLength(6)]],
@@ -40,11 +41,13 @@ export class LoginComponent {
     this.showPassword.update((val) => !val);
   }
  
+  // VALIDACIÓN FRONTEND: Comprueba si el campo no cumple con las condiciones requeridas
   isFieldInvalid(fieldName: string): boolean {
     const field = this.form.get(fieldName);
     return !!(field && field.invalid && (field.dirty || field.touched));
   }
  
+  // VALIDACIÓN FRONTEND: Evalúa el tipo de error específico detectado por Angular para retornar el mensaje de advertencia exacto
   getErrorMessage(fieldName: string): string {
     const control = this.form.get(fieldName);
  
@@ -67,6 +70,7 @@ export class LoginComponent {
   }
  
   onSubmit(): void {
+    // VALIDACIÓN EN FORMULARIO: Control de seguridad que cancela la petición al servidor si el formulario contiene errores
     if (!this.form.valid) return;
  
     this.error.set(null);
@@ -82,6 +86,7 @@ export class LoginComponent {
       next: () => {
         this.router.navigate(['/home']);
       },
+      // VALIDACIÓN FRONTEND: Captura el fallo del proceso de autenticación para activar visualmente la alerta de error general
       error: (err) => {
         this.isLoading.set(false);
         this.error.set(

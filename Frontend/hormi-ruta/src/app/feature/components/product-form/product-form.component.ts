@@ -31,6 +31,7 @@ export class ProductFormComponent implements OnInit {
   availableAttributes: any[] = [];
 
   constructor() {
+    // VALIDACIÓN EN FORMULARIO: Define los campos iniciales obligatorios que se requieren antes de admitir un registro
     this.productForm = this.fb.group({
       name: ['', Validators.required],
       shortDescription: ['', Validators.required],
@@ -72,11 +73,13 @@ export class ProductFormComponent implements OnInit {
     });
   }
 
+
 loadProductForEdit(id: number): void {
     this.productService.getById(id).subscribe({
       next: (product: any) => {
         this.variants.clear();
         
+        // VALIDACIÓN EN FORMULARIO: restricciones de valores mínimos (>= 0) para precio y stock
         product.variants.forEach((v: any) => {
           const variantGroup = this.fb.group({
             sku: [v.sku, Validators.required],
@@ -190,7 +193,7 @@ loadProductForEdit(id: number): void {
   getAttributes(variantIndex: number): FormArray {
     return this.variants.at(variantIndex).get('attributeValues') as FormArray;
   }
-
+ // VALIDACIÓN EN FORMULARIO
   createVariant(): FormGroup {
     return this.fb.group({
       sku: ['', Validators.required],
@@ -239,6 +242,7 @@ loadProductForEdit(id: number): void {
   addImage(variantIndex: number): void {
     const images = this.variants.at(variantIndex).get('productImages') as FormArray;
     images.push(this.fb.group({
+      // VALIDACIÓN EN FORMULARIO
       imageUrl: ['', Validators.required],
       isPrimary: [false],
       displayOrder: [images.length + 1]
@@ -290,6 +294,7 @@ loadProductForEdit(id: number): void {
   }
 
   onSubmit(): void {
+    // VALIDACIÓN FRONTEND: Frena inmediatamente la ejecución y alerta de forma visual al usuario si tiene datos que son inválidos
   if (this.productForm.invalid) {
     Swal.fire({
       title: '<span class="block text-center">Formulario incompleto</span>',
@@ -342,6 +347,7 @@ loadProductForEdit(id: number): void {
         this.handleSuccessAlert('¡Producto actualizado!', 'Los cambios se guardaron correctamente.');
         this.router.navigate(['/products']);
       },
+      // VALIDACIÓN FRONTEND
       error: (err) => {
         console.error('Error en edición:', err);
         this.handleErrorAlert('Error de edición', 'La base de datos rechazó los cambios. Revisa la consola.');
@@ -354,6 +360,7 @@ loadProductForEdit(id: number): void {
         this.handleSuccessAlert('¡Hormiguita feliz!', 'El producto ha sido guardado exitosamente.');
         this.resetForm();
       },
+      // VALIDACIÓN FRONTEND
       error: (err) => {
         console.error('Error en creación:', err);
         this.handleErrorAlert('Error de registro', 'No se pudo crear el producto.');
