@@ -1,0 +1,43 @@
+<div class="min-h-screen bg-[#FBF5EC] flex flex-col items-center justify-center px-4 text-center">
+
+  <!-- Hormiga animada -->
+  <div class="relative mb-6">
+    <img src="assets/Hormiga-404.png" alt="Hormiga perdida"
+         class="w-40 h-auto object-contain drop-shadow-lg">
+  </div>
+
+  <!-- Código -->
+  <h1 class="text-8xl font-black text-[#E78E46] mb-2 leading-none">404</h1>
+
+  <h2 class="text-2xl font-bold text-slate-700 mb-3">
+    ¡Esta hormiga se perdió!
+  </h2>
+
+  <p class="text-slate-500 text-base max-w-sm mb-10 leading-relaxed">
+    La página que buscas no existe o fue movida.<br>
+    Pero tranquilo, hay muchos productos por explorar.
+  </p>
+
+  <!-- Botones -->
+  <div class="flex flex-col sm:flex-row gap-4">
+    <a routerLink="/home"
+       class="inline-flex items-center gap-2 px-6 py-3 rounded-full
+              bg-[#E78E46] hover:bg-[#E78E46] text-white font-bold
+              transition-all duration-200 hover:-translate-y-1 hover:shadow-lg
+              active:scale-95 no-underline">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+           stroke-width="2" stroke="currentColor" class="w-4 h-4">
+        <path stroke-linecap="round" stroke-linejoin="round"
+              d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"/>
+      </svg>
+      Ir al inicio
+    </a>
+    <a routerLink="/products"
+       class="inline-flex items-center gap-2 px-6 py-3 rounded-full
+              border-2 border-[#E78E46] text-[#E78E46] font-bold
+              hover:bg-[#fdf6ec] transition-all duration-200
+              hover:-translate-y-1 no-underline">
+      Ver productos
+    </a>
+  </div>
+</div>

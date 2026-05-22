@@ -12,6 +12,7 @@ import { CartComponent } from './feature/components/cart/cart.component';
 import { ProductFormComponent } from './feature/components/product-form/product-form.component';
 import { adminGuard } from './feature/guards/admin.guard';
 import { EditProfileComponent } from './feature/components/edit-profile/edit-profile.component';
+import { NotFoundComponent } from './shared/components/not-found/not-found.component';
 
 
 export const routes: Routes = [
@@ -37,6 +38,8 @@ export const routes: Routes = [
     path: 'admin/editar-producto/:id',
     component: ProductFormComponent, 
     canActivate: [adminGuard] 
-  }
+  },
+
+  { path: '**', component: NotFoundComponent }
 
  ];
