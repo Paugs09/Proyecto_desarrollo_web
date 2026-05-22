@@ -78,23 +78,19 @@ export class HomeComponent {
       subtitle: 'Una tienda llena de productos por descubrir',
       overlayImage: 'assets/hormiga-indicadora.png',
       buttonText: 'Comenzar compras',
-      scrollTo: 'sesion-banner',
+      scrollTo: 'categorias'
     },
     {
-      image: 'assets/actividades-carrusel.jpg',
-      title: { first: 'Siente la adrenalina', second: 'sangileña' },
-      subtitle: 'Atrévete a vivir la aventura',
-      overlayImage: 'assets/hormiga-aventurera.png',
-      buttonText: 'Buscar aventuras',
-      scrollTo: 'actividades',
+      image: 'assets/fondoFique.png',
+      title: { first: 'Conecta con la tradición,', second: 'luce con orgullo' },
+      subtitle: 'Atrévete a tejer la historia.',
+      overlayImage: 'assets/Hormiga-fique.png'
     },
     {
-      image: 'assets/alojamientos-carrusel.jpg',
-      title: { first: 'Siéntete en casa,', second: 'descansa mejor' },
-      subtitle: 'El descanso perfecto después de explorar',
-      overlayImage: 'assets/hormiga-hotelera.png',
-      buttonText: 'Ver alojamientos',
-      scrollTo: 'alojamientos',
+      image: 'assets/fondoBarro.png',
+      title: { first: 'Disfruta lo nuestro,', second: 'elige lo auténtico' },
+      subtitle: 'La artesanía perfecta con sello santandereano',
+      overlayImage: 'assets/Hormiga-barro.png'
     },
   ];
 

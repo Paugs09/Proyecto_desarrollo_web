@@ -9,6 +9,7 @@ import { ProductDetail, ProductVariant } from '../../interfaces/product.interfac
 import { CartService } from '../../services/cart.service';
 import { first } from 'rxjs';
 import Swal from 'sweetalert2';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-detalles',
@@ -28,7 +29,8 @@ export class DetailsComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private productService: ProductService,
-    private cartService: CartService
+    private cartService: CartService,
+    private location: Location
   ) { }
 
   ngOnInit(): void {
@@ -218,4 +220,9 @@ export class DetailsComponent implements OnInit {
   sumar() { this.cantidad++; }
   // VALIDACIÓN FRONTEND: Control de rango mínimo. no permitira que el contador sea menor a 1
   restar() { if (this.cantidad > 1) this.cantidad--; }
+
+  // Método volver
+  goBack() {
+    this.location.back();
+  }
 }
