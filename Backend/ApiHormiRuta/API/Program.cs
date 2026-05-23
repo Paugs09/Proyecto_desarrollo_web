@@ -6,6 +6,7 @@ using Infraestructure.Data;
 using Infraestructure.Filters;
 using Infraestructure.Persistence;
 using Infraestructure.Repositories;
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi;
 using Scalar.AspNetCore;
@@ -123,6 +124,12 @@ services.AddCors(options => options.AddPolicy(CORS_POLICY_NAME, builder =>
     builder.AllowAnyHeader();
     builder.WithExposedHeaders("Content-Disposition");
 }));
+
+services.AddValidatorsFromAssemblies(AppDomain.CurrentDomain.GetAssemblies());
+services.AddControllers(options =>
+{
+    options.Filters.Add<ValidationFilter>();
+});
 
 var app = builder.Build();
 

@@ -48,15 +48,15 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
     else if (url.includes('/api/cart/finish-order')) descripcion = ' Finalizó su Compra';
 
     // Product
-    else if (url.includes('/api/product/detail')) descripcion = 'Vio Detalle de Producto';
-    else if (url.includes('/api/product') && req.method === 'PUT') {
+    else if (url.includes('/api/products/detail')) descripcion = 'Vio Detalle de Producto';
+    else if (url.includes('/api/products') && req.method === 'PUT') {
         descripcion = 'Editó producto';
     }
-    else if (url.includes('/api/product/wish-list') && req.method === 'GET') descripcion = 'Vio sus favoritos';
-    else if (url.includes('/api/product/wish-list') && req.method === 'POST') descripcion = 'gestiono favoritos';
-    else if (url.includes('/api/product/purchase-history')) descripcion = ' Vio su Historial de Compras';
-    else if (url.includes('/api/product/upload-image')) descripcion = ' Subió Imagen';
-    else if (url.includes('/api/product') && req.method === 'GET') descripcion = ' Consultó Catálogo';
+    else if (url.includes('/api/products/wish-list') && req.method === 'GET') descripcion = 'Vio sus favoritos';
+    else if (url.includes('/api/products/wish-list') && req.method === 'POST') descripcion = 'gestiono favoritos';
+    else if (url.includes('/api/products/purchase-history')) descripcion = ' Vio su Historial de Compras';
+    else if (url.includes('/api/products/upload-image')) descripcion = ' Subió Imagen';
+    else if (url.includes('/api/products') && req.method === 'GET') descripcion = ' Consultó Catálogo';
     else if (req.method === 'DELETE') descripcion = 'Eliminó Producto';
 
     // C.nueva entrada con el mensaje

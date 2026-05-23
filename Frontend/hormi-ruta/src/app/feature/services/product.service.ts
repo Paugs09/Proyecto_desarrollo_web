@@ -12,12 +12,12 @@ export class ProductService {
   constructor(private http: HttpClient) { }
 
   getById(id: number): Observable<ProductDetail> {
-    return this.http.get<ProductDetail>(`${this.apiUrl}/product/detail/${id}`);
+    return this.http.get<ProductDetail>(`${this.apiUrl}/products/detail/${id}`);
   }
 
   // Obtiene la lista de favoritos actual
   getWishList(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/product/wish-list`);
+    return this.http.get<any[]>(`${this.apiUrl}/products/wish-list`);
   }
 
   // Envía la acción de favorito con el booleano
@@ -26,26 +26,26 @@ export class ProductService {
       productId: productId,
       isFavorite: isFav
     };
-    return this.http.post(`${this.apiUrl}/product/wish-list`, body);
+    return this.http.post(`${this.apiUrl}/products/wish-list`, body);
   }
 
   // METODOS PARA EL FORMULARIO 
   createProduct(productData: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/product`, productData);
+    return this.http.post(`${this.apiUrl}/products`, productData);
   }
 
   deleteProduct(productId: number): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/product/${productId}`);
+    return this.http.delete(`${this.apiUrl}/products/${productId}`);
   }
 
   updateProduct(productId: number, productData: any): Observable<any> {
-    return this.http.put(`${this.apiUrl}/product/${productId}`, productData);
+    return this.http.put(`${this.apiUrl}/products/${productId}`, productData);
   }
 
   uploadImage(file: File): Observable<string> {
     const formData = new FormData();
     formData.append('formFile', file, file.name);
-    return this.http.post(`${this.apiUrl}/product/upload-image`, formData, {
+    return this.http.post(`${this.apiUrl}/products/upload-image`, formData, {
       responseType: 'text'
     });
   }
@@ -72,15 +72,15 @@ export class ProductService {
     if (categoryId) params['categoryId'] = categoryId;
     if (productName) params['productName'] = productName;
 
-    return this.http.get<ProductDto[]>(`${this.apiUrl}/product`, { params });
+    return this.http.get<ProductDto[]>(`${this.apiUrl}/products`, { params });
   }
 
   // Top vendidos
   getBestSellers(): Observable<BestSellerDto[]> {
-    return this.http.get<BestSellerDto[]>(`${this.apiUrl}/product/best-sellers`);
+    return this.http.get<BestSellerDto[]>(`${this.apiUrl}/products/best-sellers`);
   }
 
   getPurchaseHistory(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/product/purchase-history`);
+    return this.http.get<any[]>(`${this.apiUrl}/products/purchase-history`);
   }
 }
