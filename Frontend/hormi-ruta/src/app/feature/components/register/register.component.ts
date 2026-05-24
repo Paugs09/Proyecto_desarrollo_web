@@ -42,6 +42,22 @@ fotoUrl = signal<string | null>(null);
     return control?.invalid && (control?.touched || control?.dirty);
   }
 
+  getErrorMessage(field: string): string {
+    const control = this.form.get(field);
+    if (!control?.errors) return '';
+
+    if (control.hasError('required')) {
+      return 'Este campo es obligatorio';
+    }
+    if (control.hasError('email')) {
+      return 'Ingresa un correo electrónico válido';
+    }
+    if (control.hasError('minlength')) {
+      const minLength = control.getError('minlength').requiredLength;
+      return `Debe tener al menos ${minLength} caracteres`;
+    }
+    return 'Campo inválido';
+  }
   
 
 
