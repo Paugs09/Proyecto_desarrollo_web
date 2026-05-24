@@ -8,11 +8,12 @@ import { CategoryService } from '../../services/category.service';
 import { ProductDto } from '../../interfaces/product.interface';
 import { Category } from '../../interfaces/category.interface';
 import { ActivatedRoute } from '@angular/router';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-products',
   standalone: true,
-  imports: [CommonModule, FormsModule, ProductCardComponent],
+  imports: [CommonModule, FormsModule, ProductCardComponent, RouterLink],
   templateUrl: './products.component.html',
   styleUrl: './products.component.scss'
 })
