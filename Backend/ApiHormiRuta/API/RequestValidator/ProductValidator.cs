@@ -28,14 +28,6 @@ namespace API.RequestValidator
                 .GreaterThan(0).WithMessage("El Id del municipio debe ser mayor a 0.")
                 .NotNull().WithMessage("El Id del municipio no puede estar vacío.")
                 .NotEmpty().WithMessage("El Id del municipio no puede estar vacío.");
-
-            RuleFor(x => x.Notes)
-                .NotNull().WithMessage("Las notas no pueden estar vacías.")
-                .NotEmpty().WithMessage("Las notas no pueden estar vacías.");
-
-            RuleFor(x => x.Dimensions)
-                .NotNull().WithMessage("Las dimensiones no pueden estar vacías.")
-                .NotEmpty().WithMessage("Las dimensiones no pueden estar vacías.");
         }
     }
 
@@ -60,14 +52,6 @@ namespace API.RequestValidator
                 .GreaterThan(0).WithMessage("El Id del municipio debe ser mayor a 0.")
                 .NotNull().WithMessage("El Id del municipio no puede estar vacío.")
                 .NotEmpty().WithMessage("El Id del municipio no puede estar vacío.");
-
-            RuleFor(x => x.Notes)
-                .NotNull().WithMessage("Las notas no pueden estar vacías.")
-                .NotEmpty().WithMessage("Las notas no pueden estar vacías.");
-
-            RuleFor(x => x.Dimensions)
-                .NotNull().WithMessage("Las dimensiones no pueden estar vacías.")
-                .NotEmpty().WithMessage("Las dimensiones no pueden estar vacías.");
         }
     }
 
