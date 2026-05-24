@@ -1,5 +1,21 @@
-<section class="products-banner w-full h-60 flex items-center justify-center mb-10">
-  <h1 class="text-white text-5xl font-bold uppercase tracking-widest">Productos</h1>
+<!-- Banner -->
+<section class="products-banner w-full h-80 flex items-end justify-start mb-10 relative overflow-hidden">
+  <div class="absolute inset-0 bg-gradient-to-r from-black/60 via-black/30 to-transparent z-10"></div>
+  <div class="relative z-20 px-8 md:px-16 pb-8 flex flex-col gap-2">
+    <div class="flex items-center gap-2 text-white/60 text-xs uppercase tracking-widest">
+      <a routerLink="/home" class="hover:text-white transition no-underline text-white/60">Inicio</a>
+      <span>/</span>
+      <span class="text-[#F4A261]">Productos</span>
+    </div>
+    <h1 class="text-white font-black leading-none"
+        style="font-size: clamp(2.5rem, 6vw, 4rem); text-shadow: 0 2px 20px rgba(0,0,0,0.4);">
+      Nuestros
+      <span class="text-[#F4A261] italic">Productos</span>
+    </h1>
+    <p class="text-white/80 text-sm font-medium tracking-wide">
+      Artesanías, sabores y tradición de la provincia de guanentina
+    </p>
+  </div>
 </section>
 
 <!-- Botón para el filtro por categorías -->

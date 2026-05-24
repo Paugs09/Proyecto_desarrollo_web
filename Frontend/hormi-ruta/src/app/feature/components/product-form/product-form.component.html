@@ -1,4 +1,26 @@
 <div class="max-w-4xl mx-auto p-6 bg-white shadow-2xl rounded-xl my-10 border border-gray-100">
+  
+  @if (isFormLoading) {
+    <div class="fixed inset-0 z-[300] bg-[#FBF5EC]/90 backdrop-blur-sm
+                flex flex-col items-center justify-center">
+      <div class="flex flex-col items-center gap-4">
+        <img src="assets/hormiga-feliz.gif" alt="Cargando"
+             class="w-24 h-auto object-contain">
+        <div class="flex flex-col items-center gap-2">
+          <p class="text-[#2D5016] font-bold text-lg tracking-wide animate-pulse">
+            Cargando producto...
+          </p>
+          <p class="text-gray-400 text-sm">Por favor espera un momento</p>
+        </div>
+        <div class="w-48 h-1.5 bg-gray-200 rounded-full overflow-hidden mt-2">
+          <div class="h-full bg-gradient-to-r from-[#3aa394] to-[#F4A261]
+                      rounded-full animate-[loading_1.5s_ease-in-out_infinite]"
+               style="width: 60%"></div>
+        </div>
+      </div>
+    </div>
+  }
+  
   @if (isImageLoading()) {
   <div class="loading-overlay">
     <div class="spinner"></div>
@@ -122,8 +144,12 @@
 
           <div>
             <label class="text-xs font-bold text-gray-400 block uppercase">Precio ($)</label>
-            <input formControlName="specificPrice" type="number"
-              class="w-full p-2 border border-gray-200 rounded-lg outline-none bg-white focus:bg-white focus:border-[#F4A261]">
+            <input
+              type="text"
+              [value]="formatPrice(variants.at(i).get('specificPrice')?.value)"
+              (input)="onPriceInput($event, i)"
+              class="w-full p-2 border border-gray-200 rounded-lg outline-none bg-white focus:bg-white focus:border-[#F4A261]"
+              placeholder="Ej: 25.000">
           </div>
 
           <div>

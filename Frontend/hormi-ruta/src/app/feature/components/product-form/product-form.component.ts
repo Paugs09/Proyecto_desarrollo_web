@@ -23,6 +23,7 @@ export class ProductFormComponent implements OnInit {
   isImageLoading = signal(false);
   isEditMode = false;
   editProductId?: number;
+  isFormLoading = false;
 
   productForm: FormGroup;
   categories: any[] = [];
@@ -48,6 +49,8 @@ export class ProductFormComponent implements OnInit {
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
 
+    if (id) this.isFormLoading = true;
+
     // Sincronización: cargar diccionarios primero, luego el producto
     forkJoin({
       categories: this.productService.getCategories(),
@@ -69,12 +72,15 @@ export class ProductFormComponent implements OnInit {
           this.addVariant(); 
         }
       },
-      error: () => this.showError('Error al cargar datos maestros del servidor')
+      error: () => {
+        this.isFormLoading = false;
+        this.showError('Error al cargar datos maestros del servidor');
+      }
     });
   }
 
 
-loadProductForEdit(id: number): void {
+  loadProductForEdit(id: number): void {
     this.productService.getById(id).subscribe({
       next: (product: any) => {
         this.variants.clear();
@@ -125,8 +131,12 @@ loadProductForEdit(id: number): void {
           municipalityId: product.municipalityId,
           materialId: product.materialId
         });
+        this.isFormLoading = false;
       },
-      error: () => this.showError('No se encontró el producto solicitado')
+      error: () => {
+        this.isFormLoading = false; 
+        this.showError('No se encontró el producto solicitado');
+      }
     });
   }
 
@@ -369,6 +379,24 @@ loadProductForEdit(id: number): void {
   }
 }
 
+// Formato moneda
+  formatPrice(value: number | null): string {
+    if (!value && value !== 0) return '';
+    return new Intl.NumberFormat('es-CO').format(value);
+  }
+
+  onPriceInput(event: any, variantIndex: number): void {
+    const digits = event.target.value.replace(/\D/g, '');
+    const parsed = parseInt(digits, 10) || 0;
+
+    this.variants.at(variantIndex).get('specificPrice')?.setValue(parsed, { emitEvent: false });
+
+    event.target.value = new Intl.NumberFormat('es-CO').format(parsed);
+
+    const len = event.target.value.length;
+    event.target.setSelectionRange(len, len);
+  }
+  
   resetForm(): void {
     this.productForm.reset();
     this.variants.clear();
