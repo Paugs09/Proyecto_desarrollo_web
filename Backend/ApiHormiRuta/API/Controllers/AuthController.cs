@@ -100,7 +100,7 @@ namespace API.Controllers
             public string AccessToken { get; set; } = string.Empty;
             public string RefreshToken { get; set; } = string.Empty;
         }
-    }
+    }   
 
     public record LoginRequest(string Email, string Password);
 }
