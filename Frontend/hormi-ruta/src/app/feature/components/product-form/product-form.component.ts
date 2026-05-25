@@ -438,4 +438,15 @@ export class ProductFormComponent implements OnInit {
       customClass: { popup: 'rounded-[3rem] border-8 border-white shadow-2xl' }
     });
   }
+  // Método auxiliar para verificar si un campo del formulario general es inválido y fue manipulado
+isFieldInvalid(field: string): boolean {
+  const control = this.productForm.get(field);
+  return !!(control && control.invalid && (control.dirty || control.touched));
+}
+
+// Método auxiliar para verificar campos dentro de los FormArray (Variantes)
+isVariantFieldInvalid(variantIndex: number, field: string): boolean {
+  const control = this.variants.at(variantIndex).get(field);
+  return !!(control && control.invalid && (control.dirty || control.touched));
+}
 }
