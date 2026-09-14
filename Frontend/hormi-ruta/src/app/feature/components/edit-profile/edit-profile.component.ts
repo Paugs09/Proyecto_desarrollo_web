@@ -20,6 +20,7 @@ export class EditProfileComponent implements OnInit {
   isLoading = signal(false);
   isUploadingImage = signal(false);
   fotoUrl = signal<string | null>(null);
+  avatarSource = signal<'none' | 'file' | 'url'>('none');
   successMessage = signal<string | null>(null);
   errorMessage = signal<string | null>(null);
 
@@ -44,7 +45,13 @@ export class EditProfileComponent implements OnInit {
         shippingAddress: u.shippingAddress || '',
         avatar:          u.avatar          || ''
       });
-      this.fotoUrl.set(u.avatar || null);
+      if (u.avatar) {
+        this.fotoUrl.set(u.avatar);
+        this.avatarSource.set('url');
+      } else {
+        this.fotoUrl.set(null);
+        this.avatarSource.set('none');
+      }
     }
   }
 
@@ -55,6 +62,9 @@ export class EditProfileComponent implements OnInit {
   }
 
   onFileSelected(event: Event): void {
+    if (this.avatarSource() === 'url') {
+      return;
+    }
     const input = event.target as HTMLInputElement;
     const file = input.files?.[0];
     if (!file) return;
@@ -64,6 +74,7 @@ export class EditProfileComponent implements OnInit {
       next: (url) => {
         this.fotoUrl.set(url);
         this.form.patchValue({ avatar: url });
+        this.avatarSource.set('file');
         this.isUploadingImage.set(false);
       },
       error: (err: unknown) => {
@@ -73,13 +84,39 @@ export class EditProfileComponent implements OnInit {
     });
   }
 
+  onAvatarUrlChange(event: Event): void {
+    if (this.avatarSource() === 'file') {
+      return;
+    }
+    const input = event.target as HTMLInputElement;
+    const value = input.value.trim();
+    if (value) {
+      this.avatarSource.set('url');
+      this.fotoUrl.set(value);
+      this.form.patchValue({ avatar: value });
+    } else {
+      this.avatarSource.set('none');
+      this.fotoUrl.set(null);
+      this.form.patchValue({ avatar: '' });
+    }
+  }
+
+  clearAvatar(fileInput?: HTMLInputElement): void {
+    this.fotoUrl.set(null);
+    this.form.patchValue({ avatar: '' });
+    this.avatarSource.set('none');
+    if (fileInput) {
+      fileInput.value = '';
+    }
+  }
+
   onSubmit(): void {
-    // VALIDACIÓN EN FORMULARIO: detiene el envío si el usuario intenta enviar datos que no vacíos
+    // VALIDACIÓN EN FORMULARIO: detiene el envío si el usuario intenta enviar datos vacíos
     if (this.form.invalid) return;
 
     this.isLoading.set(true);
 
-    this.authService.updateUser(this.form.value).subscribe({
+    this.authService.updateUser(this.form.getRawValue()).subscribe({
       next: () => {
         this.isLoading.set(false);
         Swal.fire({

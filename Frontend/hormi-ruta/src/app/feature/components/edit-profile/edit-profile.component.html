@@ -8,7 +8,7 @@
     <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-4">
 
       <!-- Avatar -->
-      <div class="flex flex-col items-center justify-center mb-8">
+      <div class="flex flex-col items-center justify-center mb-6">
         <div class="relative group">
           <div class="w-32 h-32 rounded-full border-4 border-[#F4A261] overflow-hidden bg-[#FBF5EC] shadow-xl flex items-center justify-center relative">
 
@@ -20,7 +20,7 @@
             }
 
             @if (fotoUrl()) {
-              <img [src]="fotoUrl()" class="w-full h-full object-cover">
+              <img [src]="fotoUrl()" class="w-full h-full object-cover animate-in fade-in duration-500" alt="Avatar">
             } @else {
               <div class="flex flex-col items-center opacity-30">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
@@ -30,25 +30,70 @@
             }
           </div>
 
+          <!-- Botón de subir archivo: bloqueado si avatarSource() === 'url' -->
           <label for="avatar-input"
-            class="absolute -bottom-1 -right-1 bg-[#4f8c27] text-white rounded-full cursor-pointer hover:bg-[#1a310d] transition-all shadow-md hover:scale-110 active:scale-95 w-12 h-12 flex items-center justify-center overflow-hidden border-2 border-white">
+            [class.opacity-40]="avatarSource() === 'url'"
+            [class.cursor-not-allowed]="avatarSource() === 'url'"
+            [class.pointer-events-none]="avatarSource() === 'url'"
+            class="absolute -bottom-1 -right-1 bg-[#4f8c27] text-white rounded-full cursor-pointer hover:bg-[#1a310d] transition-all shadow-md hover:scale-110 active:scale-95 w-12 h-12 flex items-center justify-center overflow-hidden border-2 border-white"
+            [title]="avatarSource() === 'url' ? 'Subida bloqueada: Ya ingresaste una URL' : 'Subir foto desde archivo'">
             <img src="../../../../assets/hormiguita.png" alt="Cambiar foto" class="w-full h-full object-cover">
           </label>
-          <input type="file" id="avatar-input" class="hidden" (change)="onFileSelected($event)" accept="image/*">
+          <input #avatarFileInput type="file" id="avatar-input" class="hidden" (change)="onFileSelected($event)" accept="image/*" [disabled]="avatarSource() === 'url'">
         </div>
 
-        @if (fotoUrl()) {
+        @if (avatarSource() === 'file') {
           <p class="text-[10px] font-black text-green-600 mt-2 uppercase tracking-widest flex items-center gap-1">
-            <span class="text-xs">✓</span> Foto cargada con éxito
+            <span class="text-xs">✓</span> Foto cargada desde archivo
+          </p>
+        } @else if (avatarSource() === 'url') {
+          <p class="text-[10px] font-black text-blue-600 mt-2 uppercase tracking-widest flex items-center gap-1">
+            <span class="text-xs">✓</span> Foto vinculada por URL
           </p>
         } @else {
-          <p class="text-[10px] font-bold text-gray-400 mt-2 uppercase tracking-widest">Sube tu foto de perfil</p>
+          <p class="text-[10px] font-bold text-gray-400 mt-2 uppercase tracking-widest">Sube una foto o pega una URL</p>
+        }
+
+        @if (avatarSource() !== 'none') {
+          <button type="button" (click)="clearAvatar(avatarFileInput)" class="mt-2 text-xs text-red-600 hover:text-red-800 underline font-medium transition flex items-center gap-1">
+            ✕ Quitar foto / Cambiar opción
+          </button>
+        }
+      </div>
+
+      <!-- Campo para URL opcional de Avatar -->
+      <div>
+        <label for="avatarUrl" class="block text-sm font-medium mb-1">
+          URL del Avatar <span class="text-xs text-gray-400 font-normal">(Opcional)</span>
+        </label>
+        <input
+          id="avatarUrl"
+          type="url"
+          formControlName="avatar"
+          (input)="onAvatarUrlChange($event)"
+          [readOnly]="avatarSource() === 'file'"
+          [class.opacity-60]="avatarSource() === 'file'"
+          [class.cursor-not-allowed]="avatarSource() === 'file'"
+          placeholder="https://ejemplo.com/tu-foto.jpg"
+          class="w-full bg-[#FBF5EC] border rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#F4A261] transition"
+        />
+        @if (avatarSource() === 'file') {
+          <p class="text-[11px] text-amber-700 mt-1">
+            🔒 Campo bloqueado porque subiste un archivo de imagen. Para usar una URL, pulsa "Quitar foto".
+          </p>
+        } @else if (avatarSource() === 'url') {
+          <p class="text-[11px] text-blue-700 mt-1">
+            🔗 El botón de subida de archivo está bloqueado mientras uses una URL.
+          </p>
+        } @else {
+          <p class="text-[11px] text-gray-500 mt-1">
+            Puedes pegar un enlace directo a tu imagen o usar el botón para subir un archivo.
+          </p>
         }
       </div>
 
       <!-- Nombre -->
       <div>
-        
         <label class="block text-sm font-medium mb-1">Nombre</label>
         <!-- VALIDACIÓN EN FORMULARIO:class.border-red-500 Cambia el borde a rojo si el campo Nombre no pasa las reglas de validación -->
         <input type="text" formControlName="firstName" placeholder="Tu nombre"
