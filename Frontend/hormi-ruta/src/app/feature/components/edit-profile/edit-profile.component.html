@@ -68,7 +68,7 @@
         </label>
         <input
           id="avatarUrl"
-          type="url"
+          type="string"
           formControlName="avatar"
           (input)="onAvatarUrlChange($event)"
           [readOnly]="avatarSource() === 'file'"

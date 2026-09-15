@@ -90,7 +90,8 @@ export class RegisterComponent {
       return;
     }
     const input = event.target as HTMLInputElement;
-    const value = input.value.trim();
+    const value = input.value;
+    console.log(value);
     if (value) {
       this.avatarSource.set('url');
       this.fotoUrl.set(value);
