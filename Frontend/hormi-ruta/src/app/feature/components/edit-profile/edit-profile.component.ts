@@ -89,7 +89,7 @@ export class EditProfileComponent implements OnInit {
       return;
     }
     const input = event.target as HTMLInputElement;
-    const value = input.value.trim();
+    const value = input.value;
     if (value) {
       this.avatarSource.set('url');
       this.fotoUrl.set(value);
